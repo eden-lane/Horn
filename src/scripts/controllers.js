@@ -49,7 +49,33 @@
         this.renderedText = marked(cm.getValue());
       },
 
+      newFile: function () {
+        var self = this,
+            length = self.tabs.push({name: "untitled", body: ""});
+        self.current = self.tabs[length - 1];
+      },
+
+      /*
+       * Getting all files stored in app's Drive directory
+       */
+      getDriveFiles: function (callback) {
+        if (typeof callback != 'function')
+          return;
+
+        chrome.syncFileSystem.requestFileSystem(function (fs) {
+          var directoryReader = fs.root.createReader();
+          directoryReader.readEntries(function (entries) {
+            callback(entries);
+          });
+        });
+      },
+
+
+      /*
+       * Saving file to Drive
+       */
       saveFile: function () {
+        var self = this;
         chrome.syncFileSystem.requestFileSystem(function (fs) {
           fs.root.getFile(current.name + '.md', {create: true}, function (fileEntry) {
             fileEntry.createWriter(function (writer) {
