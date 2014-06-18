@@ -26,6 +26,8 @@
       tabs: tabs,
 
       init: function (textarea) {
+        var self = this;
+
         cm = CodeMirror.fromTextArea(textarea, {
           mode: 'gfm',
           theme: 'kirin',
@@ -33,6 +35,9 @@
           lineWrapping: true
         });
 
+        cm.on('change', function (instance, changes) {
+          self.current.body = instance.getValue();
+        });
       },
 
       setMode: function (name) {
