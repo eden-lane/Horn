@@ -61,7 +61,7 @@
 
       newFile: function () {
         var length = this.tabs.push({name: "untitled", body: ""});
-        this.current = this.tabs[length - 1];
+        this.setTab(length - 1);
       },
 
       /*
