@@ -1,0 +1,69 @@
+@import "colors";
+@import "utils";
+@import "buttons";
+@import "content";
+@import "toolbar";
+
+html, body {
+  height: 95%;
+}
+
+body {
+  margin: 5px 10px;
+  padding: 0;
+  position: relative;
+}
+
+header {
+  height: 35px;
+  background-color: #f9f9f9;
+  margin-bottom: 5px;
+}
+
+.icon-close {
+  color: #fff;
+  font-size: 7px;
+  text-decoration: none;
+  margin: 0 0 0 7px;
+}
+
+#app {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+}
+
+.content, .CodeMirror, .preview {
+  height: 100%;
+}
+
+.preview {
+  overflow: auto;
+}
+
+#sidebar {
+  right: 0;
+  position: absolute;
+  height: 100%;
+  width: 29%;
+  padding: 3px 2px;
+}
+
+.panel {
+  border-bottom: 1px dotted #eee;
+}
+
+.tab {
+  background: #F15353;
+  padding: 3px 7px;
+  display: inline-block;
+  border-width: 1px 1px 0px 1px;
+  border-color: #E0E0E0;
+  border-style: solid;
+  border-radius: 3px 3px 0px 0;
+  color: #fff;
+}

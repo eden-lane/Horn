@@ -1,0 +1,8 @@
+<header class="toolbar">
+  <button class="icon-code" ng-click="editor.saveFile()"></button>
+  <div class="right">
+    <button class="icon-pencil" ng-click="editor.setMode('markdown')" ng-class="{active: editor.isMode('markdown')}"></button>
+    <button class="icon-eye" ng-click="editor.setMode('preview')" ng-class="{active: editor.isMode('preview')}"></button>
+    <button class="icon-code" ng-click="editor.setMode('html')" ng-class="{active: editor.isMode('html')}"></button>
+  </div>
+</header>

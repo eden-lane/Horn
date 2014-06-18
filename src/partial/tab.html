@@ -1,0 +1,5 @@
+<div class="content">
+  <toolbar></toolbar>
+  <codemirror ng-show="editor.isMode('markdown')"></codemirror>
+  <div hrn-preview ng-show="editor.isMode('preview')" ng-bind-html="editor.renderedText" class="preview"></preview>
+</div>

@@ -26,3 +26,9 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# bower components
+src/components/*
+
+# compiled styles
+src/styles/horn.css

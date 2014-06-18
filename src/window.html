@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru" ng-app="Horn">
+<head>
+	<meta charset="utf-8" />
+	<title>Horn</title>
+
+    <link rel="stylesheet" href="components/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="styles/kirin.css">
+
+    <script src="components/angular/angular.js"></script>
+    <script src="components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="components/codemirror/lib/codemirror.js"></script>
+    <script src="components/codemirror/addon/mode/overlay.js"></script>
+    <script src="components/codemirror/mode/markdown/markdown.js"></script>
+    <script src="components/codemirror/mode/gfm/gfm.js"></script>
+    <script src="components/codemirror/mode/javascript/javascript.js"></script>
+    <script src="components/codemirror/mode/xml/xml.js"></script>
+    <script src="components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="components/codemirror/mode/markdown/markdown.js"></script>
+    <script src="components/codemirror/mode/sql/sql.js"></script>
+    <link href="styles/horn.css" rel="stylesheet">
+    <link href="styles/icomoon.css" rel="stylesheet">
+    <script src="scripts/controllers.js"></script>
+
+</head>
+<body>
+  <div id="app" ng-controller="HornController">
+    <div class="tab" ng-repeat="tab in editor.tabs">
+      {{tab.name}}
+      <a href="" class="icon-close"></a>
+    </div>
+    <tab></tab>
+  </div>
+  <div hidden="hidden" id="text">
+  </div>
+</body>
+<script src="components/marked/lib/marked.js"></script>
