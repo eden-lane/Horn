@@ -25,7 +25,7 @@
 </head>
 <body>
   <div id="app" ng-controller="HornController">
-    <div class="tab" ng-repeat="tab in editor.tabs">
+    <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
       {{tab.name}}
       <a href="" class="icon-close"></a>
     </div>

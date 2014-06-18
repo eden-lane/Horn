@@ -36,7 +36,7 @@
         });
 
         cm.on('change', function (instance, changes) {
-          self.current.body = instance.getValue();
+          current.body = instance.getValue();
         });
       },
 
@@ -44,6 +44,11 @@
         mode = name;
         if (name != 'markdown')
           this.render();
+      },
+
+      setTab: function (number) {
+        current = tabs[number];
+        cm.setValue(current.body || "");
       },
 
       isMode: function (name) {
@@ -55,9 +60,8 @@
       },
 
       newFile: function () {
-        var self = this,
-            length = self.tabs.push({name: "untitled", body: ""});
-        self.current = self.tabs[length - 1];
+        var length = this.tabs.push({name: "untitled", body: ""});
+        this.current = this.tabs[length - 1];
       },
 
       /*
