@@ -35,6 +35,8 @@
           lineWrapping: true
         });
 
+        cm.setSize('100%', '80%');
+
         cm.on('change', function (instance, changes) {
           current.body = instance.getValue();
         });

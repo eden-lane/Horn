@@ -23,16 +23,12 @@
     <script src="scripts/controllers.js"></script>
 
 </head>
-<body>
-  <div id="app" ng-controller="HornController">
-    <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
-      {{tab.name}}
-      <a href="" class="icon-close"></a>
-    </div>
-    <tab></tab>
+<body ng-controller="HornController">
+  <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
+    {{tab.name}}
+    <a href="" class="icon-close"></a>
   </div>
-  <div hidden="hidden" id="text">
-  </div>
-</body>
+  <tab></tab>
 
 <script src="components/marked/lib/marked.js"></script>
+</body>
