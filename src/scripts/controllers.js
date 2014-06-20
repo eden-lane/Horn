@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var app = angular.module("Horn", ['ngSanitize']);
+  var app = angular.module("Horn.controllers", ["Horn.services", 'ngSanitize']);
 
   app.controller('HornController', ['$scope', 'editor', function ($scope, editor) {
     var current = { title: 'example', value: ''};
