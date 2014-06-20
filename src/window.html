@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" ng-app="Horn">
+<html lang="ru" >
 <head>
 	<meta charset="utf-8" />
 	<title>Horn</title>
@@ -9,6 +9,7 @@
 
     <script src="components/angular/angular.js"></script>
     <script src="components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="components/angular-route/angular-route.js"></script>
     <script src="components/codemirror/lib/codemirror.js"></script>
     <script src="components/codemirror/addon/mode/overlay.js"></script>
     <script src="components/codemirror/mode/markdown/markdown.js"></script>
@@ -24,14 +25,19 @@
     <script src="scripts/services.js"></script>
     <script src="scripts/controllers.js"></script>
 
-</head>
-<body ng-controller="HornController">
-  <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
-    {{tab.name}}
-    <span class="is-saved" ng-hide="tab.isSaved">●</span>
-    <a href="" class="icon-close"></a>
-  </div>
-  <tab></tab>
+    <script src="scripts/app.js"></script>
 
-<script src="components/marked/lib/marked.js"></script>
+</head>
+<body >
+  <div ng-app="Horn" ng-controller="Horncontroller">
+    <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
+      {{tab.name}}
+      <span class="is-saved" ng-hide="tab.isSaved">●</span>
+      <a href="" class="icon-close"></a>
+    </div>
+    <tab></tab>
+    <script src="components/marked/lib/marked.js"></script>
+  </div>
 </body>
+
+</html>
