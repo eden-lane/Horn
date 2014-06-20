@@ -12,6 +12,7 @@
    */
   app.factory('editor', ['$rootScope', function ($rootScope) {
     var mode = 'markdown',
+        switchingTabs = false,
         tabs = [
           {
             name: "untitled 1",
@@ -46,7 +47,12 @@
 
         cm.on('change', function (instance, changes) {
           current.body = instance.getValue();
-          current.isSaved = false;
+          if (!switchingTabs) {
+            current.isSaved = false;
+            $rootScope.$apply();
+          } else {
+            switchingTabs = false;
+          }
         });
       },
 
@@ -58,6 +64,7 @@
 
       setTab: function (number) {
         current = tabs[number];
+        switchingTabs = true;
         cm.setValue(current.body || "");
       },
 
@@ -122,6 +129,7 @@
             fileEntry.createWriter(function (writer) {
               writer.write(new Blob([cm.getValue()]));
               current.isSaved = true;
+              $rootScope.$apply();
             });
           });
         });
