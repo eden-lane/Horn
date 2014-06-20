@@ -14,7 +14,14 @@
     var mode = 'markdown',
         tabs = [
           {
-            name: "newfile"
+            name: "untitled 1",
+            isSaved: true
+          },
+          {
+            name: "untitled 2"
+          },
+          {
+            name: "untitled 3"
           }
         ],
         current = tabs[0],
@@ -39,6 +46,7 @@
 
         cm.on('change', function (instance, changes) {
           current.body = instance.getValue();
+          current.isSaved = false;
         });
       },
 
@@ -62,8 +70,13 @@
       },
 
       newFile: function () {
-        var length = this.tabs.push({name: "untitled", body: ""});
-        this.setTab(length - 1);
+        var self = this;
+
+        this.getNewFileName(function (newFileName) {
+          var length = self.tabs.push({name: newFileName, body: ""});
+          self.setTab(length - 1);
+          $rootScope.$apply();
+        });
       },
 
       /*
@@ -81,6 +94,23 @@
         });
       },
 
+      getNewFileName: function (callback) {
+        this.getDriveFiles(function (entries) {
+          var regExp = /untitled (\d*)(\.v\d*)?\.md/,
+              lastIndex = 0,
+              newFileName;
+          for (var i = 0, max = entries.length; i < max; i++) {
+            var entry = entries[i],
+                result = regExp.exec(entry.name);
+            if (result && +result[1] > lastIndex)
+              lastIndex = result[1];
+          };
+          lastIndex++;
+          newFileName = "untitled " + lastIndex;
+
+          callback(newFileName);
+        });
+      },
 
       /*
        * Saving file to Drive
@@ -91,6 +121,7 @@
           fs.root.getFile(current.name + '.md', {create: true}, function (fileEntry) {
             fileEntry.createWriter(function (writer) {
               writer.write(new Blob([cm.getValue()]));
+              current.isSaved = true;
             });
           });
         });
