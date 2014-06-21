@@ -29,7 +29,7 @@
 
 </head>
 <body >
-  <div ng-app="Horn" ng-controller="Horncontroller">
+  <div ng-app="Horn" ng-controller="HornController">
     <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
       {{tab.name}}
       <span class="is-saved" ng-hide="tab.isSaved">●</span>
