@@ -26,12 +26,14 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/editor/module.js"></script>
     <script src="scripts/toolbar/module.js"></script>
+    <script src="scripts/tabs/module.js"></script>
 
 </head>
 <body ng-app="Horn">
   <div ng-controller="BaseCtrl">
+    <tabs items="tabs"></tabs>
     <editor-area>
-      <toolbar actions='actions'></toolbar>
+      <toolbar actions="actions"></toolbar>
     </editor-area>
 <!--
     <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
