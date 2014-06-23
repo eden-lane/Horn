@@ -1,5 +1,3 @@
 'use strict';
 
-angular.module('editor', [function () {
-
-}])
+angular.module('Horn')

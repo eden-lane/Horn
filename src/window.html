@@ -22,14 +22,18 @@
     <link href="styles/horn.css" rel="stylesheet">
     <link href="styles/icomoon.css" rel="stylesheet">
 
-    <script src="scripts/services.js"></script>
-    <script src="scripts/controllers.js"></script>
 
     <script src="scripts/app.js"></script>
+    <script src="scripts/editor/module.js"></script>
+    <script src="scripts/toolbar/module.js"></script>
 
 </head>
-<body >
-  <div ng-app="Horn" ng-controller="HornController">
+<body ng-app="Horn">
+  <div ng-controller="BaseCtrl">
+    <editor-area>
+      <toolbar actions='actions'></toolbar>
+    </editor-area>
+<!--
     <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
       {{tab.name}}
       <span class="is-saved" ng-hide="tab.isSaved">●</span>
@@ -38,6 +42,7 @@
     <tab></tab>
     <script src="components/marked/lib/marked.js"></script>
   </div>
+-->
 </body>
 
 </html>

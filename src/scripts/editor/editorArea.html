@@ -1,0 +1,12 @@
+<div ng-transclude>
+  <!-- place for toolbar -->
+</div>
+<!-- codemirror -->
+<textarea style="width: 100%; height: 100%;" ng-show="isMode('md')">
+</textarea>
+
+<!-- preview -->
+<div class="preview" ng-show="isMode('preview')"></div>
+
+<!-- html -->
+<div class="html" ng-show="isMode('html')"></div>

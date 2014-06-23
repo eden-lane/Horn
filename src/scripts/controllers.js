@@ -1,15 +1,13 @@
 'use strict';
 
 (function () {
-  var app = angular.module("Horn.controllers", ["Horn.services", 'ngSanitize']);
+  /*var app = angular.module('Horn', ['ngSanitize']);
 
-  app.controller('HornController', ['$scope', 'editor', function ($scope, editor) {
-    var current = { title: 'example', value: ''};
+  app.controller('HornController', ['$scope', function ($scope) {
+
   }]);
-
+*/
   /*
-   * Toolbar Tab Directive
-   */
 
   app.directive('toolbar', ['editor', function (editor) {
     return {
@@ -31,7 +29,7 @@
 
   /*
    * Current Tab Directive
-   */
+
 
   app.directive('tab', [function () {
     return {
@@ -60,7 +58,7 @@
 
   /*
    * Views modes
-   */
+
 
   app.directive('codemirror', ['editor', function (editor) {
     return {
@@ -87,5 +85,5 @@
       }
     };
   }])
-
+  */
 })();
