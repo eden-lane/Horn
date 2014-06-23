@@ -8,11 +8,12 @@
     link: function (scope, element) {
       var textarea = element.find('textarea')[0];
       cm.init(textarea);
+
+      scope.isMode = cm.isMode;
+      scope.setMode = cm.setMode;
     },
     controller: function ($scope) {
 
-      $scope.isMode = cm.isMode;
-      $scope.setMode = cm.setMode;
 
     }
   }

@@ -32,3 +32,6 @@ src/components/*
 
 # compiled styles
 src/styles/horn.css
+
+# compiled modules
+src/scripts/*/module.js

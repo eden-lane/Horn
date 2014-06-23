@@ -7,5 +7,5 @@ angular
       newFile: function () {console.log('newfile')},
       setMode: cm.setMode,
       isMode: cm.isMode
-    }
+    };
   }]);

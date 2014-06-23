@@ -35,7 +35,7 @@
   obj.on = this.cm,
 
   obj.render = function () {
-    renderedText = marked(this.cm.getValue());
+    renderedText = marked(cm.getValue());
   },
 
   obj.isMode = function (name) {

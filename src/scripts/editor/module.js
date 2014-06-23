@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('Horn')
+
 /**
  * Service for CodeMirror
  */
@@ -38,7 +39,7 @@ angular.module('Horn')
   obj.on = this.cm,
 
   obj.render = function () {
-    renderedText = marked(this.cm.getValue());
+    renderedText = marked(cm.getValue());
   },
 
   obj.isMode = function (name) {
@@ -63,11 +64,12 @@ angular.module('Horn')
     link: function (scope, element) {
       var textarea = element.find('textarea')[0];
       cm.init(textarea);
+
+      scope.isMode = cm.isMode;
+      scope.setMode = cm.setMode;
     },
     controller: function ($scope) {
 
-      $scope.isMode = cm.isMode;
-      $scope.setMode = cm.setMode;
 
     }
   }
