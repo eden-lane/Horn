@@ -1,5 +1,5 @@
-<div class="tab" ng-repeat="(key, value) in tabs" ng-click="editor.setTab(key)">
-  {{key}}
-  <span class="is-saved" ng-hide="value.isSaved">●</span>
+<div class="tab" ng-repeat="tab in tabs" ng-click="setTab($index)">
+  {{tab.name}}
+  <span class="is-saved" ng-hide="tab.isSaved">●</span>
   <a href="" class="icon-close"></a>
 </div>

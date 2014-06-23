@@ -5,10 +5,11 @@ angular
     restrict: 'E',
     templateUrl: 'scripts/tabs/tabs.html',
     scope: {
-      tabs: '=items'
+      tabs: '=items',
+      current: '=current'
     },
-    link: function () {
-
+    link: function (scope) {
+      console.log(scope.current);
     }
   }
 });
