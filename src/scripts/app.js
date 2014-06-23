@@ -14,7 +14,17 @@ angular
       }
     ];
 
-    $scope.current = 'text';
+    $scope.current = $scope.tabs[0];
+
+    /**
+     * Called when user switches tab
+     * @param {Number} id - number of tab in array
+     */
+    $scope.onChangeTab = function (id) {
+      $scope.current.text = cm.getText();
+      $scope.current = $scope.tabs[id];
+      cm.setText($scope.current.text || "");
+    };
 
     $scope.actions = {
       newFile: function () {console.log('newfile')},

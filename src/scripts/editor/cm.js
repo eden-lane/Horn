@@ -47,5 +47,13 @@
     obj.render();
   };
 
+  obj.getText = function () {
+    return cm.getValue();
+  };
+
+  obj.setText = function (text) {
+    cm.setValue(text);
+  };
+
   return obj;
 })

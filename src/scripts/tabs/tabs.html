@@ -1,4 +1,4 @@
-<div class="tab" ng-repeat="tab in tabs" ng-click="setTab($index)">
+<div class="tab" ng-repeat="tab in tabs" ng-click="setTab($index)" ng-class="{active: isCurrent(tab)}">
   {{tab.name}}
   <span class="is-saved" ng-hide="tab.isSaved">●</span>
   <a href="" class="icon-close"></a>
