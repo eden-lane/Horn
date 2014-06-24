@@ -2,7 +2,7 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute'])
-  .controller('BaseCtrl', ['$scope', 'cm', function ($scope, cm) {
+  .controller('BaseCtrl', ['$scope', 'cm', 'db', function ($scope, cm, db) {
     $scope.tabs = [
       {
         name: 'Watch Dogs',
@@ -15,6 +15,8 @@ angular
     ];
 
     $scope.current = $scope.tabs[0];
+
+    db.getAll();
 
     /**
      * Called when user switches tab
