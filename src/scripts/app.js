@@ -16,7 +16,8 @@ angular
 
     $scope.current = $scope.tabs[0];
 
-    db.getAll();
+    console.log(db);
+    db.create();
 
     /**
      * Called when user switches tab
@@ -28,6 +29,9 @@ angular
       cm.setText($scope.current.text || "");
     };
 
+    /**
+     * Actions of toolbar
+     */
     $scope.actions = {
       newFile: function () {console.log('newfile')},
       setMode: cm.setMode,
