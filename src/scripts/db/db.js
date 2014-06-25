@@ -83,7 +83,6 @@ angular
     }, function () {
       create(id).then(function(dbFile) {
         cfs.set(dbFile.files.cfs, tab.body);
-        insert(dbFile);
       });
     });
   };
