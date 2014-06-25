@@ -16,24 +16,34 @@ angular
 
     $scope.current = $scope.tabs[0];
 
-    console.log(db);
-    db.create();
 
     /**
      * Called when user switches tab
      * @param {Number} id - number of tab in array
      */
     $scope.onChangeTab = function (id) {
-      $scope.current.text = cm.getText();
+      $scope.current.body = cm.getText();
       $scope.current = $scope.tabs[id];
-      cm.setText($scope.current.text || "");
+      cm.setText($scope.current.body || "");
     };
 
     /**
-     * Actions of toolbar
+     * Actions for the toolbar
      */
     $scope.actions = {
-      newFile: function () {console.log('newfile')},
+      newFile: function () {
+        $scope.tabs.push({
+          name: 'untitled',
+          isSaved: false
+        });
+        $scope.current = $scope.tabs[$scope.tabs.length - 1];
+      },
+      saveFile: function () {
+        var current = $scope.current;
+
+        current.body = cm.getText();
+        db.update(current.name, current);
+      },
       setMode: cm.setMode,
       isMode: cm.isMode
     };

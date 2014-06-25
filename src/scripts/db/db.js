@@ -8,19 +8,38 @@ angular
    * @return {Promise<TAFFY>} - database
    */
   function getDb () {
+    console.log(cfs);
     var deferred = $q.defer(),
-        promise = cfs.getFile('db.json', true);
+        promise = cfs.get('db.json', true);
     promise.then(function (body) {
-      var db = TAFFY(body)();
+      var db = jdb(body);
+      window.db = db;
+      console.log(db);
       deferred.resolve(db);
     });
 
     return deferred.promise;
-  },
+  };
 
-  function getAll () {
+  function saveDb (db) {
+    cfs.set('db.json', db);
+  };
 
-  },
+  /**
+   * @return dbFile
+   */
+  function get (id) {
+    var deferred = $q.defer();
+    getDb().then(function (db) {
+      var dbFile = db.get({name: id});
+      if (dbFile)
+        deferred.resolve(dbFile);
+      else
+        deferred.reject();
+    });
+
+    return deferred.promise;
+  }
 
   /**
    * @private
@@ -29,20 +48,21 @@ angular
   function insert(dbFile) {
     getDb().then(function (db) {
       db.insert(dbFile);
+      cfs.set('db.json', db.toJSON());
     });
-  },
+  };
 
   /**
    * @public
    * Create a new file in cfs and in the database
    * @return {Promise<DbFile>} - created DbFile
    */
-  function create () {
-    var promise = cfs.get(),
-        deferred = $q.defer();
-    promise.then(function (file) {
+  function create (name) {
+    var deferred = $q.defer();
+    cfs.get().then(function (file) {
+      console.log(file);
       var dbFile = {
-        name: 'untilted',
+        name: name || 'untilted',
         files: {
           cfs: file.name
         }
@@ -54,11 +74,23 @@ angular
     return deferred.promise;
   };
 
-
+  /**
+   * Update an entry in the db and in the cfs
+   */
+  function update (id, tab) {
+    get(id).then(function (dbFile) {
+      cfs.set(dbFile.files && dbFile.files.cfs, tab.body);
+    }, function () {
+      create(id).then(function(dbFile) {
+        cfs.set(dbFile.files.cfs, tab.body);
+        insert(dbFile);
+      });
+    });
+  };
 
   return {
-    getAll: getAll,
-    create: create
+    create: create,
+    update: update
   }
 
 }]);

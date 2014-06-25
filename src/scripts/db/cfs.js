@@ -8,6 +8,26 @@ angular
 .factory('cfs', ['$q', function ($q) {
 
   /**
+   * @private
+   * @return {Promise<FileEntry>}
+   */
+  function getFileEntry (name, createIfNotExists) {
+    var deferred = $q.defer();
+
+    if (!name)
+      throw "name of FileEntry cannot be undefined";
+
+    createIfNotExists = createIfNotExists || true;
+    chrome.syncFileSystem.requestFileSystem(function (fs) {
+      fs.root.getFile(name, {create: createIfNotExists}, function (fileEntry) {
+        deferred.resolve(fileEntry);
+      });
+    });
+
+    return deferred.promise;
+  };
+
+  /**
    * Getting or creating file
    * @return {Promise<File>} -
    *
@@ -20,16 +40,15 @@ angular
     var deferred = $q.defer();
 
     name = name || getNewFileName();
-    createIfNotExists = createIfNotExists || true;
 
-    chrome.syncFileSystem.requestFileSystem(function (fs) {
-      fs.root.getFile(name, {create: createIfNotExists}, function (fileEntry) {
+    getFileEntry(name, createIfNotExists)
+      .then(function (fileEntry) {
         fileEntry.file(function (file) {
           var reader = new FileReader();
           reader.onloadend = function (e) {
             var file = {
               name: name,
-              body: this
+              body: e.target.result
             };
 
             deferred.resolve(file);
@@ -38,9 +57,20 @@ angular
           reader.readAsText(file);
         });
       });
-    });
 
     return deferred.promise;
+  };
+
+  /**
+   * Set the new content of file
+   */
+  function set(name, body) {
+    getFileEntry(name).then(function (fileEntry) {
+      fileEntry.createWriter(function (fileWriter) {
+        var blob = new Blob([body]);
+        fileWriter.write(blob);
+      })
+    });
   };
 
   /**
@@ -51,6 +81,7 @@ angular
   };
 
   return {
-    get: get
+    get: get,
+    set: set
   }
 }]);
