@@ -42,7 +42,7 @@ angular
         var current = $scope.current;
 
         current.body = cm.getText();
-        db.update(current.name, current);
+        db.update(current);
       },
       setMode: cm.setMode,
       isMode: cm.isMode

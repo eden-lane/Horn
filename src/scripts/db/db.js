@@ -11,10 +11,8 @@ angular
     console.log(cfs);
     var deferred = $q.defer(),
         promise = cfs.get('db.json', true);
-    promise.then(function (body) {
-      var db = jdb(body);
-      window.db = db;
-      console.log(db);
+    promise.then(function (dbFile) {
+      var db = JSON.parse(dbFile.body);
       deferred.resolve(db);
     });
 
@@ -22,18 +20,21 @@ angular
   };
 
   function saveDb (db) {
+    if (typeof db == 'object')
+      db = JSON.stringify(db);
     cfs.set('db.json', db);
   };
 
   /**
+   * @param {Object} filter - monogo-like filter
    * @return dbFile
    */
-  function get (id) {
+  function get (filter) {
     var deferred = $q.defer();
     getDb().then(function (db) {
-      var dbFile = db.get({name: id});
-      if (dbFile)
-        deferred.resolve(dbFile);
+      var dbFile = sift(filter, db);
+      if (dbFile && dbFile.length)
+        deferred.resolve(dbFile[0]);
       else
         deferred.reject();
     });
@@ -47,7 +48,7 @@ angular
    */
   function insert(dbFile) {
     getDb().then(function (db) {
-      db.insert(dbFile);
+      db.push(dbFile);
       cfs.set('db.json', db.toJSON());
     });
   };
@@ -60,7 +61,6 @@ angular
   function create (name) {
     var deferred = $q.defer();
     cfs.get().then(function (file) {
-      console.log(file);
       var dbFile = {
         name: name || 'untilted',
         files: {
@@ -77,12 +77,22 @@ angular
   /**
    * Update an entry in the db and in the cfs
    */
-  function update (id, tab) {
-    get(id).then(function (dbFile) {
+  //TODO: Refactoring
+  function update (tab) {
+    var filter;
+    if (tab.files && tab.files.cfs)
+      filter = {files: {cfs: tab.files.cfs}};
+    else
+      filter = {name: tab.name};
+
+    get(filter).then(function (dbFile) {
       cfs.set(dbFile.files && dbFile.files.cfs, tab.body);
     }, function () {
-      create(id).then(function(dbFile) {
-        cfs.set(dbFile.files.cfs, tab.body);
+      create(tab.name).then(function(dbFile) {
+        var name = null;
+        if (dbFile.files && dbFile.files.cfs)
+          name = dbFile.files.cfs;
+        cfs.set(name, tab.body);
       });
     });
   };

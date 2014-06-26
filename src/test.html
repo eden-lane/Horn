@@ -1,0 +1,43 @@
+<!doctype html>
+<head>
+
+</head>
+<body>
+  <script>
+    var array = [
+      {
+        name: 'Watch dogs',
+        files: {
+          cfs: 'qwerty.md',
+          tumblr: {
+            id: 'qwerty',
+            state: 'draft'
+          }
+        },
+        tags: [
+          'draft',
+          'blog'
+        ]
+      },
+      {
+        name: 'About Horn',
+        files: {
+          cfs: 'asdfg.md',
+          tumblr: {
+            id: 'asdfg',
+            state: 'public'
+          }
+        },
+        tags: [
+          'dev',
+          'draft'
+        ]
+      }
+    ];
+
+  var f1 = {name: 'Watch dogs'},
+      f2 = {tags: {$in: ['draft']}},
+      f3 = {files: {cfs: 'asdfg.md'}};
+  </script>
+  <script src="https://rawgithub.com/crcn/sift.js/master/sift.min.js" type="text/javascript"></script>
+</body>
