@@ -16,6 +16,7 @@
         "directory"
       ]
     },
-    "syncFileSystem"
+    "syncFileSystem",
+    "storage"
   ]
 }

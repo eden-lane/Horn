@@ -63,9 +63,7 @@ angular
     cfs.get().then(function (file) {
       var dbFile = {
         name: name || 'untilted',
-        files: {
-          cfs: file.name
-        }
+        cfs: file.name
       };
       insert(dbFile);
       deferred.resolve(dbFile);
@@ -80,18 +78,18 @@ angular
   //TODO: Refactoring
   function update (tab) {
     var filter;
-    if (tab.files && tab.files.cfs)
-      filter = {files: {cfs: tab.files.cfs}};
+    if (tab.cfs)
+      filter = {cfs: tab.cfs};
     else
       filter = {name: tab.name};
 
     get(filter).then(function (dbFile) {
-      cfs.set(dbFile.files && dbFile.files.cfs, tab.body);
+      cfs.set(dbFile.cfs, tab.body);
     }, function () {
       create(tab.name).then(function(dbFile) {
         var name = null;
-        if (dbFile.files && dbFile.files.cfs)
-          name = dbFile.files.cfs;
+        if (dbFile.cfs)
+          name = dbFile.cfs;
         cfs.set(name, tab.body);
       });
     });
