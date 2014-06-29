@@ -2,17 +2,9 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
-  .controller('BaseCtrl', ['$scope', 'cm', 'db', 'settings', 'ngDialog', function ($scope, cm, db, settings, ngDialog) {
+  .controller('BaseCtrl', ['$rootScope', '$scope', 'cm', 'db', 'settings', 'ngDialog', function ($rootScope, $scope, cm, db, settings, ngDialog) {
 
     $scope.tabs = [
-      {
-        name: 'Watch Dogs',
-        isSaved: true
-      },
-      {
-        name: 'untitled 1',
-        isSaved: false
-      }
     ];
 
     $scope.current = $scope.tabs[0];
@@ -57,7 +49,8 @@ angular
       newFile: function () {
         $scope.tabs.push({
           name: 'untitled',
-          isSaved: false
+          isSaved: false,
+          isNew: true
         });
         $scope.current = $scope.tabs[$scope.tabs.length - 1];
       },
@@ -66,20 +59,20 @@ angular
        * Save file to database and cfs
        */
       saveFile: function () {
-        var dialog = ngDialog.open({
-          template: 'templates/newfile.html',
-          scope: $scope
-        });
-        window.s = $scope;
-        window.x = dialog;
-        return;
         var current = $scope.current;
+
+        if (current.isNew)
+          ngDialog.open({
+            template: 'templates/newfile.html',
+            scope: $scope
+          });
+        return;
+
         current.body = cm.getText();
 
         if (current.cfs)
           db.update(current);
         else {
-
           db.create(current);
         };
       },
