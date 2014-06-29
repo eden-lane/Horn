@@ -1,8 +1,9 @@
 'use strict';
 
 angular
-  .module('Horn', ['ngSanitize', 'ngRoute'])
-  .controller('BaseCtrl', ['$scope', 'cm', 'db', 'settings', function ($scope, cm, db, settings) {
+  .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
+  .controller('BaseCtrl', ['$scope', 'cm', 'db', 'settings', 'ngDialog', function ($scope, cm, db, settings, ngDialog) {
+
     $scope.tabs = [
       {
         name: 'Watch Dogs',
@@ -14,27 +15,28 @@ angular
       }
     ];
 
+    $scope.current = $scope.tabs[0];
+    $scope.text = "name it !";
+
     /**
-     * @return array of tabs without unnecessary information
-     * for storing it in settings
+     * Saves current tabs to settings (if they are saved)
      */
-    function getCompactTabs () {
+    function saveTabsToSettings () {
       var result = [];
       for (var i = 0, max = $scope.tabs.length; i < max; i++) {
-        var tab = $scope.tabs[i],
-            clone = {};
+        var tab = $scope.tabs[i];
         if (tab.cfs)
-          clone.cfs = tab.cfs;
-        else
-          clone.name = tab.name;
-
-        result.push(clone);
+          result.push({cfs: tab.cfs});
       };
+      settings.set('tabs', result);
 
-      return result;
+      //TODO: Save every tab in cfs
     };
 
-    $scope.current = $scope.tabs[0];
+    chrome.storage.sync.get('tabs', function (obj) {
+      console.log(obj.tabs);
+    });
+
     /**
      * Called when user switches tab
      * @param {Number} id - number of tab in array
@@ -49,22 +51,41 @@ angular
      * Actions for the toolbar
      */
     $scope.actions = {
+      /**
+       * Creates a new tab
+       */
       newFile: function () {
         $scope.tabs.push({
           name: 'untitled',
           isSaved: false
         });
         $scope.current = $scope.tabs[$scope.tabs.length - 1];
-        settings.set('tabs', getCompactTabs());
       },
+
+      /**
+       * Save file to database and cfs
+       */
       saveFile: function () {
+        var dialog = ngDialog.open({
+          template: 'templates/newfile.html',
+          scope: $scope
+        });
+        window.s = $scope;
+        window.x = dialog;
+        return;
         var current = $scope.current;
-
         current.body = cm.getText();
-        db.update(current);
 
+        if (current.cfs)
+          db.update(current);
+        else {
+
+          db.create(current);
+        };
       },
       setMode: cm.setMode,
       isMode: cm.isMode
     };
+
   }]);
+

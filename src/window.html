@@ -4,12 +4,13 @@
 	<meta charset="utf-8" />
 	<title>Horn</title>
 
-    <link rel="stylesheet" href="components/codemirror/lib/codemirror.css">
     <link rel="stylesheet" href="styles/kirin.css">
 
     <script src="components/angular/angular.js"></script>
     <script src="components/angular-sanitize/angular-sanitize.js"></script>
     <script src="components/angular-route/angular-route.js"></script>
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="components/codemirror/lib/codemirror.css">
     <script src="components/codemirror/lib/codemirror.js"></script>
     <script src="components/codemirror/addon/mode/overlay.js"></script>
     <script src="components/codemirror/mode/markdown/markdown.js"></script>
@@ -19,6 +20,12 @@
     <script src="components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
     <script src="components/codemirror/mode/markdown/markdown.js"></script>
     <script src="components/codemirror/mode/sql/sql.js"></script>
+    <!-- ngDialog -->
+    <script src="components/ngDialog/js/ngDialog.js"></script>
+    <link href="components/ngDialog/css/ngDialog-theme-default.css" rel="stylesheet">
+    <link href="components/ngDialog/css/ngDialog-theme-plain.css" rel="stylesheet">
+    <link href="components/ngDialog/css/ngDialog.css">
+    <!-- -->
     <link href="styles/horn.css" rel="stylesheet">
     <link href="styles/icomoon.css" rel="stylesheet">
 
@@ -38,17 +45,7 @@
     <editor-area>
       <toolbar actions="actions"></toolbar>
     </editor-area>
-<!--
-    <div class="tab" ng-repeat="tab in editor.tabs" ng-click="editor.setTab($index)">
-      {{tab.name}}
-      <span class="is-saved" ng-hide="tab.isSaved">●</span>
-      <a href="" class="icon-close"></a>
-    </div>
-    <tab></tab>
-  </div>
--->
     <script src="components/marked/lib/marked.js"></script>
-    <script src="components/siftjs/sift.js"></script>
 </body>
 
 </html>
