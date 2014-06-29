@@ -25,6 +25,8 @@ angular
       //TODO: Save every tab in cfs
     };
 
+    window.tabs = $scope.tabs;
+
     chrome.storage.sync.get('tabs', function (obj) {
       console.log(obj.tabs);
     });
@@ -58,15 +60,19 @@ angular
       /**
        * Save file to database and cfs
        */
-      saveFile: function () {
+      saveFile: function (isNamed) {
         var current = $scope.current;
 
-        if (current.isNew)
+        if (isNamed)
+          delete current.isNew;
+
+        if (current.isNew) {
           ngDialog.open({
             template: 'templates/newfile.html',
             scope: $scope
           });
-        return;
+          return;
+        }
 
         current.body = cm.getText();
 

@@ -72,12 +72,10 @@ angular
 
     var deferred = $q.defer();
     cfs.get().then(function (file) {
-      var dbFile = {
-        name: tab.name,
-        cfs: file.name
-      };
-      insert(dbFile);
-      deferred.resolve(dbFile);
+      tab.cfs = file.name;
+      insert(tab);
+      update(tab);
+      deferred.resolve(tab);
     });
 
     return deferred.promise;
@@ -87,11 +85,10 @@ angular
    * Update an entry in the db and in the cfs
    */
   function update (tab) {
-    //TODO: Refactoring
     if (!tab.cfs)
       throw 'This file doesn\'t exists in database';
     else
-    get(filter).then(function (dbFile) {
+    get({cfs: tab.cfs}).then(function (dbFile) {
       cfs.set(dbFile.cfs, tab.body);
     });
   };
