@@ -30,7 +30,6 @@ angular
     cm.setup = function (cm) {
       cm.on('change', function () {
         $scope.current.isSaved = false;
-        $scope.$apply();
       });
     };
 
