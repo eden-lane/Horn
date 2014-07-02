@@ -25,7 +25,17 @@ angular
       //TODO: Save every tab in cfs
     };
 
-    window.tabs = $scope.tabs;
+    function loadTabsFromSettings () {
+      settings.get('tabs', function(it) {
+        for (var i = 0, max = it.tabs.length; i < max; i++) {
+          //TODO: db.open;
+        };
+      });
+    };
+
+    $scope.$watch('tabs.length', function () {
+      saveTabsToSettings();
+    }, true);
 
     cm.setup = function (cm) {
       cm.on('change', function () {
