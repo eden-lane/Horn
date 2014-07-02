@@ -27,10 +27,6 @@ angular
 
     window.tabs = $scope.tabs;
 
-    chrome.storage.sync.get('tabs', function (obj) {
-      console.log(obj.tabs);
-    });
-
     /**
      * Called when user switches tab
      * @param {Number} id - number of tab in array

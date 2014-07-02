@@ -65,6 +65,7 @@ angular
    * Set the new content of file
    */
   function set(name, body) {
+    console.log('cfs:set', name, body);
     getFileEntry(name).then(function (fileEntry) {
       fileEntry.createWriter(function (fileWriter) {
         var blob = new Blob([body]);
@@ -80,8 +81,13 @@ angular
     return +new Date + ".md";
   };
 
+  function on(callback) {
+    chrome.syncFileSystem.onFileStatusChanged.addListener(callback);
+  };
+
   return {
     get: get,
-    set: set
+    set: set,
+    on: on
   }
 }]);
