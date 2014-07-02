@@ -55,6 +55,8 @@ angular
    * Insert file in the database and save
    */
   function insert(dbFile) {
+    delete dbFile.$$hash;
+    delete dbFile.body;
     getDb().then(function (db) {
       db.push(dbFile);
       saveDb(db);
