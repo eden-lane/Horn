@@ -48,9 +48,11 @@ angular
      * @param {Number} id - number of tab in array
      */
     $scope.onChangeTab = function (id) {
-      $scope.current.body = cm.getText();
+      if ($scope.current)
+        $scope.current.body = cm.getText();
       $scope.current = $scope.tabs[id];
       cm.setText($scope.current.body || "");
+      settings.set('current', {cfs: $scope.current.cfs});
     };
 
     /**
@@ -61,12 +63,12 @@ angular
        * Creates a new tab
        */
       newFile: function () {
-        $scope.tabs.push({
+        var l = $scope.tabs.push({
           name: 'untitled',
           isSaved: false,
           isNew: true
         });
-        $scope.current = $scope.tabs[$scope.tabs.length - 1];
+        $scope.onChangeTab(l - 1);
       },
 
       /**
