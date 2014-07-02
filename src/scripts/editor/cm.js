@@ -10,7 +10,6 @@
   var obj = {};
   obj.init = function (textarea) {
     var self = this;
-
     cm = CodeMirror.fromTextArea(textarea, {
       mode: 'gfm',
       theme: 'kirin',
@@ -19,28 +18,18 @@
     });
 
     cm.setSize('100%', '80%');
-/*
-    cm.on('change', function (instance, changes) {
-      current.body = instance.getValue();
-      if (!switchingTabs) {
-        current.isSaved = false;
-        $rootScope.$apply();
-      } else {
-        switchingTabs = false;
-      }
-    });
-*/
-  },
 
-  obj.on = this.cm,
+    if (angular.isFunction(obj.setup))
+      obj.setup(cm);
+  };
 
   obj.render = function () {
     renderedText = marked(cm.getValue());
-  },
+  };
 
   obj.isMode = function (name) {
     return mode === name;
-  },
+  };
 
   obj.setMode = function (name) {
     mode = name;
@@ -54,6 +43,11 @@
   obj.setText = function (text) {
     cm.setValue(text);
   };
+
+  /**
+   * Setup cm after init
+   */
+  obj.setup = null;
 
   return obj;
 })

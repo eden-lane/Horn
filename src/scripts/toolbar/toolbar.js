@@ -12,7 +12,7 @@
  */
 angular
   .module('Horn')
-  .directive('toolbar', function () {
+  .directive('toolbar', [function () {
     return {
       restrict: 'E',
       templateUrl: 'scripts/toolbar/toolbar.html',
@@ -26,7 +26,7 @@ angular
       },
       link: function (scope) {
         if (!scope.actions)
-          throw 'Toolbar needs an `actions` object with callbacks for my functions';
+          throw 'Toolbar needs an `actions` object with callbacks for functions';
 
         scope.newFile = scope.actions.newFile;
         scope.openFile = scope.actions.openFile ;
@@ -36,4 +36,4 @@ angular
         scope.isMode = scope.actions.isMode;
       }
     }
-  })
+  }]);

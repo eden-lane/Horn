@@ -27,6 +27,13 @@ angular
 
     window.tabs = $scope.tabs;
 
+    cm.setup = function (cm) {
+      cm.on('change', function () {
+        $scope.current.isSaved = false;
+        $scope.$apply();
+      });
+    };
+
     /**
      * Called when user switches tab
      * @param {Number} id - number of tab in array
@@ -74,9 +81,10 @@ angular
 
         if (current.cfs)
           db.update(current);
-        else {
+        else
           db.create(current);
-        };
+
+        current.isSaved = true;
       },
       setMode: cm.setMode,
       isMode: cm.isMode
