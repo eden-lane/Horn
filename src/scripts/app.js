@@ -30,7 +30,7 @@ angular
     };
 
     function saveCurrentTabToSettings() {
-
+      settings.set('current', {cfs: $scope.current.cfs});
     };
 
     function loadTabsFromSettings () {
@@ -39,11 +39,13 @@ angular
         settings.get('current', function (it) {
           var current = it.current;
           for (var i = 0, max = tabs.length; i < max; i++) {
-            db.get(tabs[i], true).then(function (t) {
-              $scope.tabs.push(t);
-              if (t.cfs === current.cfs)
-                $scope.current = t;
-            });
+            (function (i) {
+              db.get(tabs[i], true).then(function (t) {
+                $scope.tabs.push(t);
+                if (t.cfs === current.cfs)
+                  $scope.onChangeTab(i);
+              });
+            })(i);
           };
 
         })
@@ -71,6 +73,7 @@ angular
         $scope.current.body = cm.getText();
       $scope.current = $scope.tabs[id];
       cm.setText($scope.current.body || "");
+      saveCurrentTabToSettings();
     };
 
     /**
@@ -88,7 +91,7 @@ angular
         });
         $scope.onChangeTab(l - 1);
         db.create($scope.current).then(function () {
-          settings.set('current', {cfs: $scope.current.cfs});
+          saveCurrentTabToSettings();
         });
       },
 
