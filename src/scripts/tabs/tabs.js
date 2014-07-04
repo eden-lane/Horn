@@ -16,7 +16,7 @@ angular
       };
 
       scope.isCurrent = function (obj) {
-        return scope.current.name === obj.name;
+        return scope.current.cfs === obj.cfs;
       }
     }
   }
