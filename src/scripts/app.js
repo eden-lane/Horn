@@ -9,8 +9,10 @@ angular
 
     $scope.current = {};
 
+    loadTabsFromSettings();
+
     /**
-     * Saves current tabs to settings (if they are saved)
+     * Saves current tabs to settings
      */
     function saveTabsToSettings () {
       if ($scope.tabs.length == 0)
@@ -18,8 +20,7 @@ angular
       var result = [];
       for (var i = 0, max = $scope.tabs.length; i < max; i++) {
         var tab = $scope.tabs[i];
-        if (tab.cfs)
-          result.push({cfs: tab.cfs});
+        result.push({cfs: tab.cfs});
       };
       settings.set('tabs', result);
 
@@ -39,10 +40,6 @@ angular
         };
       });
     };
-
-
-
-    loadTabsFromSettings();
 
     $scope.$watch('tabs.length', function () {
       saveTabsToSettings();
@@ -80,7 +77,10 @@ angular
           isNew: true
         });
         $scope.onChangeTab(l - 1);
+        db.create($scope.current);
       },
+
+
 
       /**
        * Save file to database and cfs
@@ -88,34 +88,17 @@ angular
       saveFile: function (isNamed) {
         var current = $scope.current;
 
-        if (isNamed)
-          delete current.isNew;
-
-        if (current.isNew) {
-          ngDialog.open({
-            template: 'templates/newfile.html',
-            scope: $scope
-          });
-          return;
-        }
-
         current.body = cm.getText();
 
-        var promise;
-
-        if (current.cfs)
-          promise = db.update(current);
-        else
-          promise = db.create(current);
-
-        promise.then(function () {
+        db.update(current).then(function () {
+          delete current.isNew;
           current.isSaved = true;
           saveTabsToSettings();
         });
-
-        ngDialog.closeAll();
       },
+
       setMode: cm.setMode,
+
       isMode: cm.isMode
     };
 

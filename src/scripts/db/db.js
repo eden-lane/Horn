@@ -8,16 +8,17 @@ angular
   var getDb = (function () {
     var database,
         deferred = $q.defer();
-    window.db = database;
     function init () {
       cfs.on(function (fileInfo) {
         if (fileInfo.fileEntry.name == 'db.json') {
-          console.log('db.json has been updated', fileInfo);
+          console.log('db: database has been updated', fileInfo);
           fileInfo.fileEntry.file(function (file) {
             var reader = new FileReader();
             reader.onloadend = function (e) {
-              console.log(e.target.result);
-              database = JSON.parse(e.target.result);
+              if (e.target.result)
+                database = JSON.parse(e.target.result);
+              else
+                database = [];
             };
 
             reader.readAsText(file);
@@ -57,6 +58,8 @@ angular
     cfs.set('db.json', db);
   };
 
+
+
   /**
    * @param {Object} filter - monogo-like filter
    * @return dbFile
@@ -64,10 +67,7 @@ angular
   function get (filter) {
     var deferred = $q.defer();
     getDb().then(function (db) {
-      window.db = db;
       var dbFile = sift(filter, db);
-      console.log('db:get:filter', filter);
-      console.log('db:get:dbFile', dbFile);
       if (dbFile && dbFile.length)
         deferred.resolve(dbFile[0]);
       else
@@ -77,11 +77,14 @@ angular
     return deferred.promise;
   }
 
+
+
   /**
    * @private
    * Insert file in the database and save
    */
   function insert(tab) {
+    console.log('db:insert');
     var dbFile = angular.copy(tab);
 
     delete dbFile.$$hashKey;
@@ -94,6 +97,8 @@ angular
       update(tab);
     });
   };
+
+
 
   /**
    * @public
@@ -113,6 +118,8 @@ angular
 
     return deferred.promise;
   };
+
+
 
   /**
    * Update an entry in the db and in the cfs
