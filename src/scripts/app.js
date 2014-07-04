@@ -35,12 +35,18 @@ angular
 
     function loadTabsFromSettings () {
       settings.get('tabs', function(it) {
-        console.log('saved tabs', it.tabs);
-        for (var i = 0, max = it.tabs.length; i < max; i++) {
-          db.get(it.tabs[i], true).then(function (t) {
-            $scope.tabs.push(t);
-          });
-        };
+        var tabs = it.tabs;
+        settings.get('current', function (it) {
+          var current = it.current;
+          for (var i = 0, max = tabs.length; i < max; i++) {
+            db.get(tabs[i], true).then(function (t) {
+              $scope.tabs.push(t);
+              if (t.cfs === current.cfs)
+                $scope.current = t;
+            });
+          };
+
+        })
       });
     };
 
