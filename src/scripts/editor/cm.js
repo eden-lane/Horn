@@ -1,6 +1,8 @@
 /**
  * Service for CodeMirror
  */
+angular
+.module('Horn')
 .factory('cm', function () {
 
   var cm,

@@ -1,3 +1,5 @@
+angular
+.module('Horn')
 .directive('editorArea', ['cm', function (cm) {
   var mode = 'markdown';
 

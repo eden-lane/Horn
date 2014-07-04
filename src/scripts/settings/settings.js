@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('Horn')
+angular
+.module('Horn')
 .service('settings', [function () {
 
   function set(name, value, callback) {

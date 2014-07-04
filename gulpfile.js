@@ -42,6 +42,12 @@ gulp.task('watch', function () {
   gulp.watch(['src/scripts/*/*.js', '!src/scripts/*/module.js'], ['build']);
 });
 
+gulp.task('build.v2', function () {
+  gulp.src(['src/scripts/*/*.js', '!src/scripts/*/module.js'])
+    .pipe(concat('module.js'))
+    .pipe(gulp.dest('src/scripts/'));
+});
+
 /*gulp.task('build', function () {
   gulp.src(paths.services)
     .pipe(concat('services.js'))
