@@ -11,7 +11,6 @@ angular
     function init () {
       cfs.on(function (fileInfo) {
         if (fileInfo.fileEntry.name == 'db.json') {
-          console.log('db: database has been updated', fileInfo);
           fileInfo.fileEntry.file(function (file) {
             var reader = new FileReader();
             reader.onloadend = function (e) {
@@ -54,7 +53,6 @@ angular
   function saveDb (db) {
     if (typeof db == 'object')
       db = JSON.stringify(db);
-    console.log('saveDb', db);
     cfs.set('db.json', db);
   };
 
@@ -64,14 +62,19 @@ angular
    * @param {Object} filter - monogo-like filter
    * @return dbFile
    */
-  function get (filter) {
+  function get (filter, withContent) {
     var deferred = $q.defer();
     getDb().then(function (db) {
-      var dbFile = sift(filter, db);
-      if (dbFile && dbFile.length)
-        deferred.resolve(dbFile[0]);
+      var dbFile = sift(filter, db)[0];
+      if (withContent) {
+        cfs.get(dbFile.cfs, false).then(function (file) {
+          console.log(file);
+          dbFile.body = file.body;
+          deferred.resolve(dbFile);
+        });
+      }
       else
-        deferred.reject();
+        deferred.resolve(dbFile);
     });
 
     return deferred.promise;
@@ -84,7 +87,6 @@ angular
    * Insert file in the database and save
    */
   function insert(tab) {
-    console.log('db:insert');
     var dbFile = angular.copy(tab);
 
     delete dbFile.$$hashKey;
@@ -129,7 +131,7 @@ angular
       throw 'This file doesn\'t exists in database';
     else
     return get({cfs: tab.cfs}).then(function (dbFile) {
-      cfs.set(dbFile.cfs, tab.body);
+      cfs.set(dbFile.cfs, tab.body || '');
     });
   };
 

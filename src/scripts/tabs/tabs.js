@@ -11,7 +11,6 @@ angular
     },
     link: function (scope) {
       scope.setTab = function (id) {
-        console.log(scope);
         scope.onChangeTab(id);
       };
 

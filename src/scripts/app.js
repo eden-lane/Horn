@@ -9,6 +9,8 @@ angular
 
     $scope.current = {};
 
+    window.tabs = $scope.tabs;
+
     loadTabsFromSettings();
 
     /**
@@ -33,8 +35,9 @@ angular
 
     function loadTabsFromSettings () {
       settings.get('tabs', function(it) {
+        console.log('saved tabs', it.tabs);
         for (var i = 0, max = it.tabs.length; i < max; i++) {
-          db.get(it.tabs[i]).then(function (t) {
+          db.get(it.tabs[i], true).then(function (t) {
             $scope.tabs.push(t);
           });
         };
@@ -42,9 +45,11 @@ angular
     };
 
     $scope.$watch('tabs.length', function () {
-      saveTabsToSettings();
     }, true);
 
+    /**
+     * Setup for cm editor
+     */
     cm.setup = function (cm) {
       cm.on('change', function () {
         $scope.current.isSaved = false;
@@ -60,7 +65,6 @@ angular
         $scope.current.body = cm.getText();
       $scope.current = $scope.tabs[id];
       cm.setText($scope.current.body || "");
-      settings.set('current', {cfs: $scope.current.cfs});
     };
 
     /**
@@ -77,7 +81,9 @@ angular
           isNew: true
         });
         $scope.onChangeTab(l - 1);
-        db.create($scope.current);
+        db.create($scope.current).then(function () {
+          settings.set('current', {cfs: $scope.current.cfs});
+        });
       },
 
 
