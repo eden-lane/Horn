@@ -8,7 +8,6 @@ angular
     ];
 
     $scope.current = $scope.tabs[0];
-    $scope.text = "name it !";
 
     /**
      * Saves current tabs to settings (if they are saved)
