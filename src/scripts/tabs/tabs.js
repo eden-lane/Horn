@@ -7,11 +7,13 @@ angular
     scope: {
       tabs: '=items',
       current: '=',
-      onChangeTab: '='
+      changeTab: '=',
+      closeTab: '=',
+      renameTab: '='
     },
     link: function (scope) {
       scope.setTab = function (id) {
-        scope.onChangeTab(id);
+        scope.changeTab(id);
       };
 
       scope.isCurrent = function (obj) {

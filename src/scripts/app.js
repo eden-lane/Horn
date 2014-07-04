@@ -87,6 +87,14 @@ angular
       }
     };
 
+
+    $scope.renameTab = function (id) {
+      ngDialog.open({
+        template: 'templates/fileSettings.html',
+        scope: $scope
+      });
+    };
+
     /**
      * Actions for the toolbar
      */
