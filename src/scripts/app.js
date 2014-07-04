@@ -7,12 +7,14 @@ angular
     $scope.tabs = [
     ];
 
-    $scope.current = $scope.tabs[0];
+    $scope.current = {};
 
     /**
      * Saves current tabs to settings (if they are saved)
      */
     function saveTabsToSettings () {
+      if ($scope.tabs.length == 0)
+        return;
       var result = [];
       for (var i = 0, max = $scope.tabs.length; i < max; i++) {
         var tab = $scope.tabs[i];
@@ -24,13 +26,23 @@ angular
       //TODO: Save every tab in cfs
     };
 
+    function saveCurrentTabToSettings() {
+
+    };
+
     function loadTabsFromSettings () {
       settings.get('tabs', function(it) {
         for (var i = 0, max = it.tabs.length; i < max; i++) {
-          //TODO: db.open;
+          db.get(it.tabs[i]).then(function (t) {
+            $scope.tabs.push(t);
+          });
         };
       });
     };
+
+
+
+    loadTabsFromSettings();
 
     $scope.$watch('tabs.length', function () {
       saveTabsToSettings();
@@ -89,12 +101,19 @@ angular
 
         current.body = cm.getText();
 
-        if (current.cfs)
-          db.update(current);
-        else
-          db.create(current);
+        var promise;
 
-        current.isSaved = true;
+        if (current.cfs)
+          promise = db.update(current);
+        else
+          promise = db.create(current);
+
+        promise.then(function () {
+          current.isSaved = true;
+          saveTabsToSettings();
+        });
+
+        ngDialog.closeAll();
       },
       setMode: cm.setMode,
       isMode: cm.isMode

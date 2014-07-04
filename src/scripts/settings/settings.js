@@ -4,6 +4,7 @@ angular.module('Horn')
 .service('settings', [function () {
 
   function set(name, value, callback) {
+    console.log('settings:save', name, value);
     var item = {};
     item[name] = value;
 

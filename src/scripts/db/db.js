@@ -64,7 +64,10 @@ angular
   function get (filter) {
     var deferred = $q.defer();
     getDb().then(function (db) {
+      window.db = db;
       var dbFile = sift(filter, db);
+      console.log('db:get:filter', filter);
+      console.log('db:get:dbFile', dbFile);
       if (dbFile && dbFile.length)
         deferred.resolve(dbFile[0]);
       else
@@ -118,12 +121,13 @@ angular
     if (!tab.cfs)
       throw 'This file doesn\'t exists in database';
     else
-    get({cfs: tab.cfs}).then(function (dbFile) {
+    return get({cfs: tab.cfs}).then(function (dbFile) {
       cfs.set(dbFile.cfs, tab.body);
     });
   };
 
   return {
+    get: get,
     create: create,
     update: update
   }
