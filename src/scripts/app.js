@@ -43,7 +43,7 @@ angular
               db.get(tabs[i], true).then(function (t) {
                 $scope.tabs.push(t);
                 if (t.cfs === current.cfs)
-                  $scope.onChangeTab(i);
+                  $scope.changeTab(i);
               });
             })(i);
           };
@@ -68,12 +68,23 @@ angular
      * Called when user switches tab
      * @param {Number} id - number of tab in array
      */
-    $scope.onChangeTab = function (id) {
+    $scope.changeTab = function (id) {
       if ($scope.current)
         $scope.current.body = cm.getText();
       $scope.current = $scope.tabs[id];
       cm.setText($scope.current.body || "");
       saveCurrentTabToSettings();
+    };
+
+
+
+    $scope.closeTab = function (id) {
+      var tab = $scope.tabs[id];
+      if (tab.isNew) {
+
+      } else {
+
+      }
     };
 
     /**
@@ -89,7 +100,7 @@ angular
           isSaved: false,
           isNew: true
         });
-        $scope.onChangeTab(l - 1);
+        $scope.changeTab(l - 1);
         db.create($scope.current).then(function () {
           saveCurrentTabToSettings();
         });
@@ -109,6 +120,18 @@ angular
           delete current.isNew;
           current.isSaved = true;
           saveTabsToSettings();
+        });
+      },
+
+      openFile: function (name) {
+        var self = this;
+        db.getDb().then(function (db) {
+          self.scope = $scope.$new(true);
+          self.scope.files = db;
+          ngDialog.open({
+            template: 'templates/openFile.html',
+            scope: self.scope
+          });
         });
       },
 

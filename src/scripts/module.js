@@ -46,7 +46,6 @@ angular
         fileEntry.file(function (file) {
           var reader = new FileReader();
           reader.onloadend = function (e) {
-            console.log('getFileEntry', name, e.target.result);
             var file = {
               name: name,
               body: e.target.result
@@ -162,7 +161,6 @@ angular
       var dbFile = sift(filter, db)[0];
       if (withContent) {
         cfs.get(dbFile.cfs, false).then(function (file) {
-          console.log(file);
           dbFile.body = file.body;
           deferred.resolve(dbFile);
         });
@@ -231,35 +229,9 @@ angular
 
   return {
     get: get,
+    getDb: getDb,
     create: create,
     update: update
-  }
-
-}]);
-
-'use strict';
-
-angular
-.module('Horn')
-.service('settings', [function () {
-
-  function set(name, value, callback) {
-    var item = {};
-    item[name] = value;
-
-    if (typeof callback != 'function')
-      callback = null;
-
-    chrome.storage.sync.set(item, callback);
-  };
-
-  function get(name, callback) {
-    chrome.storage.sync.get(name, callback);
-  };
-
-  return {
-    set: set,
-    get: get
   }
 
 }]);
@@ -365,6 +337,33 @@ angular
     }
   }
 });
+
+'use strict';
+
+angular
+.module('Horn')
+.service('settings', [function () {
+
+  function set(name, value, callback) {
+    var item = {};
+    item[name] = value;
+
+    if (typeof callback != 'function')
+      callback = null;
+
+    chrome.storage.sync.set(item, callback);
+  };
+
+  function get(name, callback) {
+    chrome.storage.sync.get(name, callback);
+  };
+
+  return {
+    set: set,
+    get: get
+  }
+
+}]);
 
 /**
  * @name Toolbar

@@ -68,7 +68,6 @@ angular
       var dbFile = sift(filter, db)[0];
       if (withContent) {
         cfs.get(dbFile.cfs, false).then(function (file) {
-          console.log(file);
           dbFile.body = file.body;
           deferred.resolve(dbFile);
         });
@@ -137,6 +136,7 @@ angular
 
   return {
     get: get,
+    getDb: getDb,
     create: create,
     update: update
   }
