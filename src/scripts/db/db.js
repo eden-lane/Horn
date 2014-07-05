@@ -134,6 +134,19 @@ angular
     });
   };
 
+  /**
+   * Rename an entry in the database
+   * @param {String} id - cfs name of document
+   * @param {Object} params - new properties of item
+   */
+  function update (id, params) {
+    getDb().then(function (db) {
+      var item = sift({cfs: id}, db)[0];
+      angular.extend(item, params);
+      saveDb(db);
+    });
+  };
+
   return {
     get: get,
     getDb: getDb,

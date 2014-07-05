@@ -9,14 +9,16 @@ angular
       current: '=',
       changeTab: '=',
       closeTab: '=',
-      renameTab: '='
+      editTab: '='
     },
     link: function (scope) {
+
       scope.setTab = function (id) {
         scope.changeTab(id);
       };
 
       scope.isCurrent = function (obj) {
+
         return scope.current.cfs === obj.cfs;
       }
     }

@@ -88,11 +88,15 @@ angular
     };
 
 
-    $scope.renameTab = function (id) {
+    $scope.editTab = function (saveToDb) {
       ngDialog.open({
         template: 'templates/fileSettings.html',
         scope: $scope
       });
+      if (saveToDb) {
+        var tab = $scope.current;
+        db.update(tab.cfs, {name: tab.name, tags: tab.tags});
+      }
     };
 
     /**
