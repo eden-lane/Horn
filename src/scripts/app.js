@@ -128,7 +128,7 @@ angular
 
         current.body = cm.getText();
 
-        db.update(current).then(function () {
+        db.updateBody(current).then(function () {
           delete current.isNew;
           current.isSaved = true;
           saveTabsToSettings();

@@ -95,7 +95,7 @@ angular
     getDb().then(function (db) {
       db.push(dbFile);
       saveDb(db);
-      update(tab);
+      updateBody(tab);
     });
   };
 
@@ -125,7 +125,7 @@ angular
   /**
    * Update an entry in the db and in the cfs
    */
-  function update (tab) {
+  function updateBody (tab) {
     if (!tab.cfs)
       throw 'This file doesn\'t exists in database';
     else
@@ -151,6 +151,7 @@ angular
     get: get,
     getDb: getDb,
     create: create,
+    updateBody: updateBody,
     update: update
   }
 
