@@ -4,6 +4,8 @@ angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
   .controller('BaseCtrl', ['$rootScope', '$scope', 'cm', 'db', 'settings', 'ngDialog', function ($rootScope, $scope, cm, db, settings, ngDialog) {
 
+    var changingTabs = false;
+
     $scope.tabs = [
     ];
 
@@ -60,7 +62,8 @@ angular
      */
     cm.setup = function (cm) {
       cm.on('change', function () {
-        $scope.current.isSaved = false;
+        if (!changingTabs)
+          $scope.current.isSaved = false;
       });
     };
 
@@ -69,10 +72,12 @@ angular
      * @param {Number} id - number of tab in array
      */
     $scope.changeTab = function (id) {
+      changingTabs = true;
       if ($scope.current)
         $scope.current.body = cm.getText();
       $scope.current = $scope.tabs[id];
       cm.setText($scope.current.body || "");
+      changingTabs = false;
       saveCurrentTabToSettings();
     };
 
