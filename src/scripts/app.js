@@ -43,13 +43,13 @@ angular
           for (var i = 0, max = tabs.length; i < max; i++) {
             (function (i) {
               db.get(tabs[i], true).then(function (t) {
+                t.isSaved = true;
                 $scope.tabs.push(t);
                 if (t.cfs === current.cfs)
                   $scope.changeTab(i);
               });
             })(i);
           };
-
         })
       });
     };
