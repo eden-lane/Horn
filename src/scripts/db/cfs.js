@@ -86,10 +86,15 @@ angular
    * Remove file from cfs
    */
   function remove(name) {
+    var deferred = $q.defer();
     getFileEntry(name)
       .then(function (fileEntry) {
-        fileEntry.remove();
+        fileEntry.remove(function () {
+          deferred.resolve();
+        });
       });
+
+    return deferred.promise;
   };
 
   /**

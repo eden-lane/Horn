@@ -54,9 +54,6 @@ angular
       });
     };
 
-    $scope.$watch('tabs.length', function () {
-    }, true);
-
     /**
      * Setup for cm editor
      */
@@ -81,15 +78,9 @@ angular
       saveCurrentTabToSettings();
     };
 
-
-
     $scope.closeTab = function (id) {
       var tab = $scope.tabs[id];
-      if (tab.isNew) {
-
-      } else {
-
-      }
+      db.remove(tab.cfs);
     };
 
 

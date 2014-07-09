@@ -64,17 +64,18 @@ angular
    */
   function get (filter, withContent) {
     var deferred = $q.defer();
-    getDb().then(function (db) {
-      var dbFile = sift(filter, db)[0];
-      if (withContent) {
-        cfs.get(dbFile.cfs, false).then(function (file) {
-          dbFile.body = file.body;
+    getDb()
+      .then(function (db) {
+        var dbFile = sift(filter, db)[0];
+        if (withContent) {
+          cfs.get(dbFile.cfs, false).then(function (file) {
+            dbFile.body = file.body;
+            deferred.resolve(dbFile);
+          });
+        }
+        else
           deferred.resolve(dbFile);
-        });
-      }
-      else
-        deferred.resolve(dbFile);
-    });
+      });
 
     return deferred.promise;
   }
@@ -121,6 +122,18 @@ angular
   };
 
 
+  /**
+   * Delete an entry from the db and file from the cfs
+   */
+  function remove(id) {
+    getDb().then(function (db) {
+      db = db.filter(function (item) {
+        return item.cfs !== id;
+      });
+      saveDb(db);
+      cfs.remove(id);
+    });
+  };
 
   /**
    * Update an entry in the db and in the cfs
@@ -152,7 +165,8 @@ angular
     getDb: getDb,
     create: create,
     updateBody: updateBody,
-    update: update
+    update: update,
+    remove: remove
   }
 
 }]);
