@@ -96,7 +96,8 @@ angular
           scope: $scope
         });
       } else {
-        //TODO: close
+        $scope.tabs.splice(number,1);
+        $scope.current = (number - 1 >= 0) ? $scope.tabs[number - 1] : $scope.tabs[0];
       }
     };
 
