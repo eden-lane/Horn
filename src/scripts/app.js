@@ -9,6 +9,8 @@ angular
     $scope.tabs = [
     ];
 
+    $scope.closingTab;
+
     $scope.current = {};
 
     window.tabs = $scope.tabs;
@@ -66,21 +68,36 @@ angular
 
     /**
      * Called when user switches tab
-     * @param {Number} id - number of tab in array
+     * @param {Number} number - number of tab in array
      */
-    $scope.changeTab = function (id) {
+    $scope.changeTab = function (number) {
       changingTabs = true;
       if ($scope.current)
         $scope.current.body = cm.getText();
-      $scope.current = $scope.tabs[id];
+      $scope.current = $scope.tabs[number];
       cm.setText($scope.current.body || "");
       changingTabs = false;
       saveCurrentTabToSettings();
     };
 
-    $scope.closeTab = function (id) {
-      var tab = $scope.tabs[id];
-      db.remove(tab.cfs);
+    $scope.closeTab = function (number, close) {
+      var tab = $scope.tabs[number];
+      // User agreed with deleting document
+      if (tab.isNew && close) {
+        db.remove(tab.cfs);
+        $scope.tabs.splice(number,1);
+        $scope.current = (number - 1 >= 0) ? $scope.tabs[number - 1] : $scope.tabs[0];
+      } else
+      // first atempt to close tab
+      if (tab.isNew && !close) {
+        $scope.closingTab = number;
+        ngDialog.open({
+          template: 'templates/prompt.html',
+          scope: $scope
+        });
+      } else {
+        //TODO: close
+      }
     };
 
 
@@ -113,7 +130,6 @@ angular
           saveCurrentTabToSettings();
         });
       },
-
 
 
       /**
