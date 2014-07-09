@@ -65,13 +65,31 @@ angular
    * Set the new content of file
    */
   function set(name, body) {
-    console.log('cfs:set', body);
-    getFileEntry(name).then(function (fileEntry) {
-      fileEntry.createWriter(function (fileWriter) {
-        var blob = new Blob([body]);
-        fileWriter.write(blob);
-      })
-    });
+    getFileEntry(name)
+      .then(function (fileEntry) {
+        fileEntry.createWriter(function (fileWriter) {
+          var truncated = false;
+          fileWriter.onwriteend = function (e) {
+            if (!truncated) {
+              truncated = true;
+              this.truncate(this.position);
+            };
+          };
+
+          var blob = new Blob([body]);
+          fileWriter.write(blob);
+        });
+      });
+  };
+
+  /**
+   * Remove file from cfs
+   */
+  function remove(name) {
+    getFileEntry(name)
+      .then(function (fileEntry) {
+        fileEntry.remove();
+      });
   };
 
   /**
@@ -88,6 +106,7 @@ angular
   return {
     get: get,
     set: set,
+    remove: remove,
     on: on
   }
 }]);
