@@ -4,10 +4,14 @@ angular
 .module('Horn')
 .factory('db', ['$q', 'cfs', function ($q, cfs) {
 
-
+  /**
+   * @private
+   * @return {Array<Object>} - database
+   */
   var getDb = (function () {
     var database,
         deferred = $q.defer();
+
     function init () {
       cfs.on(function (fileInfo) {
         if (fileInfo.fileEntry.name == 'db.json') {
@@ -43,7 +47,6 @@ angular
 
       return deferred.promise;
     };
-
   })();
 
   /**
@@ -60,6 +63,8 @@ angular
 
   /**
    * @param {Object} filter - monogo-like filter
+   * @param {Boolean} withContent - if true returns contents
+   *                                of the file from cfs
    * @return dbFile
    */
   function get (filter, withContent) {
@@ -67,14 +72,15 @@ angular
     getDb()
       .then(function (db) {
         var dbFile = sift(filter, db)[0];
+
         if (withContent) {
           cfs.get(dbFile.cfs, false).then(function (file) {
             dbFile.body = file.body;
             deferred.resolve(dbFile);
           });
-        }
-        else
+        } else {
           deferred.resolve(dbFile);
+        }
       });
 
     return deferred.promise;
@@ -93,11 +99,12 @@ angular
     delete dbFile.body;
     delete dbFile.isSaved;
 
-    getDb().then(function (db) {
-      db.push(dbFile);
-      saveDb(db);
-      updateBody(tab);
-    });
+    getDb()
+      .then(function (db) {
+        db.push(dbFile);
+        saveDb(db);
+        updateBody(tab);
+      });
   };
 
 
