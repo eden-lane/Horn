@@ -36,6 +36,9 @@
 </head>
 <body ng-app="Horn">
   <div ng-controller="BaseCtrl">
+    <div class="loader-container" ng-show="loader">
+      <div class="loader"></div>
+    </div>
     <tabs items="tabs" current="current" change-tab="changeTab" close-tab="closeTab" edit-tab="editTab"></tabs>
     <editor-area>
       <toolbar actions="actions"></toolbar>

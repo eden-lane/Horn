@@ -5,16 +5,22 @@ header.toolbar {
   border-width: 1px 0 1px 0;
   border-style: dashed;
   border-color: #EEE;
+  padding: 0 10px;
 
   button {
     border: none;
     outline: none;
-    border-bottom: 1px solid transparent;
+    color: #636363;
     background: rgba(0, 0, 0, 0);
-    height: 22px;
+    height: 24px;
     width: 23px;
     font-size: 15px;
     padding: 0;
+    cursor: pointer;
+
+    &:hover {
+      color: #333;
+    }
 
     &.active {
       color: @active-color;

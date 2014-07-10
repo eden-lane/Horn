@@ -38,6 +38,7 @@ angular
     };
 
     function loadTabsFromSettings () {
+      $scope.loader = true;
       settings.get('tabs', function(it) {
         var tabs = it.tabs;
         settings.get('current', function (it) {
@@ -52,6 +53,7 @@ angular
               });
             })(i);
           };
+          $scope.loader = false;
         })
       });
     };
@@ -80,6 +82,9 @@ angular
       saveCurrentTabToSettings();
     };
 
+    /**
+     * Closes tab
+     */
     $scope.closeTab = function (number, close) {
       var tab = $scope.tabs[number];
       // User agreed with deleting document
