@@ -122,9 +122,11 @@ angular
     };
 
     /**
-     * Actions for the toolbar
+     * Action commands for toolbars buttons
      */
+
     $scope.actions = {
+
       /**
        * Creates a new tab
        */
@@ -156,6 +158,10 @@ angular
         });
       },
 
+
+      /**
+       * Open existing file from cfs
+       */
       openFile: function (name) {
         var self = this;
         db.getDb().then(function (db) {
@@ -168,8 +174,15 @@ angular
         });
       },
 
+
+      /**
+       * Set current preview mode
+       */
       setMode: cm.setMode,
 
+      /**
+       * Check currently active mode
+       */
       isMode: cm.isMode
     };
 
