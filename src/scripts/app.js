@@ -6,21 +6,16 @@ angular
 
     var changingTabs = false;
 
-    $scope.tabs = [
-    ];
-
+    $scope.tabs = [];
+    $scope.current = {};
     $scope.closingTab;
 
-    $scope.current = {};
-
-    window.tabs = $scope.tabs;
-
-    loadTabsFromSettings();
+    loadTabs();
 
     /**
      * Saves current tabs to settings
      */
-    function saveTabsToSettings () {
+    function saveTabs () {
       if ($scope.tabs.length == 0)
         return;
       var result = [];
@@ -33,28 +28,41 @@ angular
       //TODO: Save every tab in cfs
     };
 
-    function saveCurrentTabToSettings() {
+    /**
+     *
+     */
+    function saveCurrentTab () {
       settings.set('current', {cfs: $scope.current.cfs});
     };
 
-    function loadTabsFromSettings () {
+    function loadCurrentTab () {
+      settings.get('current', function (it) {
+        var current = it.current;
+        for (var i = 0, l = $scope.tabs.length; i < l; i++) {
+          var tab = $scope.tabs[i];
+          if (tab.cfs == current.cfs)
+            $scope.$apply(function () {
+              $scope.changeTab(i);
+            });
+        };
+      });
+    };
+
+    function loadTabs () {
       $scope.loader = true;
       settings.get('tabs', function(it) {
         var tabs = it.tabs;
-        settings.get('current', function (it) {
-          var current = it.current;
           for (var i = 0, max = tabs.length; i < max; i++) {
             (function (i) {
               db.get(tabs[i], true).then(function (t) {
                 t.isSaved = true;
                 $scope.tabs.push(t);
-                if (t.cfs === current.cfs)
-                  $scope.changeTab(i);
+                if ($scope.tabs.length == tabs.length)
+                  loadCurrentTab();
               });
             })(i);
           };
           $scope.loader = false;
-        })
       });
     };
 
@@ -81,7 +89,7 @@ angular
       $scope.current = $scope.tabs[number];
       cm.setText($scope.current.body || "");
       changingTabs = false;
-      saveCurrentTabToSettings();
+      saveCurrentTab();
     };
 
     /**
@@ -138,7 +146,7 @@ angular
         });
         $scope.changeTab(l - 1);
         db.create($scope.current).then(function () {
-          saveCurrentTabToSettings();
+          saveCurrentTab();
         });
       },
 
@@ -154,7 +162,7 @@ angular
         db.updateBody(current).then(function () {
           delete current.isNew;
           current.isSaved = true;
-          saveTabsToSettings();
+          saveTabs();
         });
       },
 
