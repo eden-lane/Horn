@@ -40,10 +40,13 @@ angular
         var current = it.current;
         for (var i = 0, l = $scope.tabs.length; i < l; i++) {
           var tab = $scope.tabs[i];
-          if (tab.cfs == current.cfs)
+          if (tab.cfs == current.cfs) {
             $scope.$apply(function () {
               $scope.changeTab(i);
+              $scope.loader = false;
             });
+            return;
+          }
         };
       });
     };
@@ -62,7 +65,6 @@ angular
               });
             })(i);
           };
-          $scope.loader = false;
       });
     };
 
