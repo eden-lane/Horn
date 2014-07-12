@@ -63,8 +63,10 @@ angular
      */
     cm.setup = function (cm) {
       cm.on('change', function () {
-        if (!changingTabs)
-          $scope.current.isSaved = false;
+        if (!changingTabs && $scope.current.isSaved)
+          $scope.$apply(function () {
+            $scope.current.isSaved = false;
+          });
       });
     };
 
@@ -172,4 +174,3 @@ angular
     };
 
   }]);
-
