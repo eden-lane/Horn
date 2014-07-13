@@ -1,4 +1,4 @@
-.cm-s-kirin.CodeMirror {font-family: Calibri; font-size: 18px; background: #fdfdfd; color: #555; line-height: 25px;}
+.cm-s-kirin.CodeMirror {font-family: Calibri; font-size: 16px; background: #fdfdfd; color: #555; line-height: 25px;}
 
 .cm-s-kirin .cm-keyword {color: #F05;}
 .cm-s-kirin .cm-atom {color: red;}
@@ -18,8 +18,8 @@
 .cm-s-kirin .cm-bracket {color: #997;}
 .cm-s-kirin .cm-tag {color: #170;}
 .cm-s-kirin .cm-attribute {color: #00c;}
-.cm-s-kirin .cm-header {color: #444; font-size: 18px;}
-.cm-s-kirin .cm-quote {color: #555; font-size: 18px; }
+.cm-s-kirin .cm-header {color: #444; font-size: 17px;}
+.cm-s-kirin .cm-quote {color: #555; font-size: 17px; }
 .cm-s-kirin .cm-hr {color: #999;}
 .cm-s-kirin .cm-link {color: #00c;}
 .cm-s-kirin .cm-variable,
@@ -29,7 +29,7 @@
 .cm-s-kirin .cm-variable-2,
 .cm-s-kirin .cm-string,
 .cm-s-kirin .cm-property
-{font-family: Consolas; font-size: 14px;}
+{font-family: Calibri; font-size: 16px;}
 
 .cm-negative {color: #d44;}
 .cm-positive {color: #292;}
