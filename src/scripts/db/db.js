@@ -73,13 +73,17 @@ angular
       .then(function (db) {
         var dbFile = sift(filter, db)[0];
 
-        if (withContent) {
-          cfs.get(dbFile.cfs, false).then(function (file) {
-            dbFile.body = file.body;
-            deferred.resolve(dbFile);
-          });
+        if (!dbFile) {
+          deferred.reject();
         } else {
-          deferred.resolve(dbFile);
+          if (withContent) {
+            cfs.get(dbFile.cfs, false).then(function (file) {
+              dbFile.body = file.body;
+              deferred.resolve(dbFile);
+            });
+          } else {
+            deferred.resolve(dbFile);
+          }
         }
       });
 
@@ -150,6 +154,7 @@ angular
       throw 'This file doesn\'t exists in database';
     else
     return get({cfs: tab.cfs}).then(function (dbFile) {
+      delete tab.isNew;
       cfs.set(dbFile.cfs, tab.body || '');
     });
   };

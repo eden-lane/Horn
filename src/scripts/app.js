@@ -54,16 +54,22 @@ angular
     function loadTabs () {
       $scope.loader = true;
       settings.get('tabs', function(it) {
-        var tabs = it.tabs;
+        var tabs = it.tabs,
+            tabsCount = tabs.length;
+
           for (var i = 0, max = tabs.length; i < max; i++) {
-            (function (i) {
-              db.get(tabs[i], true).then(function (t) {
-                t.isSaved = true;
-                $scope.tabs.push(t);
-                if ($scope.tabs.length == tabs.length)
-                  loadCurrentTab();
+            db.get(tabs[i], true)
+              .then(function (t) {
+                if (t) {
+                  t.isSaved = true;
+                  $scope.tabs.push(t);
+                  if ($scope.tabs.length == tabsCount)
+                    loadCurrentTab();
+                }
+              })
+              .catch(function () {
+                tabsCount--;
               });
-            })(i);
           };
       });
     };
