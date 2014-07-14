@@ -1,6 +1,6 @@
 angular
 .module('Horn')
-.directive('editorArea', ['cm', function (cm) {
+.directive('editorArea', ['cm', '$sanitize', function (cm, $sanitize) {
   var mode = 'markdown';
 
   return {
@@ -13,9 +13,9 @@ angular
 
       scope.isMode = cm.isMode;
       scope.setMode = cm.setMode;
+      scope.cm = cm;
     },
     controller: function ($scope) {
-
 
     }
   }

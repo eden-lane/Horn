@@ -6,10 +6,12 @@ angular
 .factory('cm', function () {
 
   var cm,
-      mode = 'md',
-      renderedText;
+      mode = 'md';
 
-  var obj = {};
+  var obj = {
+    renderedText: "xasdasd"
+  };
+
   obj.init = function (textarea) {
     var self = this;
     cm = CodeMirror.fromTextArea(textarea, {
@@ -26,7 +28,7 @@ angular
   };
 
   obj.render = function () {
-    renderedText = marked(cm.getValue());
+    obj.renderedText = marked(cm.getValue());
   };
 
   obj.isMode = function (name) {
