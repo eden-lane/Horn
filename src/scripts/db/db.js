@@ -59,7 +59,14 @@ angular
     cfs.set('db.json', db);
   };
 
+  function clearTab(tab) {
+    var result = angular.copy(tab);
+    delete result.body;
+    delete result.$$hashKey;
+    delete result.isSaved;
 
+    return result;
+  };
 
   /**
    * @param {Object} filter - monogo-like filter
@@ -97,11 +104,7 @@ angular
    * Insert file in the database and save
    */
   function insert(tab) {
-    var dbFile = angular.copy(tab);
-
-    delete dbFile.$$hashKey;
-    delete dbFile.body;
-    delete dbFile.isSaved;
+    var dbFile = clearTab(tab);
 
     getDb()
       .then(function (db) {
@@ -167,6 +170,7 @@ angular
   function update (id, params) {
     getDb().then(function (db) {
       var item = sift({cfs: id}, db)[0];
+      params = clearTab(params);
       angular.extend(item, params);
       saveDb(db);
     });
