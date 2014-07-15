@@ -56,7 +56,8 @@ angular
       settings.get('tabs', function(it) {
         var tabs = it.tabs,
             tabsCount = tabs.length;
-
+          if (!tabs.length)
+            $scope.loader = false;
           for (var i = 0, max = tabs.length; i < max; i++) {
             db.get(tabs[i], true)
               .then(function (t) {
