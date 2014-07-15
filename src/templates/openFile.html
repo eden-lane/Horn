@@ -1,6 +1,6 @@
 <div>
   <input type="text" ng-model="searchText"/>
-  <div ng-repeat="file in files | filter:{'name':searchText} track by $index" class="file">
+  <div ng-repeat="file in files | filter:{'name':searchText} track by $index" class="file" ng-click="closeThisDialog(); openDocument(file.cfs)">
     <div>{{file.name}}</div>
     <div>
       <span class="tag" ng-repeat="tag in file.tags">{{tag}}</span>

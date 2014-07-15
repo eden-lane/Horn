@@ -19,7 +19,7 @@ angular
 
       scope.isCurrent = function (obj) {
 
-        return scope.current.cfs === obj.cfs;
+        return scope.current && scope.current.cfs === obj.cfs;
       }
     }
   }

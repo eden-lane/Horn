@@ -51,6 +51,18 @@ angular
       });
     };
 
+    function openDocument (cfs) {
+      return db.get({cfs: cfs}, true)
+        .then(function (dbFile) {
+          dbFile.isSaved = true;
+          var l = $scope.tabs.push(dbFile);
+          $scope.changeTab(l - 1);
+        })
+        .catch(function () {
+          console.error('Can\'t open file with cfs <' + cfs + '>');
+        });
+    };
+
     function loadTabs () {
       $scope.loader = true;
       settings.get('tabs', function(it) {
@@ -184,6 +196,7 @@ angular
         db.getDb().then(function (db) {
           self.scope = $scope.$new(true);
           self.scope.files = db;
+          self.scope.openDocument = openDocument;
           ngDialog.open({
             template: 'templates/openFile.html',
             scope: self.scope
