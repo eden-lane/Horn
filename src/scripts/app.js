@@ -2,7 +2,7 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
-  .controller('BaseCtrl', ['$rootScope', '$scope', 'cm', 'db', 'settings', 'ngDialog', function ($rootScope, $scope, cm, db, settings, ngDialog) {
+  .controller('BaseCtrl', ['$rootScope', '$scope', 'cm', 'db', 'settings', 'ngDialog', '$q', function ($rootScope, $scope, cm, db, settings, ngDialog, $q) {
 
     var changingTabs = false;
 
@@ -51,15 +51,15 @@ angular
       });
     };
 
+    /**
+     * Open document by it's cfs
+     */
     function openDocument (cfs) {
       return db.get({cfs: cfs}, true)
         .then(function (dbFile) {
           dbFile.isSaved = true;
           var l = $scope.tabs.push(dbFile);
           $scope.changeTab(l - 1);
-        })
-        .catch(function () {
-          console.error('Can\'t open file with cfs <' + cfs + '>');
         });
     };
 
@@ -67,23 +67,19 @@ angular
       $scope.loader = true;
       settings.get('tabs', function(it) {
         var tabs = it.tabs,
-            tabsCount = tabs.length;
-          if (!tabs.length)
-            $scope.loader = false;
-          for (var i = 0, max = tabs.length; i < max; i++) {
-            db.get(tabs[i], true)
-              .then(function (t) {
-                if (t) {
-                  t.isSaved = true;
-                  $scope.tabs.push(t);
-                  if ($scope.tabs.length == tabsCount)
-                    loadCurrentTab();
-                }
-              })
-              .catch(function () {
-                tabsCount--;
-              });
-          };
+            promises = [];
+        if (!tabs.length)
+          $scope.loader = false;
+
+        for (var i = 0, max = tabs.length; i < max; i++) {
+          var cfs = tabs[i].cfs;
+          promises.push(openDocument(cfs));
+        };
+
+        $q.all(promises).finally(function () {
+          loadCurrentTab();
+          $scope.loader = false;
+        })
       });
     };
 
