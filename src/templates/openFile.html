@@ -1,9 +1,9 @@
 <div>
-  <input type="text" ng-model="q"/>
-  <div ng-repeat="file in files track by name | filter:q">
-    <span>{{file.name}}</span>
-    <p>
-      <span ng-repat="tag in file.tags">{{tag}}</span>
-    </p>
+  <input type="text" ng-model="searchText"/>
+  <div ng-repeat="file in files | filter:{'name':searchText} track by $index" class="file">
+    <div>{{file.name}}</div>
+    <div>
+      <span class="tag" ng-repeat="tag in file.tags">{{tag}}</span>
+    </div>
   </div>
 </div>
