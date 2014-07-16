@@ -12,6 +12,7 @@ angular
 
     loadTabs();
 
+
     /**
      * Saves current tabs to settings
      */
@@ -24,17 +25,44 @@ angular
         result.push({cfs: tab.cfs});
       };
       settings.set('tabs', result);
-
-      //TODO: Save every tab in cfs
     };
 
+
     /**
-     *
+     * Load last opened tabs
+     */
+    function loadTabs () {
+      $scope.loader = true;
+      settings.get('tabs', function(it) {
+        var tabs = it.tabs,
+            promises = [];
+        if (!tabs.length)
+          $scope.loader = false;
+
+        for (var i = 0, max = tabs.length; i < max; i++) {
+          var cfs = tabs[i].cfs;
+          promises.push(openDocument(cfs));
+        };
+
+        $q.all(promises).finally(function () {
+          loadCurrentTab();
+          $scope.loader = false;
+        })
+      });
+    };
+
+
+    /**
+     * Saves active tab to settings
      */
     function saveCurrentTab () {
       settings.set('current', {cfs: $scope.current.cfs});
     };
 
+
+    /**
+     * Load last active tab from settings
+     */
     function loadCurrentTab () {
       settings.get('current', function (it) {
         var current = it.current;
@@ -61,26 +89,6 @@ angular
           var l = $scope.tabs.push(dbFile);
           $scope.changeTab(l - 1);
         });
-    };
-
-    function loadTabs () {
-      $scope.loader = true;
-      settings.get('tabs', function(it) {
-        var tabs = it.tabs,
-            promises = [];
-        if (!tabs.length)
-          $scope.loader = false;
-
-        for (var i = 0, max = tabs.length; i < max; i++) {
-          var cfs = tabs[i].cfs;
-          promises.push(openDocument(cfs));
-        };
-
-        $q.all(promises).finally(function () {
-          loadCurrentTab();
-          $scope.loader = false;
-        })
-      });
     };
 
     /**
