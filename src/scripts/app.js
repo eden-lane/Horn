@@ -113,6 +113,7 @@ angular
         $scope.current.body = cm.getText();
       $scope.current = $scope.tabs[number];
       cm.setText($scope.current.body || "");
+      $scope.actions.setMode($scope.current.mode || 'md');
       changingTabs = false;
       saveCurrentTab();
     };
@@ -212,7 +213,10 @@ angular
       /**
        * Set current preview mode
        */
-      setMode: cm.setMode,
+      setMode: function (name) {
+        $scope.current.mode = name;
+        cm.setMode(name);
+      },
 
       /**
        * Check currently active mode
