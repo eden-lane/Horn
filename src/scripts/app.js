@@ -215,6 +215,7 @@ angular
        */
       setMode: function (name) {
         $scope.current.mode = name;
+        db.update($scope.current.cfs, {mode: name});
         cm.setMode(name);
       },
 
