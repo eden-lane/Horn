@@ -85,6 +85,7 @@ angular
     function openDocument (cfs) {
       return db.get({cfs: cfs}, true)
         .then(function (dbFile) {
+          var dbFile = angular.copy(dbFile);
           dbFile.isSaved = true;
           var l = $scope.tabs.push(dbFile);
           $scope.changeTab(l - 1);
@@ -108,9 +109,13 @@ angular
      * @param {Number} number - number of tab in array
      */
     $scope.changeTab = function (number) {
+      if ($scope.current == $scope.tabs[number])
+        return;
+
       changingTabs = true;
       if ($scope.current)
         $scope.current.body = cm.getText();
+
       $scope.current = $scope.tabs[number];
       cm.setText($scope.current.body || "");
       $scope.actions.setMode($scope.current.mode || 'md');
@@ -154,6 +159,16 @@ angular
         });
       }
     };
+
+    /**
+     *
+     */
+    window.debug = {
+      clearAll: function () {
+        chrome.storage.sync.set({tabs: []});
+        db.removeAll();
+      }
+    }
 
     /**
      * Action commands for toolbars buttons

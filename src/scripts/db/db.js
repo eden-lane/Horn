@@ -78,7 +78,7 @@ angular
     var deferred = $q.defer();
     getDb()
       .then(function (db) {
-        var dbFile = sift(filter, db)[0];
+        var dbFile = angular.copy(sift(filter, db)[0]);
 
         if (!dbFile) {
           deferred.reject();
@@ -122,8 +122,6 @@ angular
    * @return {Promise<DbFile>} - created DbFile
    */
   function create (tab) {
-    if (!tab.name)
-      throw 'File must have a name';
     var deferred = $q.defer();
 
     cfs.get().then(function (file) {
@@ -149,6 +147,10 @@ angular
     });
   };
 
+  function removeAll() {
+    cfs.removeAll();
+  };
+
   /**
    * Update an entry in the db and in the cfs
    */
@@ -168,6 +170,8 @@ angular
    * @param {Object} params - new properties of item
    */
   function update (id, params) {
+    if (!id)
+      return;
     getDb().then(function (db) {
       var item = sift({cfs: id}, db)[0];
       params = clearTab(params);
@@ -182,7 +186,8 @@ angular
     create: create,
     updateBody: updateBody,
     update: update,
-    remove: remove
+    remove: remove,
+    removeAll: removeAll
   }
 
 }]);

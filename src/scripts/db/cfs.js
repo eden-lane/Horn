@@ -98,6 +98,20 @@ angular
   };
 
   /**
+   * Remove all
+   */
+  function removeAll() {
+    chrome.syncFileSystem.requestFileSystem(function (fs) {
+      var reader = fs.root.createReader();
+      reader.readEntries(function (files) {
+        for (var i = 0, l = files.length; i < l; i++) {
+          remove(files[i].name);
+        }
+      });
+    });
+  };
+
+  /**
    * Generate uniq file name
    */
   function getNewFileName() {
@@ -112,6 +126,7 @@ angular
     get: get,
     set: set,
     remove: remove,
+    removeAll: removeAll,
     on: on
   }
 }]);
