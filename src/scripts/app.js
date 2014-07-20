@@ -167,6 +167,7 @@ angular
       clearAll: function () {
         chrome.storage.sync.set({tabs: []});
         db.removeAll();
+        close();
       }
     }
 
