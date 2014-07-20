@@ -123,7 +123,6 @@ angular
 
       if (number < 0) {
         $scope.current = null;
-        console.log(cm);
         cm.setText('');
         $scope.actions.setMode('md');
         cm.options.readOnly = true;
@@ -181,7 +180,6 @@ angular
       clearAll: function () {
         chrome.storage.sync.set({tabs: []});
         db.removeAll();
-        close();
       }
     }
 
