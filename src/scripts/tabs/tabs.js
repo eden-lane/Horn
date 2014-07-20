@@ -12,13 +12,7 @@ angular
       editTab: '='
     },
     link: function (scope) {
-
-      scope.setTab = function (id) {
-        scope.changeTab(id);
-      };
-
       scope.isCurrent = function (obj) {
-
         return scope.current && scope.current.cfs === obj.cfs;
       }
     }

@@ -56,6 +56,8 @@ angular
      * Saves active tab to settings
      */
     function saveCurrentTab () {
+      if (!$scope.current)
+        return;
       settings.set('current', {cfs: $scope.current.cfs});
     };
 
@@ -70,7 +72,7 @@ angular
           var tab = $scope.tabs[i];
           if (tab.cfs == current.cfs) {
             $scope.$apply(function () {
-              $scope.changeTab(i);
+              $scope.setTab(i);
               $scope.loader = false;
             });
             return;
@@ -88,7 +90,7 @@ angular
           var dbFile = angular.copy(dbFile);
           dbFile.isSaved = true;
           var l = $scope.tabs.push(dbFile);
-          $scope.changeTab(l - 1);
+          $scope.setTab(l - 1);
         });
     };
 
@@ -108,7 +110,7 @@ angular
      * Called when user switches tab
      * @param {Number} number - number of tab in array
      */
-    $scope.changeTab = function (number) {
+    $scope.setTab = function (number) {
       if ($scope.current == $scope.tabs[number])
         return;
 
@@ -116,9 +118,21 @@ angular
       if ($scope.current)
         $scope.current.body = cm.getText();
 
-      $scope.current = $scope.tabs[number];
-      cm.setText($scope.current.body || "");
-      $scope.actions.setMode($scope.current.mode || 'md');
+      if ($scope.tabs.length < number)
+        number = 0;
+
+      if (number < 0) {
+        $scope.current = null;
+        console.log(cm);
+        cm.setText('');
+        $scope.actions.setMode('md');
+        cm.options.readOnly = true;
+      } else {
+        $scope.current = $scope.tabs[number];
+        cm.setText($scope.current.body || '');
+        $scope.actions.setMode($scope.current.mode || 'md');
+        cm.options.readOnly = false;
+      }
       changingTabs = false;
       saveCurrentTab();
     };
@@ -143,7 +157,7 @@ angular
         });
       } else {
         $scope.tabs.splice(number,1);
-        $scope.current = (number - 1 >= 0) ? $scope.tabs[number - 1] : $scope.tabs[0];
+        $scope.setTab(number - 1);
       }
     };
 
@@ -186,7 +200,7 @@ angular
           isSaved: false,
           isNew: true
         });
-        $scope.changeTab(l - 1);
+        $scope.setTab(l - 1);
         db.create($scope.current).then(function () {
           saveCurrentTab();
         });
@@ -230,6 +244,8 @@ angular
        * Set current preview mode
        */
       setMode: function (name) {
+        if (!$scope.current)
+          return;
         $scope.current.mode = name;
         db.update($scope.current.cfs, {mode: name});
         cm.setMode(name);

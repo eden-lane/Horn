@@ -21,6 +21,7 @@ angular
       lineWrapping: true
     });
 
+    obj.options = cm.options;
     cm.setSize('100%', '80%');
 
     if (angular.isFunction(obj.setup))
@@ -47,6 +48,7 @@ angular
   obj.setText = function (text) {
     cm.setValue(text);
   };
+
 
   /**
    * Setup cm after init
