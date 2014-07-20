@@ -7,7 +7,7 @@ angular
     scope: {
       tabs: '=items',
       current: '=',
-      changeTab: '=',
+      setTab: '=',
       closeTab: '=',
       editTab: '='
     },

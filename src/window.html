@@ -9,6 +9,8 @@
     <script src="components/angular/angular.js"></script>
     <script src="components/angular-sanitize/angular-sanitize.js"></script>
     <script src="components/angular-route/angular-route.js"></script>
+    <!-- Keymaster -->
+    <script src="components/keymaster/keymaster.js"></script>
     <!-- CodeMirror -->
     <link rel="stylesheet" href="components/codemirror/lib/codemirror.css">
     <script src="components/codemirror/lib/codemirror.js"></script>
@@ -39,7 +41,7 @@
     <div class="loader-container" ng-show="loader">
       <div class="loader"></div>
     </div>
-    <tabs items="tabs" current="current" change-tab="changeTab" close-tab="closeTab" edit-tab="editTab"></tabs>
+    <tabs items="tabs" current="current" set-tab="setTab" close-tab="closeTab" edit-tab="editTab"></tabs>
     <editor-area>
       <toolbar actions="actions"></toolbar>
     </editor-area>
