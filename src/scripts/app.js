@@ -125,12 +125,13 @@ angular
         $scope.current = null;
         cm.setText('');
         $scope.actions.setMode('md');
-        cm.options.readOnly = true;
+        //cm.options.readOnly = true;
       } else {
         $scope.current = $scope.tabs[number];
+        console.log('setText', $scope.current.body);
         cm.setText($scope.current.body || '');
         $scope.actions.setMode($scope.current.mode || 'md');
-        cm.options.readOnly = false;
+        //cm.options.readOnly = false;
       }
       changingTabs = false;
       saveCurrentTab();
@@ -180,6 +181,9 @@ angular
       clearAll: function () {
         chrome.storage.sync.set({tabs: []});
         db.removeAll();
+      },
+      setMode: function (mode) {
+       $scope.actions.setMode(mode || $scope.current.mode || 'md');
       }
     }
 
@@ -242,11 +246,14 @@ angular
        * Set current preview mode
        */
       setMode: function (name) {
+        changingTabs = true;
         if (!$scope.current)
           return;
         $scope.current.mode = name;
         db.update($scope.current.cfs, {mode: name});
         cm.setMode(name);
+        cm.setText($scope.current.body || '');
+        changingTabs = false;
       },
 
       /**

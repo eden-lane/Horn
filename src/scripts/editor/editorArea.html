@@ -3,13 +3,13 @@
 </div>
 <!-- codemirror -->
 <div class="content">
-<div ng-show="isMode('md')" style="height: 88%">
+<div ng-show="isMode('md')" style="height: 88%; border: 1px solid red;">
   <textarea style="width: 100%; height: 100%;">
   </textarea>
 </div>
 
 <!-- preview -->
-<div class="preview" ng-show="isMode('preview')" ng-bind-html="cm.renderedText">
+<div class="preview" ng-show="isMode('preview')" ng-bind-html="cm.renderedText" style="border: 1px solid green;">
 
 </div>
 
