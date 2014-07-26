@@ -3,7 +3,7 @@
  */
 angular
 .module('Horn')
-.factory('cm', function () {
+.factory('cXm', function () {
 
   var cm,
       mode = 'md';

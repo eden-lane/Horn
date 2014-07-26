@@ -2,7 +2,7 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
-  .controller('BaseCtrl', ['$rootScope', '$scope', 'cm', 'db', 'settings', 'ngDialog', '$q', function ($rootScope, $scope, cm, db, settings, ngDialog, $q) {
+  .controller('BaseCtrl', ['$rootScope', '$scope', 'db', 'settings', 'ngDialog', '$q', function ($rootScope, $scope, db, settings, ngDialog, $q) {
 
     var changingTabs = false;
 
@@ -10,7 +10,7 @@ angular
     $scope.current = {};
     $scope.closingTab;
 
-    loadTabs();
+    //loadTabs();
 
 
     /**
@@ -97,14 +97,14 @@ angular
     /**
      * Setup for cm editor
      */
-    cm.setup = function (cm) {
+    /*cm.setup = function (cm) {
       cm.on('change', function () {
         if (!changingTabs && $scope.current.isSaved)
           $scope.$apply(function () {
             $scope.current.isSaved = false;
           });
       });
-    };
+    };*/
 
     /**
      * Called when user switches tab
@@ -259,7 +259,7 @@ angular
       /**
        * Check currently active mode
        */
-      isMode: cm.isMode
+      //isMode: cm.isMode
     };
 
   }]);
