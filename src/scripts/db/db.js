@@ -64,6 +64,7 @@ angular
     delete result.body;
     delete result.$$hashKey;
     delete result.isSaved;
+    delete result.doc;
 
     return result;
   };

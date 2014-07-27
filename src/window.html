@@ -37,14 +37,14 @@
 
 </head>
 <body ng-app="Horn">
-  <div ng-controller="BaseCtrl">
+  <div ng-controller="BaseCtrl as base">
     <div class="loader-container" ng-show="loader">
       <div class="loader"></div>
     </div>
-    <editor>
-      <toolbar></toolbar>
+    <tabs></tabs>
+    <editor doc="current">
+      <toolbar actions="actions"></toolbar>
     </editor>
-
     <script src="components/marked/lib/marked.js"></script>
     <script src="components/siftjs/sift.min.js"></script>
 </body>

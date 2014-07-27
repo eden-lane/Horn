@@ -2,16 +2,23 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
-  .controller('BaseCtrl', ['$rootScope', '$scope', 'db', 'settings', 'ngDialog', '$q', function ($rootScope, $scope, db, settings, ngDialog, $q) {
+  .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, db, settings, ngDialog) {
 
     var changingTabs = false;
 
+    $scope.current = CodeMirror.Doc('sometext', 'gfm');
+
     $scope.tabs = [];
-    $scope.current = {};
     $scope.closingTab;
 
     //loadTabs();
 
+
+    window.main = $scope;
+
+    window.test = function (text) {
+      $scope.current = CodeMirror.Doc(text, 'gfm');
+    };
 
     /**
      * Saves current tabs to settings
@@ -111,7 +118,7 @@ angular
      * @param {Number} number - number of tab in array
      */
     $scope.setTab = function (number) {
-      if ($scope.current == $scope.tabs[number])
+/*      if ($scope.current == $scope.tabs[number])
         return;
 
       changingTabs = true;
@@ -134,7 +141,7 @@ angular
         //cm.options.readOnly = false;
       }
       changingTabs = false;
-      saveCurrentTab();
+      saveCurrentTab();*/
     };
 
     /**
@@ -196,10 +203,11 @@ angular
       /**
        * Creates a new tab
        */
-      newFile: function () {
+      newFile: function (doc) {
         var l = $scope.tabs.push({
           name: 'untitled',
           isSaved: false,
+          doc: doc,
           isNew: true
         });
         $scope.setTab(l - 1);
@@ -229,7 +237,8 @@ angular
        * Open existing file from cfs
        */
       openFile: function (name) {
-        var self = this;
+        console.log('app:openFile', name);
+        /*var self = this;
         db.getDb().then(function (db) {
           self.scope = $scope.$new(true);
           self.scope.files = db;
@@ -238,7 +247,7 @@ angular
             template: 'templates/openFile.html',
             scope: self.scope
           });
-        });
+        });*/
       },
 
 
@@ -262,4 +271,4 @@ angular
       //isMode: cm.isMode
     };
 
-  }]);
+  });

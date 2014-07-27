@@ -1,12 +1,15 @@
 ;(function () {
   angular
   .module('Horn')
-  .directive('editor', ['$sanitize', function ($sanitize) {
+  .directive('editor', function ($sanitize) {
     return {
       restrict: 'E',
       templateUrl: 'scripts/editor/editor.html',
       transclude: true,
       controllerAs: 'editor',
+      scope: {
+        doc: '=',
+      },
       link: function (scope, element) {
         var textarea = element.find('textarea')[0];
         scope.cm = CodeMirror.fromTextArea(textarea, {
@@ -15,6 +18,11 @@
           tabSize: 2,
           lineWrapping: true
         });
+
+        console.log('editor service', editor);
+
+        console.log(scope.doc);
+        scope.cm.swapDoc(scope.doc);
       },
       controller: function ($scope) {
         $scope.mode = 'md';
@@ -22,6 +30,10 @@
         window.editor = $scope;
 
         $scope.renderedText;
+
+        var render = function () {
+          $scope.renderedText = marked($scope.cm.getValue());
+        };
 
         /**
          * Check current editors's mode
@@ -37,7 +49,8 @@
          */
         this.setMode = function (name) {
           $scope.mode = name;
-          $scope.renderedText = marked($scope.cm.getValue());
+          render();
+          $scope.cm.refresh();
         };
 
         /**
@@ -51,10 +64,11 @@
           text = text || '';
           doc = new CodeMirror.Doc(text, 'gfm');
           oldDoc = $scope.cm.swapDoc(doc);
-          return oldDoc;
+          render();
+          return doc;
         };
 
       }
     }
-  }])
+  })
 })();
