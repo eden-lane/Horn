@@ -18,12 +18,11 @@ angular
     };
 
     Tabs.set = function (number) {
-//      if (this.selected === number)
-//        return;
+      if (this.current.id === number)
+        return;
 
       this.current.id = number;
       this.current.tab = Tabs.tabs[number];
-      console.log(this.selected);
     }
 
     window.tabs = Tabs;

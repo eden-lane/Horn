@@ -10,6 +10,12 @@ angular
 
     $scope.closingTab;
 
+
+    $scope.$on('tabs:currentChanged', function (ev, data) {
+      if (data.tab && data.tab.doc)
+        Editor.set(data.tab.doc);
+    });
+
     window.ts = Tabs;
     //loadTabs();
 
@@ -215,9 +221,9 @@ angular
 
         Editor.set(tab.doc);
         Tabs.add(tab);
-        db.create(tab).then(function () {
+        /*db.create(tab).then(function () {
           console.log('document is created');
-        });
+        });*/
       },
 
 
@@ -229,11 +235,11 @@ angular
 
         current.body = cm.getText();
 
-        db.updateBody(current).then(function () {
+        /*db.updateBody(current).then(function () {
           delete current.isNew;
           current.isSaved = true;
           saveTabs();
-        });
+        });*/
       },
 
 
