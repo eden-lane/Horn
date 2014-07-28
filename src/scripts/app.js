@@ -27,12 +27,13 @@ angular
      * Saves current tabs to settings
      */
     function saveTabs () {
-      if ($scope.tabs.length == 0)
+      var tabs = Tabs.tabs,
+          result = [];
+      if (tabs == 0)
         return;
-      var result = [];
-      for (var i = 0, max = $scope.tabs.length; i < max; i++) {
-        var tab = $scope.tabs[i];
-        result.push({cfs: tab.cfs});
+
+      for (var i = 0, max = tabs.length; i < max; i++) {
+        result.push({cfs: tabs[i].cfs});
       };
       settings.set('tabs', result);
     };
