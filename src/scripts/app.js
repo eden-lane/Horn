@@ -2,15 +2,15 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
-  .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, db, settings, ngDialog) {
+  .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, db, settings, ngDialog, Tabs, Editor) {
 
     var changingTabs = false;
 
     $scope.current = CodeMirror.Doc('sometext', 'gfm');
 
-    $scope.tabs = [];
     $scope.closingTab;
 
+    window.ts = Tabs;
     //loadTabs();
 
 
@@ -18,6 +18,7 @@ angular
 
     window.test = function (text) {
       $scope.current = CodeMirror.Doc(text, 'gfm');
+      $scope.$broadcast('editor:open', $scope.current);
     };
 
     /**
@@ -203,16 +204,19 @@ angular
       /**
        * Creates a new tab
        */
-      newFile: function (doc) {
-        var l = $scope.tabs.push({
+      newFile: function () {
+
+        var tab = {
           name: 'untitled',
           isSaved: false,
-          doc: doc,
+          doc: CodeMirror.Doc('', 'gfm'),
           isNew: true
-        });
-        $scope.setTab(l - 1);
-        db.create($scope.current).then(function () {
-          saveCurrentTab();
+        };
+
+        Editor.set(tab.doc);
+        Tabs.add(tab);
+        db.create(tab).then(function () {
+          console.log('document is created');
         });
       },
 
