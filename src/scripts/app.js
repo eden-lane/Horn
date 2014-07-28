@@ -22,10 +22,6 @@ angular
 
     window.main = $scope;
 
-    window.test = function (text) {
-      $scope.current = CodeMirror.Doc(text, 'gfm');
-      $scope.$broadcast('editor:open', $scope.current);
-    };
 
     /**
      * Saves current tabs to settings
@@ -106,86 +102,6 @@ angular
           var l = $scope.tabs.push(dbFile);
           $scope.setTab(l - 1);
         });
-    };
-
-    /**
-     * Setup for cm editor
-     */
-    /*cm.setup = function (cm) {
-      cm.on('change', function () {
-        if (!changingTabs && $scope.current.isSaved)
-          $scope.$apply(function () {
-            $scope.current.isSaved = false;
-          });
-      });
-    };*/
-
-    /**
-     * Called when user switches tab
-     * @param {Number} number - number of tab in array
-     */
-    $scope.setTab = function (number) {
-/*      if ($scope.current == $scope.tabs[number])
-        return;
-
-      changingTabs = true;
-      if ($scope.current)
-        $scope.current.body = cm.getText();
-
-      if ($scope.tabs.length < number)
-        number = 0;
-
-      if (number < 0) {
-        $scope.current = null;
-        cm.setText('');
-        $scope.actions.setMode('md');
-        //cm.options.readOnly = true;
-      } else {
-        $scope.current = $scope.tabs[number];
-        console.log('setText', $scope.current.body);
-        cm.setText($scope.current.body || '');
-        $scope.actions.setMode($scope.current.mode || 'md');
-        //cm.options.readOnly = false;
-      }
-      changingTabs = false;
-      saveCurrentTab();*/
-    };
-
-    /**
-     * Closes tab
-     */
-    $scope.closeTab = function (number, close) {
-      var tab = $scope.tabs[number];
-      // User agreed with deleting document
-      if (tab.isNew && close) {
-        db.remove(tab.cfs);
-        $scope.tabs.splice(number,1);
-        $scope.current = (number - 1 >= 0) ? $scope.tabs[number - 1] : $scope.tabs[0];
-      } else
-      // first atempt to close tab
-      if (tab.isNew && !close) {
-        $scope.closingTab = number;
-        ngDialog.open({
-          template: 'templates/prompt.html',
-          scope: $scope
-        });
-      } else {
-        $scope.tabs.splice(number,1);
-        $scope.setTab(number - 1);
-      }
-    };
-
-
-    $scope.editTab = function (saveToDb) {
-      if (saveToDb) {
-        var tab = $scope.current;
-        db.update(tab.cfs, {name: tab.name, tags: tab.tags});
-      } else {
-        ngDialog.open({
-          template: 'templates/fileSettings.html',
-          scope: $scope
-        });
-      }
     };
 
     /**
