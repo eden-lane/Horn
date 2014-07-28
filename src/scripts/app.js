@@ -67,9 +67,9 @@ angular
      * Saves active tab to settings
      */
     function saveCurrentTab () {
-      if (!$scope.current)
+      if (Tabs.current)
         return;
-      settings.set('current', {cfs: $scope.current.cfs});
+      settings.set('current', {cfs: Tabs.current.tab.cfs});
     };
 
 
