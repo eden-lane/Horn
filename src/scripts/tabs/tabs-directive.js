@@ -8,12 +8,10 @@ angular
     },
     link: function (scope) {
       scope.tabs = Tabs.tabs;
-
-      scope.isCurrent = function (obj) {
-        return (Tabs.current && Tabs.current.cfs === obj.cfs);
-      }
-
+      scope.current = Tabs.current;
       scope.set = Tabs.set;
+
+      window.tdir = scope;
     }
   }
 });

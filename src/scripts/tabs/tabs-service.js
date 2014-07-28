@@ -1,23 +1,32 @@
 angular
-.module('Horn')
-.factory('Tabs', function () {
-  return {
-    tabs: [],
+  .module('Horn')
+  .factory('Tabs', function () {
 
-    current: null,
+    var Tabs = {};
 
-    add: function (tab, switchToNewTab) {
+    Tabs.tabs = [];
+    Tabs.current = {};
+
+
+    Tabs.add = function (tab, switchToNewTab) {
       if (typeof switchToNewTab == 'undefined')
         switchToNewTab = true;
 
       var l = this.tabs.push(tab);
       if (switchToNewTab)
         this.set(l - 1);
-    },
+    };
 
-    set: function (number) {
-      console.log('Tabs:current', this.current);
-      this.current = this.tabs[number];
+    Tabs.set = function (number) {
+//      if (this.selected === number)
+//        return;
+
+      this.current.id = number;
+      this.current.tab = Tabs.tabs[number];
+      console.log(this.selected);
     }
+
+    window.tabs = Tabs;
+    return Tabs;
   }
-});
+);
