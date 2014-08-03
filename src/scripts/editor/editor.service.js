@@ -9,9 +9,17 @@
         this.cm = cm;
       },
 
-      set: function (doc) {
+      setDoc: function (doc) {
         this.cm.swapDoc(doc);
-      }
+      },
+
+      getDoc: function () {
+        return this.cm.getDoc();
+      },
+
+      getText: function () {
+        return this.cm.getValue();
+      },
     };
   });
 })();

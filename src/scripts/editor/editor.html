@@ -1,5 +1,3 @@
-<div ng-transclude>
-</div>
 <!-- codemirror -->
 <div class="content">
 <div ng-show="editor.isMode('md')" style="height: 88%; border: 1px solid red;">
@@ -8,7 +6,7 @@
 </div>
 
 <!-- preview -->
-<div class="preview" ng-show="editor.isMode('preview')" ng-bind-html="renderedText" style="border: 1px solid green;">
+<div class="preview" ng-show="editor.isMode('preview')" ng-bind-html="editor.renderedText" style="border: 1px solid green;">
 
 </div>
 

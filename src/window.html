@@ -41,9 +41,20 @@
     <div class="loader-container" ng-show="loader">
       <div class="loader"></div>
     </div>
-    <tabs on-change="onTabChange(data)"></tabs>
-    <editor doc="current">
-      <toolbar actions="actions"></toolbar>
+    <tabs items="base.tabs" current="base.current"></tabs>
+    <toolbar>
+      <button class="icon-file" ng-click="base.newFile()"></button>
+      <button class="icon-disk" ng-click="base.saveFile()"></button>
+      <button class="icon-folder" ng-click="base.openFile()"></button>
+
+      <div class="right">
+        <button class="icon-pencil" ng-click="base.setMode('md')" ng-class="{active: base.isMode('md')}"></button>
+        <button class="icon-eye" ng-click="base.setMode('preview')" ng-class="{active: base.isMode('preview')}"></button>
+        <button class="icon-code" ng-click="base.setMode('html')" ng-class="{active: base.isMode('html')}"></button>
+      </div>
+    </toolbar>
+    <editor mode="base.mode">
+
     </editor>
     <script src="components/marked/lib/marked.js"></script>
     <script src="components/siftjs/sift.min.js"></script>
