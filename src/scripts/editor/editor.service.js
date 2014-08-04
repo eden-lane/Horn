@@ -1,7 +1,7 @@
 ;(function () {
   angular
   .module('Horn')
-  .factory('Editor', function () {
+  .factory('Editor', function ($timeout) {
     return {
       cm: null,
 
@@ -10,7 +10,10 @@
       },
 
       setDoc: function (doc) {
-        this.cm.swapDoc(doc);
+        var cm = this.cm;
+        $timeout(function () {
+          cm.swapDoc(doc)
+        }, 0);
       },
 
       getDoc: function () {

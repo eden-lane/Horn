@@ -9,7 +9,7 @@ angular
     this.set = function (id) {
       $scope.$emit('tabs:beforeChanged');
       $scope.current = id;
-      $scope.$emit('tabs:changed');
+      $scope.$emit('tabs:changed', id);
     }
 
     this.isActive = function (id) {

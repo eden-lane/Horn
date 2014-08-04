@@ -27,8 +27,7 @@ angular
     }
 
     vm.setMode = function (name) {
-      vm.mode = name;
-
+      vm.mode = vm.tabs[vm.current].mode = name;
     }
 
     vm.isMode = function (name) {
@@ -41,10 +40,13 @@ angular
     });
 
     $scope.$on('tabs:changed', function (ev, id) {
-      var tab = vm.tabs[vm.current],
-          doc = tab.doc || new CodeMirror.Doc('', 'gfm');
-      console.log('tabs changed');
+      var tab = vm.tabs[id],
+          doc = tab.doc || new CodeMirror.Doc('', 'gfm'),
+          mode = tab.mode || 'md';
+
+      vm.mode = mode;
       Editor.setDoc(doc);
+      vm.current = id;
     });
 
     window.debug = {};
