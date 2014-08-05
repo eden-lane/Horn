@@ -2,6 +2,16 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
+  .controller('PromptCtrl', function ($scope) {
+
+    $scope.data = {
+      result: false
+    };
+
+    $scope.confirm = function () {
+      $scope.data.result = true;
+    };
+  })
   .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, db, settings, ngDialog, Editor) {
 
     var vm = this,
@@ -51,7 +61,12 @@ angular
     });
 
     $scope.$on('tabs:closing', function (ev, defer) {
-      //TODO: ask before closing
+      ngDialog.open({
+        template: 'templates/prompt.html',
+        controller: 'PromptCtrl'
+      }).closePromise.then(function (result) {
+        result.data.result ? defer.resolve() : defer.reject();
+      });
     });
 
     /*

@@ -20,7 +20,7 @@
     "marked": "~0.3.2",
     "codemirror": "~4.2.0",
     "angular-route": "~1.2.18",
-    "ngDialog": "git@github.com:colinbate/ngDialog.git#return-close",
-    "siftjs": "*"
+    "siftjs": "*",
+    "ngDialog": "git@github.com:edencore/ngDialog.git#master"
   }
 }
