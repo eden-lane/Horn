@@ -10,16 +10,24 @@ angular
     vm.tabs = [
       {
         name: 'Document 1',
-        isSaved: true
+        isSaved: true,
+        doc: new CodeMirror.Doc('**abc**', 'gfm')
       },
       {
         name: 'Something',
-        isSaved: false
+        isSaved: false,
+        doc: new CodeMirror.Doc('**xyz**', 'gfm'),
+        mode: 'md'
+      },
+      {
+        name: 'doc 3',
+        isSaved: false,
+        mode: 'preview',
+        doc: new CodeMirror.Doc('**iop**', 'gfm')
       }
     ];
 
     vm.current = 0;
-
     vm.mode = 'md';
 
     vm.newFile = function () {
@@ -28,6 +36,8 @@ angular
 
     vm.setMode = function (name) {
       vm.mode = vm.tabs[vm.current].mode = name;
+      Editor.render();
+      Editor.setDoc(vm.tabs[vm.current].doc);
     }
 
     vm.isMode = function (name) {
@@ -44,9 +54,10 @@ angular
           doc = tab.doc || new CodeMirror.Doc('', 'gfm'),
           mode = tab.mode || 'md';
 
+      vm.current = id;
       vm.mode = mode;
       Editor.setDoc(doc);
-      vm.current = id;
+      Editor.render();
     });
 
     window.debug = {};

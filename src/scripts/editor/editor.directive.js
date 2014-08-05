@@ -6,7 +6,14 @@
     function Controller ($scope) {
       var vm = this;
 
-      vm.renderedText;
+      vm.renderedText = '';
+
+      Editor.on('rendered', function (text) {
+        vm.renderedText = text;
+      });
+
+      window.Ed = Editor;
+      window.eds = $scope;
 
       /**
       * Changing document
@@ -15,13 +22,13 @@
       $scope.$on('editor:open', function (ev, doc) {
         $scope.cm.swapDoc(doc);
         $scope.$apply(function () {
-          render();
+          Editor.render();
         });
       })
 
       $scope.$watch('mode', function () {
         console.log('mode has changed');
-        render();
+        Editor.render();
       });
 
       vm.isMode = function (name) {
