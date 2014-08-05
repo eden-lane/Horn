@@ -41,7 +41,7 @@
     <div class="loader-container" ng-show="loader">
       <div class="loader"></div>
     </div>
-    <tabs items="base.tabs" current="base.current"></tabs>
+    <tabs items="base.tabs" current="base.current" closing="base.beforeClosing"></tabs>
     <toolbar>
       <button class="icon-file" ng-click="base.newFile()"></button>
       <button class="icon-disk" ng-click="base.saveFile()"></button>

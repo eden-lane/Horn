@@ -6,5 +6,5 @@
    ng-class="{active: tabs.isActive($index)}">
   <span class="is-saved" ng-hide="tab.isSaved">●</span>
   {{tab.name}}
-  <a href="" class="icon-close" ng-click="closeTab($index)"></a>
+  <a href="" class="icon-close" ng-click="tabs.close($index)"></a>
 </div>

@@ -30,19 +30,9 @@ angular
     vm.current = 0;
     vm.mode = 'md';
 
-    vm.newFile = function () {
-      console.log('new file was fired');
-    }
-
-    vm.setMode = function (name) {
-      vm.mode = vm.tabs[vm.current].mode = name;
-      Editor.render();
-      Editor.setDoc(vm.tabs[vm.current].doc);
-    }
-
-    vm.isMode = function (name) {
-      return vm.mode == name;
-    }
+    /*
+     * Events
+     */
 
     $scope.$on('tabs:beforeChanged', function (ev, id) {
       var tab = vm.tabs[vm.current];
@@ -59,6 +49,28 @@ angular
       Editor.setDoc(doc);
       Editor.render();
     });
+
+    $scope.$on('tabs:closing', function (ev, defer) {
+      //TODO: ask before closing
+    });
+
+    /*
+     * Toolbar actions
+     */
+
+    vm.newFile = function () {
+      console.log('new file was fired');
+    }
+
+    vm.setMode = function (name) {
+      vm.mode = vm.tabs[vm.current].mode = name;
+      Editor.render();
+      Editor.setDoc(vm.tabs[vm.current].doc);
+    }
+
+    vm.isMode = function (name) {
+      return vm.mode == name;
+    }
 
     window.debug = {};
     window.debug.tabs = this.tabs;
