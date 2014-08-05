@@ -1,0 +1,15 @@
+<!-- codemirror -->
+<div class="content">
+<div ng-show="editor.isMode('md')" style="height: 88%; border: 1px solid red;">
+  <textarea style="width: 100%; height: 100%;">
+  </textarea>
+</div>
+
+<!-- preview -->
+<div class="preview" ng-show="editor.isMode('preview')" ng-bind-html="editor.renderedText" style="border: 1px solid green;">
+
+</div>
+
+<!-- html -->
+<div class="html" ng-show="editor.isMode('html')"></div>
+</div>

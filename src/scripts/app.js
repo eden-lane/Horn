@@ -2,257 +2,253 @@
 
 angular
   .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
-  .controller('BaseCtrl', ['$rootScope', '$scope', 'cm', 'db', 'settings', 'ngDialog', '$q', function ($rootScope, $scope, cm, db, settings, ngDialog, $q) {
+  .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, db, settings, ngDialog, Editor) {
 
-    var changingTabs = false;
+    var vm = this,
+        changingTabs = false;
 
-    $scope.tabs = [];
-    $scope.current = {};
-    $scope.closingTab;
-
-    loadTabs();
-
-
-    /**
-     * Saves current tabs to settings
-     */
-    function saveTabs () {
-      if ($scope.tabs.length == 0)
-        return;
-      var result = [];
-      for (var i = 0, max = $scope.tabs.length; i < max; i++) {
-        var tab = $scope.tabs[i];
-        result.push({cfs: tab.cfs});
-      };
-      settings.set('tabs', result);
-    };
-
-
-    /**
-     * Load last opened tabs
-     */
-    function loadTabs () {
-      $scope.loader = true;
-      settings.get('tabs', function(it) {
-        var tabs = it.tabs,
-            promises = [];
-        if (!tabs.length)
-          $scope.loader = false;
-
-        for (var i = 0, max = tabs.length; i < max; i++) {
-          var cfs = tabs[i].cfs;
-          promises.push(openDocument(cfs));
-        };
-
-        $q.all(promises).finally(function () {
-          loadCurrentTab();
-          $scope.loader = false;
-        })
-      });
-    };
-
-
-    /**
-     * Saves active tab to settings
-     */
-    function saveCurrentTab () {
-      if (!$scope.current)
-        return;
-      settings.set('current', {cfs: $scope.current.cfs});
-    };
-
-
-    /**
-     * Load last active tab from settings
-     */
-    function loadCurrentTab () {
-      settings.get('current', function (it) {
-        var current = it.current;
-        for (var i = 0, l = $scope.tabs.length; i < l; i++) {
-          var tab = $scope.tabs[i];
-          if (tab.cfs == current.cfs) {
-            $scope.$apply(function () {
-              $scope.setTab(i);
-              $scope.loader = false;
-            });
-            return;
-          }
-        };
-      });
-    };
-
-    /**
-     * Open document by it's cfs
-     */
-    function openDocument (cfs) {
-      return db.get({cfs: cfs}, true)
-        .then(function (dbFile) {
-          var dbFile = angular.copy(dbFile);
-          dbFile.isSaved = true;
-          var l = $scope.tabs.push(dbFile);
-          $scope.setTab(l - 1);
-        });
-    };
-
-    /**
-     * Setup for cm editor
-     */
-    cm.setup = function (cm) {
-      cm.on('change', function () {
-        if (!changingTabs && $scope.current.isSaved)
-          $scope.$apply(function () {
-            $scope.current.isSaved = false;
-          });
-      });
-    };
-
-    /**
-     * Called when user switches tab
-     * @param {Number} number - number of tab in array
-     */
-    $scope.setTab = function (number) {
-      if ($scope.current == $scope.tabs[number])
-        return;
-
-      changingTabs = true;
-      if ($scope.current)
-        $scope.current.body = cm.getText();
-
-      if ($scope.tabs.length < number)
-        number = 0;
-
-      if (number < 0) {
-        $scope.current = null;
-        cm.setText('');
-        $scope.actions.setMode('md');
-        cm.options.readOnly = true;
-      } else {
-        $scope.current = $scope.tabs[number];
-        cm.setText($scope.current.body || '');
-        $scope.actions.setMode($scope.current.mode || 'md');
-        cm.options.readOnly = false;
+    vm.tabs = [
+      {
+        name: 'Document 1',
+        isSaved: true,
+        doc: new CodeMirror.Doc('**abc**', 'gfm')
+      },
+      {
+        name: 'Something',
+        isSaved: false,
+        doc: new CodeMirror.Doc('**xyz**', 'gfm'),
+        mode: 'md'
+      },
+      {
+        name: 'doc 3',
+        isSaved: false,
+        mode: 'preview',
+        doc: new CodeMirror.Doc('**iop**', 'gfm')
       }
-      changingTabs = false;
-      saveCurrentTab();
-    };
+    ];
 
-    /**
-     * Closes tab
-     */
-    $scope.closeTab = function (number, close) {
-      var tab = $scope.tabs[number];
-      // User agreed with deleting document
-      if (tab.isNew && close) {
-        db.remove(tab.cfs);
-        $scope.tabs.splice(number,1);
-        $scope.current = (number - 1 >= 0) ? $scope.tabs[number - 1] : $scope.tabs[0];
-      } else
-      // first atempt to close tab
-      if (tab.isNew && !close) {
-        $scope.closingTab = number;
-        ngDialog.open({
-          template: 'templates/prompt.html',
-          scope: $scope
-        });
-      } else {
-        $scope.tabs.splice(number,1);
-        $scope.setTab(number - 1);
-      }
-    };
+    vm.current = 0;
+    vm.mode = 'md';
 
-
-    $scope.editTab = function (saveToDb) {
-      if (saveToDb) {
-        var tab = $scope.current;
-        db.update(tab.cfs, {name: tab.name, tags: tab.tags});
-      } else {
-        ngDialog.open({
-          template: 'templates/fileSettings.html',
-          scope: $scope
-        });
-      }
-    };
-
-    /**
-     *
-     */
-    window.debug = {
-      clearAll: function () {
-        chrome.storage.sync.set({tabs: []});
-        db.removeAll();
-      }
+    vm.newFile = function () {
+      console.log('new file was fired');
     }
 
-    /**
-     * Action commands for toolbars buttons
-     */
+    vm.setMode = function (name) {
+      vm.mode = vm.tabs[vm.current].mode = name;
+      Editor.render();
+      Editor.setDoc(vm.tabs[vm.current].doc);
+    }
 
-    $scope.actions = {
+    vm.isMode = function (name) {
+      return vm.mode == name;
+    }
 
-      /**
-       * Creates a new tab
-       */
-      newFile: function () {
-        var l = $scope.tabs.push({
-          name: 'untitled',
-          isSaved: false,
-          isNew: true
-        });
-        $scope.setTab(l - 1);
-        db.create($scope.current).then(function () {
-          saveCurrentTab();
-        });
-      },
+    $scope.$on('tabs:beforeChanged', function (ev, id) {
+      var tab = vm.tabs[vm.current];
+      tab.doc = Editor.getDoc();
+    });
 
+    $scope.$on('tabs:changed', function (ev, id) {
+      var tab = vm.tabs[id],
+          doc = tab.doc || new CodeMirror.Doc('', 'gfm'),
+          mode = tab.mode || 'md';
 
-      /**
-       * Save file to database and cfs
-       */
-      saveFile: function (isNamed) {
-        var current = $scope.current;
+      vm.current = id;
+      vm.mode = mode;
+      Editor.setDoc(doc);
+      Editor.render();
+    });
 
-        current.body = cm.getText();
+    window.debug = {};
+    window.debug.tabs = this.tabs;
+    window.debug.root = $rootScope;
+    window.debug.editor = Editor;
 
-        db.updateBody(current).then(function () {
-          delete current.isNew;
-          current.isSaved = true;
-          saveTabs();
-        });
-      },
+//
+//
+//    $scope.closingTab;
+//
+//    $scope.$on('tabs:currentChanged', function (ev, data) {
+//      if (data.tab && data.tab.doc)
+//        Editor.set(data.tab.doc);
+//    });
+//
+//    window.ts = Tabs;
+//    loadTabs();
+//
+//    window.main = $scope;
+//
+//
+//    /**
+//     * Saves current tabs to settings
+//     */
+//    function saveTabs () {
+//      var tabs = Tabs.tabs,
+//          result = [];
+//      if (tabs == 0)
+//        return;
+//
+//      for (var i = 0, max = tabs.length; i < max; i++) {
+//        result.push({cfs: tabs[i].cfs});
+//      };
+//      settings.set('tabs', result);
+//    };
+//
+//
+//    /**
+//     * Load last opened tabs
+//     */
+//    function loadTabs () {
+//      $scope.loader = true;
+//      settings.get('tabs', function(it) {
+//        var tabs = it.tabs,
+//            promises = [];
+//        if (!tabs.length)
+//          $scope.loader = false;
+//
+//        for (var i = 0, max = tabs.length; i < max; i++) {
+//          var cfs = tabs[i].cfs;
+//          promises.push(openDocument(cfs));
+//        };
+//
+//        $q.all(promises).finally(function () {
+//          $scope.loader = false;
+//        })
+//      });
+//    };
+//
+//
+//    /**
+//     * Saves active tab to settings
+//     */
+//    function saveCurrentTab () {
+//      if (Tabs.current)
+//        return;
+//      settings.set('current', {cfs: Tabs.current.tab.cfs});
+//    };
+//
+//
+//    /**
+//     * Load last active tab from settings
+//     */
+//    function loadCurrentTab () {
+//      settings.get('current', function (it) {
+//        var current = it.current;
+//        for (var i = 0, l = $scope.tabs.length; i < l; i++) {
+//          var tab = $scope.tabs[i];
+//          if (tab.cfs == current.cfs) {
+//            $scope.$apply(function () {
+//              $scope.loader = false;
+//            });
+//            return;
+//          }
+//        };
+//      });
+//    };
+//
+//    /**
+//     * Open document by it's cfs
+//     */
+//    function openDocument (cfs) {
+//      return db.get({cfs: cfs}, true)
+//        .then(function (dbFile) {
+//          console.log('dbFile', dbFile);
+//          var dbFile = angular.copy(dbFile);
+//          dbFile.isSaved = true;
+//          //$scope.actions.newFile(
+//        });
+//    };
+//
+//    /**
+//     *
+//     */
+//    window.debug = {
+//      clearAll: function () {
+//        chrome.storage.sync.set({tabs: []});
+//        db.removeAll();
+//      }
+//    }
+//
+//    /**
+//     * Action commands for toolbars buttons
+//     */
+//
+//    $scope.actions = {
+//
+//      /**
+//       * Creates a new tab
+//       */
+//      newFile: function () {
+//
+//        var tab = {
+//          name: 'untitled',
+//          isSaved: false,
+//          doc: CodeMirror.Doc('', 'gfm'),
+//          isNew: true
+//        };
+//
+//        Editor.set(tab.doc);
+//        Tabs.add(tab);
+//        db.create(tab).then(function () {
+//          saveTabs();
+//        });
+//
+//      },
+//
+//
+//      /**
+//       * Save file to database and cfs
+//       */
+//      saveFile: function (isNamed) {
+//        var current = $scope.current;
+//
+//        current.body = cm.getText();
+//
+//        /*db.updateBody(current).then(function () {
+//          delete current.isNew;
+//          current.isSaved = true;
+//          saveTabs();
+//        });*/
+//      },
+//
+//
+//      /**
+//       * Open existing file from cfs
+//       */
+//      openFile: function (name) {
+//        console.log('app:openFile', name);
+//        /*var self = this;
+//        db.getDb().then(function (db) {
+//          self.scope = $scope.$new(true);
+//          self.scope.files = db;
+//          self.scope.openDocument = openDocument;
+//          ngDialog.open({
+//            template: 'templates/openFile.html',
+//            scope: self.scope
+//          });
+//        });*/
+//      },
+//
+//
+//      /**
+//       * Set current preview mode
+//       */
+//      setMode: function (name) {
+//        changingTabs = true;
+//        if (!$scope.current)
+//          return;
+//        $scope.current.mode = name;
+//        db.update($scope.current.cfs, {mode: name});
+//        cm.setMode(name);
+//        cm.setText($scope.current.body || '');
+//        changingTabs = false;
+//      },
+//
+//      /**
+//       * Check currently active mode
+//       */
+//      //isMode: cm.isMode
+//    };
 
-
-      /**
-       * Open existing file from cfs
-       */
-      openFile: function (name) {
-        var self = this;
-        db.getDb().then(function (db) {
-          self.scope = $scope.$new(true);
-          self.scope.files = db;
-          self.scope.openDocument = openDocument;
-          ngDialog.open({
-            template: 'templates/openFile.html',
-            scope: self.scope
-          });
-        });
-      },
-
-
-      /**
-       * Set current preview mode
-       */
-      setMode: function (name) {
-        if (!$scope.current)
-          return;
-        $scope.current.mode = name;
-        db.update($scope.current.cfs, {mode: name});
-        cm.setMode(name);
-      },
-
-      /**
-       * Check currently active mode
-       */
-      isMode: cm.isMode
-    };
-
-  }]);
+  });

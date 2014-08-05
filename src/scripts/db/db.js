@@ -64,6 +64,7 @@ angular
     delete result.body;
     delete result.$$hashKey;
     delete result.isSaved;
+    delete result.doc;
 
     return result;
   };
@@ -104,13 +105,19 @@ angular
    * Insert file in the database and save
    */
   function insert(tab) {
-    var dbFile = clearTab(tab);
+    var dbFile,
+        doc = tab.doc;
+
+    delete tab.doc;
+
+    dbFile = clearTab(tab);
 
     getDb()
       .then(function (db) {
         db.push(dbFile);
         saveDb(db);
         updateBody(tab);
+        tab.doc = doc;
       });
   };
 
@@ -160,7 +167,7 @@ angular
     else
     return get({cfs: tab.cfs}).then(function (dbFile) {
       delete tab.isNew;
-      cfs.set(dbFile.cfs, tab.body || '');
+      cfs.set(dbFile.cfs, tab.doc.getValue() || '');
     });
   };
 

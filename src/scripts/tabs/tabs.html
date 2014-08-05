@@ -1,4 +1,9 @@
-<div class="tab" ng-repeat="tab in tabs track by $index" ng-click="setTab($index)" ng-dblclick="editTab()" ng-class="{active: isCurrent(tab)}">
+<div
+   class="tab"
+   ng-repeat="tab in items track by $index"
+   ng-click="tabs.set($index)"
+   ng-dblclick="editTab()"
+   ng-class="{active: tabs.isActive($index)}">
   <span class="is-saved" ng-hide="tab.isSaved">●</span>
   {{tab.name}}
   <a href="" class="icon-close" ng-click="closeTab($index)"></a>
