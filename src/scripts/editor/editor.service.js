@@ -32,6 +32,8 @@
         }, 0);
       },
 
+      Doc: CodeMirror.Doc.bind(CodeMirror, '', 'gfm'),
+
       on: function (event, callback) {
         callbacks[event].push(callback);
       },
