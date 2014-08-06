@@ -41,6 +41,6 @@
 
   angular
   .module('Horn')
-  .service('settings', Settings);
+  .factory('Settings', Settings);
 
 })(angular, chrome);

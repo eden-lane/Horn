@@ -12,30 +12,12 @@ angular
       $scope.data.result = true;
     };
   })
-  .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, db, settings, ngDialog, Editor) {
+  .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, Db, Settings, Utils, ngDialog, Editor) {
 
     var vm = this,
         changingTabs = false;
 
-    vm.tabs = [
-      {
-        name: 'Document 1',
-        isSaved: true,
-        doc: new CodeMirror.Doc('**abc**', 'gfm')
-      },
-      {
-        name: 'Something',
-        isSaved: false,
-        doc: new CodeMirror.Doc('**xyz**', 'gfm'),
-        mode: 'md'
-      },
-      {
-        name: 'doc 3',
-        isSaved: false,
-        mode: 'preview',
-        doc: new CodeMirror.Doc('**iop**', 'gfm')
-      }
-    ];
+    vm.tabs = [];
 
     vm.current = 0;
     vm.mode = 'md';
@@ -49,6 +31,9 @@ angular
       tab.doc = Editor.getDoc();
     });
 
+    /*
+     * When tab has been switched
+     */
     $scope.$on('tabs:changed', function (ev, id) {
       var tab = vm.tabs[id],
           doc = tab.doc || new CodeMirror.Doc('', 'gfm'),
@@ -58,6 +43,7 @@ angular
       vm.mode = mode;
       Editor.setDoc(doc);
       Editor.render();
+      Utils.saveCurrentTab(tab);
     });
 
     $scope.$on('tabs:closing', function (ev, defer) {
@@ -91,6 +77,8 @@ angular
     window.debug.tabs = this.tabs;
     window.debug.root = $rootScope;
     window.debug.editor = Editor;
+
+
 
 //
 //
