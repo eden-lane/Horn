@@ -11,7 +11,7 @@
           deferred = $q.defer();
 
       function init () {
-        cfs.on(function (fileInfo) {
+        Cfs.on(function (fileInfo) {
           if (fileInfo.fileEntry.name == 'db.json') {
             fileInfo.fileEntry.file(function (file) {
               var reader = new FileReader();
@@ -27,7 +27,7 @@
           };
         });
 
-        cfs.get('db.json', true).then(function (dbFile) {
+        Cfs.get('db.json', true).then(function (dbFile) {
           if (!dbFile.body)
             database = [];
           else
@@ -49,12 +49,12 @@
 
     /**
      * @private
-     * Saves database to cfs
+     * Saves database to Cfs
      */
     function saveDb (db) {
       if (typeof db == 'object')
         db = JSON.stringify(db);
-      cfs.set('db.json', db);
+      Cfs.set('db.json', db);
     };
 
     function clearTab(tab) {
@@ -70,7 +70,7 @@
     /**
      * @param {Object} filter - monogo-like filter
      * @param {Boolean} withContent - if true returns contents
-     *                                of the file from cfs
+     *                                of the file from Cfs
      * @return dbFile
      */
     function get (filter, withContent) {
@@ -83,7 +83,7 @@
             deferred.reject();
           } else {
             if (withContent) {
-              cfs.get(dbFile.cfs, false).then(function (file) {
+              Cfs.get(dbFile.cfs, false).then(function (file) {
                 dbFile.body = file.body;
                 deferred.resolve(dbFile);
               });
@@ -123,13 +123,13 @@
 
     /**
      * @public
-     * Create a new file in cfs and in the database
+     * Create a new file in Cfs and in the database
      * @return {Promise<DbFile>} - created DbFile
      */
     function create (tab) {
       var deferred = $q.defer();
 
-      cfs.get().then(function (file) {
+      Cfs.get().then(function (file) {
         tab.cfs = file.name;
         insert(tab);
         deferred.resolve(tab);
@@ -140,7 +140,7 @@
 
 
     /**
-     * Delete an entry from the db and file from the cfs
+     * Delete an entry from the db and file from the Cfs
      */
     function remove(id) {
       getDb().then(function (db) {
@@ -148,12 +148,12 @@
           return item.cfs !== id;
         });
         saveDb(db);
-        cfs.remove(id);
+        Cfs.remove(id);
       });
     };
 
     function removeAll() {
-      cfs.removeAll();
+      Cfs.removeAll();
     };
 
     /**
@@ -165,7 +165,7 @@
       else
       return get({cfs: tab.cfs}).then(function (dbFile) {
         delete tab.isNew;
-        cfs.set(dbFile.cfs, tab.doc.getValue() || '');
+        Cfs.set(dbFile.cfs, tab.doc.getValue() || '');
       });
     };
 
