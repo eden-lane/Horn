@@ -22,6 +22,17 @@ angular
     vm.current = 0;
     vm.mode = 'md';
 
+    function activate() {
+      var promise = Utils.loadTabs();
+      promise.then(function (tabs) {
+        vm.tabs = tabs;
+      });
+
+    };
+
+    activate();
+
+
     /*
      * Events
      */
@@ -36,7 +47,7 @@ angular
      */
     $scope.$on('tabs:changed', function (ev, id) {
       var tab = vm.tabs[id],
-          doc = tab.doc || new CodeMirror.Doc('', 'gfm'),
+          doc = tab.doc || new Editor.Doc(),
           mode = tab.mode || 'md';
 
       vm.current = id;
@@ -60,7 +71,17 @@ angular
      */
 
     vm.newFile = function () {
-      console.log('new file was fired');
+      var tab = {
+        doc: new Editor.Doc(),
+        isSaved: false,
+        name: 'untitled',
+        mode: 'md'
+      };
+      Db.create(tab).then(function (tab) {
+        vm.tabs.push(tab);
+        Utils.saveCurrentTab(tab);
+        Utils.saveTabs(vm.tabs);
+      });
     }
 
     vm.setMode = function (name) {
@@ -73,10 +94,23 @@ angular
       return vm.mode == name;
     }
 
-    window.debug = {};
-    window.debug.tabs = this.tabs;
-    window.debug.root = $rootScope;
-    window.debug.editor = Editor;
+    window.dbg = {};
+    window.dbg.tabs = this.tabs;
+    window.dbg.root = $rootScope;
+    window.dbg.editor = Editor;
+    window.dbg.clear = Db.removeAll;
+    window.dbg.activate = activate;
+    window.dbg.info = function () {
+      Db.getDb().then(function (db) {
+        console.info('database file', db);
+      });
+      Settings.get('tabs', function (storage) {
+        console.info('storage:opened tabs', storage.tabs);
+      });
+      Settings.get('current', function (storage) {
+        console.info('storage:current', storage.current);
+      });
+    };
 
 
 
@@ -144,23 +178,6 @@ angular
 //    };
 //
 //
-//    /**
-//     * Load last active tab from settings
-//     */
-//    function loadCurrentTab () {
-//      settings.get('current', function (it) {
-//        var current = it.current;
-//        for (var i = 0, l = $scope.tabs.length; i < l; i++) {
-//          var tab = $scope.tabs[i];
-//          if (tab.cfs == current.cfs) {
-//            $scope.$apply(function () {
-//              $scope.loader = false;
-//            });
-//            return;
-//          }
-//        };
-//      });
-//    };
 //
 //    /**
 //     * Open document by it's cfs
@@ -174,16 +191,6 @@ angular
 //          //$scope.actions.newFile(
 //        });
 //    };
-//
-//    /**
-//     *
-//     */
-//    window.debug = {
-//      clearAll: function () {
-//        chrome.storage.sync.set({tabs: []});
-//        db.removeAll();
-//      }
-//    }
 //
 //    /**
 //     * Action commands for toolbars buttons

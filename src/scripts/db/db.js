@@ -73,25 +73,24 @@
      *                                of the file from Cfs
      * @return dbFile
      */
-    function get (filter, withContent) {
+    function get(filter, withContent) {
       var deferred = $q.defer();
-      getDb()
-        .then(function (db) {
-          var dbFile = angular.copy(sift(filter, db)[0]);
+      getDb().then(function (db) {
+        var dbFile = angular.copy(sift(filter, db)[0]);
 
-          if (!dbFile) {
-            deferred.reject();
-          } else {
-            if (withContent) {
-              Cfs.get(dbFile.cfs, false).then(function (file) {
-                dbFile.body = file.body;
-                deferred.resolve(dbFile);
-              });
-            } else {
+        if (!dbFile) {
+          deferred.reject();
+        } else {
+          if (withContent) {
+            Cfs.get(dbFile.cfs, false).then(function (file) {
+              dbFile.body = file.body;
               deferred.resolve(dbFile);
-            }
+            });
+          } else {
+            deferred.resolve(dbFile);
           }
-        });
+        }
+      });
 
       return deferred.promise;
     }
@@ -127,15 +126,15 @@
      * @return {Promise<DbFile>} - created DbFile
      */
     function create (tab) {
-      var deferred = $q.defer();
+      var defer = $q.defer();
 
       Cfs.get().then(function (file) {
         tab.cfs = file.name;
         insert(tab);
-        deferred.resolve(tab);
+        defer.resolve(tab);
       });
 
-      return deferred.promise;
+      return defer.promise;
     };
 
 

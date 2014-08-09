@@ -31,17 +31,17 @@
      * when all tabs are loaded
      */
     function loadTabs() {
-      var promises = [];
-
+      var promises = [],
+          defer = $q.defer();
       Settings.get('tabs', function (storage) {
         var tabs = storage.tabs;
         for (var i = 0, l = tabs.length; i < l; i++) {
           var cfs = tabs[i].cfs;
           promises.push(openDocument(cfs));
         }
+        defer.resolve($q.all(promises));
       })
-
-      return $q.all(promises);
+      return defer.promise;
     }
 
     /**
@@ -76,7 +76,8 @@
 //    };*/
 
     function openDocument(cfs) {
-       return Db.get({cfs: cfs}, true);
+      var promise = Db.get({cfs: cfs}, true);
+      return promise;
     }
 
     return {
