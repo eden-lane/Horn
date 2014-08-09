@@ -65,16 +65,10 @@
       });
     }
 
-    /*function openDocument (cfs) {
-//      return db.get({cfs: cfs}, true)
-//        .then(function (dbFile) {
-//          console.log('dbFile', dbFile);
-//          var dbFile = angular.copy(dbFile);
-//          dbFile.isSaved = true;
-//          //$scope.actions.newFile(
-//        });
-//    };*/
-
+    /**
+     * Opens document from db
+     * @return {Promise<DbFile>}
+     */
     function openDocument(cfs) {
       var promise = Db.get({cfs: cfs}, true);
       return promise;
