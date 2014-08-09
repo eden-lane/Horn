@@ -23,15 +23,34 @@ angular
     vm.mode = 'md';
 
     function activate() {
-      var promise = Utils.loadTabs();
-      promise.then(function (tabs) {
+      Utils.loadTabs().then(function (tabs) {
         vm.tabs = tabs;
+        Utils.loadCurrentTab().then(function (current) {
+          for (var i = 0, l = tabs.length; i < l; i++) {
+            if (current.cfs == tabs[i].cfs) {
+              setTab(i);
+              break;
+            }
+          }
+        });
       });
 
     };
 
     activate();
 
+
+    function setTab (id) {
+      var tab = vm.tabs[id],
+          doc = tab.doc,
+          mode = tab.mode || 'md';
+
+      vm.current = id;
+      vm.mode = mode;
+      Editor.setDoc(doc);
+      Editor.render();
+      Utils.saveCurrentTab(tab);
+    }
 
     /*
      * Events
@@ -46,15 +65,7 @@ angular
      * When tab has been switched
      */
     $scope.$on('tabs:changed', function (ev, id) {
-      var tab = vm.tabs[id],
-          doc = tab.doc || new Editor.Doc(),
-          mode = tab.mode || 'md';
-
-      vm.current = id;
-      vm.mode = mode;
-      Editor.setDoc(doc);
-      Editor.render();
-      Utils.saveCurrentTab(tab);
+      setTab(id);
     });
 
     $scope.$on('tabs:closing', function (ev, defer) {
@@ -70,9 +81,12 @@ angular
      * Toolbar actions
      */
 
+    /**
+     * New file button
+     */
     vm.newFile = function () {
       var tab = {
-        doc: new Editor.Doc(),
+        doc: Editor.createDoc(),
         isSaved: false,
         name: 'untitled',
         mode: 'md'
@@ -80,6 +94,20 @@ angular
       Db.create(tab).then(function (tab) {
         vm.tabs.push(tab);
         Utils.saveCurrentTab(tab);
+        Utils.saveTabs(vm.tabs);
+      });
+    }
+
+    /**
+     * Save file button
+     */
+    vm.saveFile = function () {
+      var tab = vm.tabs[vm.current];
+
+      tab.body = Editor.getText();
+      Db.updateBody(tab).then(function () {
+        delete tab.isNew;
+        tab.isSaved = true;
         Utils.saveTabs(vm.tabs);
       });
     }

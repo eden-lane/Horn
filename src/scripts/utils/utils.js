@@ -4,7 +4,7 @@
 ;(function (angular) {
   'use strict';
 
-  function Utils ($q, Settings, Db) {
+  function Utils ($q, Editor, Settings, Db) {
 
     /**
      * Saves currently opened tabs
@@ -59,19 +59,28 @@
     /**
      * Loads current tab from chrome sync storage
      */
-    function loadCurrentTab() {
+    function loadCurrentTab(tabs) {
+      var defer = $q.defer();
       Settings.get('current', function (storage) {
         var current = storage.current;
+        defer.resolve(current);
       });
+
+      return defer.promise;
     }
 
     /**
-     * Opens document from db
+     * Opens document from cfs
      * @return {Promise<DbFile>}
      */
     function openDocument(cfs) {
-      var promise = Db.get({cfs: cfs}, true);
-      return promise;
+      var defer = $q.defer();
+      Db.get({cfs: cfs}, true).then(function (dbFile) {
+        dbFile.doc = Editor.createDoc(dbFile.body);
+        delete dbFile.body;
+        defer.resolve(dbFile);
+      });
+      return defer.promise;
     }
 
     return {
