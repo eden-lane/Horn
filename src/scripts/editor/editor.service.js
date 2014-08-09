@@ -32,7 +32,10 @@
         }, 0);
       },
 
-      Doc: CodeMirror.Doc.bind(CodeMirror, '', 'gfm'),
+      createDoc: function (text) {
+        text = text || '';
+        return new CodeMirror.Doc(text, 'gfm')
+      },
 
       on: function (event, callback) {
         callbacks[event].push(callback);
