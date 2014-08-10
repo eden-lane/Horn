@@ -27,6 +27,20 @@
 
     activate();
 
+    vm.renameTab = function () {
+      var tab = vm.tabs[vm.current];
+      $scope.tabSettings = {current: tab};
+
+      ngDialog.open({
+        template: 'templates/fileSettings.html',
+        controller: 'TabSettingsCtrl',
+        scope: $scope
+      }).closePromise.then(function (result) {
+        console.log('rename result', result);
+      });
+    };
+
+
     function setTab (id) {
       var tab = vm.tabs[id],
           doc = tab.doc,
@@ -128,6 +142,10 @@
     };
   };
 
+
+  /**
+   * Controller for Prompt dialog window
+   */
   function PromptCtrl ($scope) {
     $scope.data = {
       result: false
@@ -136,10 +154,25 @@
     $scope.confirm = function () {
       $scope.data.result = true;
     };
-  };
+  }
+
+  /**
+   * Controller for TabSettings popup window
+   */
+  function TabSettingsCtrl ($scope) {
+    $scope.data = {
+      result: false
+    };
+
+    $scope.confirm = function () {
+      $scope.data.result = true;
+    }
+
+  }
 
   angular
     .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
     .controller('BaseCtrl', BaseCtrl)
     .controller('PromptCtrl', PromptCtrl)
+    .controller('TabSettingsCtrl', TabSettingsCtrl)
 })(angular);

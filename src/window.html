@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" >
+<html lang="ru">
 <head>
 	<meta charset="utf-8" />
 	<title>Horn</title>
@@ -36,12 +36,12 @@
     <script src="scripts/module.js"></script>
 
 </head>
-<body ng-app="Horn">
+<body ng-app="Horn" ng-csp>
   <div ng-controller="BaseCtrl as base">
     <div class="loader-container" ng-show="loader">
       <div class="loader"></div>
     </div>
-    <tabs items="base.tabs" current="base.current" closing="base.beforeClosing"></tabs>
+    <tabs items="base.tabs" current="base.current" ng-dblclick="base.renameTab()"></tabs>
     <toolbar>
       <button class="icon-file" ng-click="base.newFile()"></button>
       <button class="icon-disk" ng-click="base.saveFile()"></button>

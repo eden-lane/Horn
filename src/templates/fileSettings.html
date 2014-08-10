@@ -1,7 +1,7 @@
 <div>
   <h3>Name:</h3>
-  <input type="text" ng-model="current.name"/>
+  <input type="text" ng-model="tabSettings.current.name"/>
   <h3>Tags:</h3>
-  <input type="text" ng-model="current.tags" ng-list/>
-  <input type="button" ng-click="closeThisDialog(); editTab(true)" value="Save"/>
+  <input type="text" ng-model="tabSettings.current.tags" ng-list/>
+  <input type="button" ng-click="confirm(); closeThisDialog(); " value="Save"/>
 </div>

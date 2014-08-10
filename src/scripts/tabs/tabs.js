@@ -51,6 +51,7 @@
 
       return {
         restrict: 'E',
+        require: '?ngDblclick',
         scope: {
           items: '=',
           current: '='
