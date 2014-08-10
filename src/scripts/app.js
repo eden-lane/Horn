@@ -69,6 +69,9 @@
       setTab(id);
     });
 
+    /**
+     * Shows prompt window when tab is going to close
+     */
     $scope.$on('tabs:closing', function (ev, defer) {
       ngDialog.open({
         template: 'templates/prompt.html',
