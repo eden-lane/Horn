@@ -77,6 +77,7 @@
       var defer = $q.defer();
       Db.get({cfs: cfs}, true).then(function (dbFile) {
         dbFile.doc = Editor.createDoc(dbFile.body);
+        dbFile.isSaved = true;
         delete dbFile.body;
         defer.resolve(dbFile);
       });
