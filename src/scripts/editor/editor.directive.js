@@ -12,19 +12,17 @@
         vm.renderedText = text;
       });
 
-      window.Ed = Editor;
-      window.eds = $scope;
 
       /**
       * Changing document
       */
       //TODO: Remove listener and swap docs directly from app.js
-      $scope.$on('editor:open', function (ev, doc) {
+/*      $scope.$on('editor:open', function (ev, doc) {
         $scope.cm.swapDoc(doc);
         $scope.$apply(function () {
           Editor.render();
         });
-      })
+      })*/
 
       $scope.$watch('mode', function () {
         console.log('mode has changed');
