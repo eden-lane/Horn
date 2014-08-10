@@ -1,9 +1,7 @@
-'use strict';
+;(function (angular) {
+  'use strict';
 
-angular
-  .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
-  .controller('BaseCtrl', function ($rootScope, $scope, $q, $timeout, Db, Settings, Utils, ngDialog, Editor) {
-
+  function BaseCtrl ($rootScope, $scope, $q, $timeout, Db, Settings, Utils, ngDialog, Editor) {
     var vm = this,
         changingTabs = false;
 
@@ -25,11 +23,9 @@ angular
           }
         });
       });
-
     };
 
     activate();
-
 
     function setTab (id) {
       var tab = vm.tabs[id],
@@ -130,10 +126,9 @@ angular
         console.info('storage:current', storage.current);
       });
     };
+  };
 
-  })
-  .controller('PromptCtrl', function ($scope) {
-
+  function PromptCtrl ($scope) {
     $scope.data = {
       result: false
     };
@@ -141,4 +136,10 @@ angular
     $scope.confirm = function () {
       $scope.data.result = true;
     };
-  })
+  };
+
+  angular
+    .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
+    .controller('BaseCtrl', BaseCtrl)
+    .controller('PromptCtrl', PromptCtrl)
+})(angular);
