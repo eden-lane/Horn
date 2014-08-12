@@ -21,6 +21,7 @@
     "codemirror": "~4.2.0",
     "angular-route": "~1.2.18",
     "siftjs": "*",
-    "ngDialog": "git@github.com:edencore/ngDialog.git#master"
+    "ngDialog": "git@github.com:edencore/ngDialog.git#master",
+    "lodash": "~2.4.1"
   }
 }
