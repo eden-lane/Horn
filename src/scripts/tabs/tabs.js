@@ -8,9 +8,7 @@
 
       function Controller ($scope, $q) {
 
-        var vm = this,
-            tabs = $scope.items;
-
+        var vm = this;
         /*
          * On tabs count change
          */
@@ -47,7 +45,7 @@
           $scope.$emit('tabs:closing', defer);
 
           defer.promise.then(function () {
-            console.log('we are closing');
+            $scope.items.splice(id, 1);
           });
         }
       }
