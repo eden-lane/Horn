@@ -54,7 +54,7 @@
     function saveDb (db) {
       if (typeof db == 'object')
         db = JSON.stringify(db);
-      Cfs.set('db.json', db);
+      return Cfs.set('db.json', db);
     };
 
     function clearTab(tab) {
@@ -177,9 +177,12 @@
       if (!id)
         return;
       getDb().then(function (db) {
-        var item = sift({cfs: id}, db)[0];
+        var item = sift({cfs: id}, db)[0],
+            doc = params.doc;
+        delete params.doc;
         params = clearTab(params);
         angular.extend(item, params);
+        params.doc = doc;
         saveDb(db);
       });
     };

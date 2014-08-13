@@ -39,6 +39,9 @@
           return id === $scope.current;
         }
 
+        /**
+         * Closing
+         */
         vm.close = function (id) {
           var defer = $q.defer();
           $scope.$emit('tabs:closing', defer);
@@ -51,7 +54,6 @@
 
       return {
         restrict: 'E',
-        require: '?ngDblclick',
         scope: {
           items: '=',
           current: '='

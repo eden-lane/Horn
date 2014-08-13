@@ -36,7 +36,7 @@
         controller: 'TabSettingsCtrl',
         scope: $scope
       }).closePromise.then(function (result) {
-        console.log('rename result', result);
+        Db.update(tab.cfs, tab);
       });
     };
 

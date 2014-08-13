@@ -60,7 +60,7 @@
      * Set the new content of file
      */
     function set(name, body) {
-      getFileEntry(name)
+      return getFileEntry(name)
         .then(function (fileEntry) {
           fileEntry.createWriter(function (fileWriter) {
             var truncated = false;
