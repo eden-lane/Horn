@@ -12,15 +12,21 @@
 
     function activate() {
       Utils.loadTabs().then(function (tabs) {
+        console.log('loaded tabs', tabs);
+        _.forEach(tabs, function (t) {
+          console.log('0:', 'name:', t.name, 'value:', t.doc.getValue());
+        });
         vm.tabs = tabs;
-        console.log('main:', tabs);
         Utils.loadCurrentTab().then(function (current) {
-          for (var i = 0, l = tabs.length; i < l; i++) {
-            if (current.cfs == tabs[i].cfs) {
-              setTab(i);
-              break;
-            }
-          }
+          _.forEach(tabs, function (t) {
+            console.log('1:', 'name:', t.name, 'value:', t.doc.getValue());
+          });
+          _.findIndex(tabs, {cfs: current.cfs}, function (index) {
+            setTab(index);
+          });
+          _.forEach(vm.tabs, function (t) {
+            console.log('2:', 'name:', t.name, 'value:', t.doc.getValue());
+          });
         });
       });
     };
@@ -45,7 +51,6 @@
       var tab = vm.tabs[id],
           doc = tab.doc,
           mode = tab.mode || 'md';
-
       vm.current = id;
       vm.mode = mode;
       Editor.setDoc(doc);

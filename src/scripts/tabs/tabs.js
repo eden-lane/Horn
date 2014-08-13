@@ -6,15 +6,15 @@
     .module('Horn')
     .directive('tabs', function () {
 
-      function Controller ($scope, $q) {
+      function Controller ($rootScope, $scope, $q) {
 
         var vm = this;
         /*
          * On tabs count change
          */
         $scope.$watch('items.length', function (newValue, oldValue) {
-          if (oldValue < newValue)
-            vm.set(newValue - 1);
+          /*if (oldValue < newValue)
+            vm.set(newValue - 1);*/
         });
 
         /**
