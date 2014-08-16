@@ -12,21 +12,10 @@
 
     function activate() {
       Utils.loadTabs().then(function (tabs) {
-        console.log('loaded tabs', tabs);
-        _.forEach(tabs, function (t) {
-          console.log('0:', 'name:', t.name, 'value:', t.doc.getValue());
-        });
         vm.tabs = tabs;
         Utils.loadCurrentTab().then(function (current) {
-          _.forEach(tabs, function (t) {
-            console.log('1:', 'name:', t.name, 'value:', t.doc.getValue());
-          });
-          _.findIndex(tabs, {cfs: current.cfs}, function (index) {
-            setTab(index);
-          });
-          _.forEach(vm.tabs, function (t) {
-            console.log('2:', 'name:', t.name, 'value:', t.doc.getValue());
-          });
+          var index = _.findIndex(vm.tabs, {cfs: current.cfs});
+          setTab(index);
         });
       });
     };
@@ -62,10 +51,7 @@
      * Events
      */
 
-    $scope.$on('tabs:beforeChanged', function (ev, id) {
-      var tab = vm.tabs[vm.current];
-      tab.doc = Editor.getDoc();
-    });
+
 
     /*
      * When tab has been switched
