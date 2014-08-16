@@ -76,7 +76,6 @@
     function openDocument(cfs) {
       var defer = $q.defer();
       Db.get({cfs: cfs}, true).then(function (dbFile) {
-        console.log('opened document. Cfs: ', cfs, dbFile);
         dbFile.doc = Editor.createDoc(dbFile.body);
         dbFile.isSaved = true;
         delete dbFile.body;

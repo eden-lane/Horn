@@ -159,13 +159,11 @@
      * Update an entry in the db and in the cfs
      */
     function updateBody (tab) {
-      console.log('db:updateBody', tab);
       if (!tab.cfs)
         throw 'This file doesn\'t exists in database';
       else
       return get({cfs: tab.cfs}).then(function (dbFile) {
         delete tab.isNew;
-        console.log('get value', tab.doc.getValue());
         Cfs.set(dbFile.cfs, tab.doc.getValue() || '');
       });
     };
