@@ -22,7 +22,8 @@
           callbacks.rendered.forEach(function (f) {
             f(text);
           });
-        })
+        });
+        cm.setSize('100%', '100%');
       },
 
       setDoc: function (doc) {
