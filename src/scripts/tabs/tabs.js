@@ -6,17 +6,15 @@
     .module('Horn')
     .directive('tabs', function () {
 
-      function Controller ($scope, $q) {
+      function Controller ($rootScope, $scope, $q) {
 
-        var vm = this,
-            tabs = $scope.items;
-
+        var vm = this;
         /*
          * On tabs count change
          */
         $scope.$watch('items.length', function (newValue, oldValue) {
-          if (oldValue < newValue)
-            vm.set(newValue - 1);
+          /*if (oldValue < newValue)
+            vm.set(newValue - 1);*/
         });
 
         /**
@@ -39,19 +37,21 @@
           return id === $scope.current;
         }
 
+        /**
+         * Closing
+         */
         vm.close = function (id) {
           var defer = $q.defer();
           $scope.$emit('tabs:closing', defer);
 
           defer.promise.then(function () {
-            console.log('we are closing');
+            $scope.items.splice(id, 1);
           });
         }
       }
 
       return {
         restrict: 'E',
-        require: '?ngDblclick',
         scope: {
           items: '=',
           current: '='

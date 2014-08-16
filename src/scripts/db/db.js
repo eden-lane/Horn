@@ -54,7 +54,7 @@
     function saveDb (db) {
       if (typeof db == 'object')
         db = JSON.stringify(db);
-      Cfs.set('db.json', db);
+      return Cfs.set('db.json', db);
     };
 
     function clearTab(tab) {
@@ -159,11 +159,13 @@
      * Update an entry in the db and in the cfs
      */
     function updateBody (tab) {
+      console.log('db:updateBody', tab);
       if (!tab.cfs)
         throw 'This file doesn\'t exists in database';
       else
       return get({cfs: tab.cfs}).then(function (dbFile) {
         delete tab.isNew;
+        console.log('get value', tab.doc.getValue());
         Cfs.set(dbFile.cfs, tab.doc.getValue() || '');
       });
     };
@@ -177,9 +179,12 @@
       if (!id)
         return;
       getDb().then(function (db) {
-        var item = sift({cfs: id}, db)[0];
+        var item = sift({cfs: id}, db)[0],
+            doc = params.doc;
+        delete params.doc;
         params = clearTab(params);
         angular.extend(item, params);
+        params.doc = doc;
         saveDb(db);
       });
     };

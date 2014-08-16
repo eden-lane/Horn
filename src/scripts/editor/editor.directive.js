@@ -25,7 +25,6 @@
       })*/
 
       $scope.$watch('mode', function () {
-        console.log('mode has changed');
         Editor.render();
       });
 

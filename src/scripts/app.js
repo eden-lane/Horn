@@ -13,14 +13,9 @@
     function activate() {
       Utils.loadTabs().then(function (tabs) {
         vm.tabs = tabs;
-        console.log('main:', tabs);
         Utils.loadCurrentTab().then(function (current) {
-          for (var i = 0, l = tabs.length; i < l; i++) {
-            if (current.cfs == tabs[i].cfs) {
-              setTab(i);
-              break;
-            }
-          }
+          var index = _.findIndex(vm.tabs, {cfs: current.cfs});
+          setTab(index);
         });
       });
     };
@@ -36,7 +31,7 @@
         controller: 'TabSettingsCtrl',
         scope: $scope
       }).closePromise.then(function (result) {
-        console.log('rename result', result);
+        Db.update(tab.cfs, tab);
       });
     };
 
@@ -45,7 +40,6 @@
       var tab = vm.tabs[id],
           doc = tab.doc,
           mode = tab.mode || 'md';
-
       vm.current = id;
       vm.mode = mode;
       Editor.setDoc(doc);
@@ -57,10 +51,7 @@
      * Events
      */
 
-    $scope.$on('tabs:beforeChanged', function (ev, id) {
-      var tab = vm.tabs[vm.current];
-      tab.doc = Editor.getDoc();
-    });
+
 
     /*
      * When tab has been switched

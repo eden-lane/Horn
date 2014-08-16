@@ -34,6 +34,7 @@
 
       createDoc: function (text) {
         text = text || '';
+        console.log('create doc', text);
         return new CodeMirror.Doc(text, 'gfm')
       },
 
