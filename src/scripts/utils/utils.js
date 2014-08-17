@@ -88,7 +88,8 @@
       saveTabs: saveTabs,
       loadTabs: loadTabs,
       saveCurrentTab: saveCurrentTab,
-      loadCurrentTab: loadCurrentTab
+      loadCurrentTab: loadCurrentTab,
+      openDocument: openDocument
     }
   }
 

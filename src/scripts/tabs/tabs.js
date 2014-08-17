@@ -9,13 +9,6 @@
       function Controller ($rootScope, $scope, $q) {
 
         var vm = this;
-        /*
-         * On tabs count change
-         */
-        $scope.$watch('items.length', function (newValue, oldValue) {
-          /*if (oldValue < newValue)
-            vm.set(newValue - 1);*/
-        });
 
         /**
          * Change currently active tab. Produces two events:

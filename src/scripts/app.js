@@ -15,7 +15,7 @@
         vm.tabs = tabs;
         Utils.loadCurrentTab().then(function (current) {
           var index = _.findIndex(vm.tabs, {cfs: current.cfs});
-          setTab(index);
+          vm.setTab(index);
           vm.loading = false;
         });
       });
@@ -37,7 +37,7 @@
     };
 
 
-    function setTab (id) {
+    vm.setTab = function (id) {
       var tab = vm.tabs[id],
           doc = tab.doc,
           mode = tab.mode || 'md';
@@ -52,13 +52,11 @@
      * Events
      */
 
-
-
     /*
      * When tab has been switched
      */
     $scope.$on('tabs:changed', function (ev, id) {
-      setTab(id);
+      vm.setTab(id);
     });
 
     /**
@@ -69,7 +67,13 @@
         template: 'templates/prompt.html',
         controller: 'PromptCtrl'
       }).closePromise.then(function (result) {
-        result.data.result ? defer.resolve() : defer.reject();
+        if (result.value) {
+          var length = vm.tabs.length - 2;
+          defer.resolve();
+          vm.setTab(length);
+        } else {
+          defer.reject();
+        };
       });
     });
 
@@ -108,6 +112,22 @@
       });
     }
 
+
+    /**
+     * Open file button
+     */
+    vm.openFile = function () {
+      ngDialog.open({
+        template: 'templates/openFile.html',
+        controller: 'OpenFileCtrl'
+      }).closePromise.then(function (data) {
+        Utils.openDocument(data.value).then(function (tab) {
+          var length = vm.tabs.push(tab);
+          vm.setTab(length - 1);
+        });
+      });
+    }
+
     vm.setMode = function (name) {
       vm.mode = vm.tabs[vm.current].mode = name;
       Editor.render();
@@ -142,13 +162,7 @@
    * Controller for Prompt dialog window
    */
   function PromptCtrl ($scope) {
-    $scope.data = {
-      result: false
-    };
 
-    $scope.confirm = function () {
-      $scope.data.result = true;
-    };
   }
 
   /**
@@ -162,7 +176,22 @@
     $scope.confirm = function () {
       $scope.data.result = true;
     }
+  }
 
+
+  /**
+   * Controller for OpenFile dialog
+   */
+  function OpenFileCtrl ($scope, Db, Utils) {
+    Db.getDb().then(function (db) {
+      $scope.db = db;
+    });
+
+    $scope.confirm = function (cfs) {
+       Utils.openDocument(cfs).then(function (file) {
+         console.log(file);
+       });
+    }
   }
 
   angular
@@ -170,4 +199,5 @@
     .controller('BaseCtrl', BaseCtrl)
     .controller('PromptCtrl', PromptCtrl)
     .controller('TabSettingsCtrl', TabSettingsCtrl)
+    .controller('OpenFileCtrl', OpenFileCtrl)
 })(angular);
