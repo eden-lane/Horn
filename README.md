@@ -6,3 +6,10 @@ Markdown editor for Chrome:
 
 ### Preview mode
 ![](https://raw.githubusercontent.com/edencore/Horn/master/images/preview.png)
+
+### How to build
+```
+$ npm install
+$ bower install
+$ gulp
+```
