@@ -6,7 +6,7 @@
         changingTabs = false;
 
     vm.tabs = [];
-
+    vm.loading = true;
     vm.current = 0;
     vm.mode = 'md';
 
@@ -16,6 +16,7 @@
         Utils.loadCurrentTab().then(function (current) {
           var index = _.findIndex(vm.tabs, {cfs: current.cfs});
           setTab(index);
+          vm.loading = false;
         });
       });
     };
