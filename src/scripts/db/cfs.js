@@ -104,6 +104,7 @@
           }
         });
       });
+      chrome.storage.sync.clear();
     };
 
     /**
