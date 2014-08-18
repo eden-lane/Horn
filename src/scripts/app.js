@@ -24,6 +24,10 @@
 
     activate();
 
+
+    /**
+     * Show dialog for renaming tab
+     */
     vm.renameTab = function () {
       var tab = vm.tabs[vm.current];
       $scope.tabSettings = {current: tab};
@@ -38,6 +42,11 @@
     };
 
 
+    /**
+     * Change current tab
+     * @param {Number} id - number of new tab
+     * Also will save new current tab to chrome sync storage
+     */
     vm.setTab = function (id) {
       var tab = vm.tabs[id],
           doc = tab.doc,
@@ -61,8 +70,9 @@
     });
 
     /**
-     * Shows prompt window when tab is going to close
+     * Shows dialog when tab is going to close
      */
+    //TODO: Don't ask if doc is in saved state
     $scope.$on('tabs:closing', function (ev, defer) {
       ngDialog.open({
         template: 'templates/prompt.html',
@@ -129,6 +139,11 @@
       });
     }
 
+
+    /**
+     * Change current mode of Editor
+     * @param {'md'|'html'|'preview'} name - name of new mode
+     */
     vm.setMode = function (name) {
       vm.mode = vm.tabs[vm.current].mode = name;
       Editor.render();
@@ -163,14 +178,14 @@
    * Controller for Prompt dialog window
    */
   function PromptCtrl ($scope) {
-
+    //TODO: Remove
   }
 
   /**
    * Controller for TabSettings popup window
    */
   function TabSettingsCtrl ($scope) {
-
+    //TODO: Remove
   }
 
 
