@@ -33,6 +33,10 @@
         }, 0);
       },
 
+      setValue: function (value) {
+        this.cm.setValue(value || "");
+      },
+
       createDoc: function (text) {
         text = text || '';
         return new CodeMirror.Doc(text, 'gfm')

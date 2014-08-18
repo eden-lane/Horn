@@ -48,9 +48,16 @@
      * Also will save new current tab to chrome sync storage
      */
     vm.setTab = function (id) {
-      var tab = vm.tabs[id],
-          doc = tab.doc,
+      var tab = vm.tabs[id];
+
+      if (!tab) {
+        Editor.setValue(null);
+        return;
+      }
+
+      var doc = tab.doc,
           mode = tab.mode || 'md';
+
       vm.current = id;
       vm.mode = mode;
       Editor.setDoc(doc);
