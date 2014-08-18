@@ -31,7 +31,7 @@
         template: 'templates/fileSettings.html',
         controller: 'TabSettingsCtrl',
         scope: $scope
-      }).closePromise.then(function (result) {
+      }).closePromise.then(function () {
         Db.update(tab.cfs, tab);
       });
     };
@@ -169,13 +169,7 @@
    * Controller for TabSettings popup window
    */
   function TabSettingsCtrl ($scope) {
-    $scope.data = {
-      result: false
-    };
 
-    $scope.confirm = function () {
-      $scope.data.result = true;
-    }
   }
 
 
