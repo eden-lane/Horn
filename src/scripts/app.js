@@ -186,12 +186,6 @@
     Db.getDb().then(function (db) {
       $scope.db = db;
     });
-
-    $scope.confirm = function (cfs) {
-       Utils.openDocument(cfs).then(function (file) {
-         console.log(file);
-       });
-    }
   }
 
   angular
@@ -200,4 +194,5 @@
     .controller('PromptCtrl', PromptCtrl)
     .controller('TabSettingsCtrl', TabSettingsCtrl)
     .controller('OpenFileCtrl', OpenFileCtrl)
+
 })(angular);
