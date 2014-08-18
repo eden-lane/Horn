@@ -206,7 +206,7 @@
   }
 
   angular
-    .module('Horn', ['ngSanitize', 'ngRoute', 'ngDialog'])
+    .module('Horn', ['ngSanitize', 'ngDialog'])
     .controller('BaseCtrl', BaseCtrl)
     .controller('PromptCtrl', PromptCtrl)
     .controller('TabSettingsCtrl', TabSettingsCtrl)
