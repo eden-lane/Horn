@@ -16,8 +16,9 @@
         Utils.loadCurrentTab().then(function (current) {
           var index = _.findIndex(vm.tabs, {cfs: current.cfs});
           vm.setTab(index);
-          vm.loading = false;
         });
+      }).finally(function () {
+        vm.loading = false;
       });
     };
 

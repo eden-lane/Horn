@@ -35,6 +35,10 @@
           defer = $q.defer();
       Settings.get('tabs', function (storage) {
         var tabs = storage.tabs;
+        if (!tabs) {
+          defer.reject();
+          return;
+        }
         for (var i = 0, l = tabs.length; i < l; i++) {
           var cfs = tabs[i].cfs;
           promises.push(openDocument(cfs));
