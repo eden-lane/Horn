@@ -37,7 +37,9 @@
         controller: 'TabSettingsCtrl',
         scope: $scope
       }).closePromise.then(function () {
-        Db.update(tab.cfs, tab);
+        Db.update(tab.cfs, tab).then(function (params) {
+          tab.doc = params.doc;
+        });
       });
     };
 

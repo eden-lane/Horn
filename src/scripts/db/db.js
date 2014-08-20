@@ -176,7 +176,7 @@
     function update (id, params) {
       if (!id)
         return;
-      getDb().then(function (db) {
+      return getDb().then(function (db) {
         var item = sift({cfs: id}, db)[0],
             doc = params.doc;
         delete params.doc;
@@ -184,6 +184,7 @@
         angular.extend(item, params);
         params.doc = doc;
         saveDb(db);
+        return params;
       });
     };
 
