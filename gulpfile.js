@@ -14,6 +14,7 @@ var paths = {
     'src/styles/fonts/*',
     'src/scripts/*.js',
     'src/scripts/**/*.html',
+    'src/img/*',
     'src/components/codemirror/**/*',
     'src/components/ngDialog/js/ngDialog.js',
     'src/components/ngDialog/css/ngDialog-theme-default.css',
