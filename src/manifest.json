@@ -2,7 +2,12 @@
   "name": "Horn",
   "description": "Markdown text editor",
   "manifest_version": 2,
-  "version": "0.101",
+  "version": "0.102",
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
   "app": {
     "background": {
       "scripts": ["background.js"]
