@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 
 var paths = {
   styles: ['src/styles/horn.less'],
-  modules: ['src/scripts/**/*.js'],
+  modules: ['src/scripts/*/*.js'],
   app: [
     'src/templates/*',
     'src/styles/horn.css',
