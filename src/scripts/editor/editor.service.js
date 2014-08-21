@@ -13,6 +13,11 @@
 
       init: function (cm) {
         this.cm = cm;
+        cm.on('change', function (sender, args) {
+          callbacks.changed.forEach(function (f) {
+            f(sender, args);
+          });
+        });
       },
 
       render: function () {

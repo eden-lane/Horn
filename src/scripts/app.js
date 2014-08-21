@@ -97,6 +97,13 @@
       });
     });
 
+    Editor.on('changed', function (sender, args) {
+      if (vm.tabs[vm.current].isSaved) {
+        vm.tabs[vm.current].isSaved = false;
+        $scope.$digest();
+      }
+    });
+
     /*
      * Toolbar actions
      */
