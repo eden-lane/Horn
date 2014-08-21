@@ -141,10 +141,15 @@
         template: 'templates/openFile.html',
         controller: 'OpenFileCtrl'
       }).closePromise.then(function (data) {
-        Utils.openDocument(data.value).then(function (tab) {
-          var length = vm.tabs.push(tab);
-          vm.setTab(length - 1);
-        });
+        var index = _.findIndex(vm.tabs, {cfs: data.value});
+        if (index > -1) {
+          vm.setTab(index);
+        } else {
+          Utils.openDocument(data.value).then(function (tab) {
+            var length = vm.tabs.push(tab);
+            vm.setTab(length - 1);
+          })
+        }
       });
     }
 
