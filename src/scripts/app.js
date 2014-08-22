@@ -122,6 +122,7 @@
         vm.tabs.push(tab);
         Utils.saveCurrentTab(tab);
         Utils.saveTabs(vm.tabs);
+        vm.setTab(vm.tabs.length - 1);
       });
     }
 
