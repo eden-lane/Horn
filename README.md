@@ -13,3 +13,5 @@ $ npm install
 $ bower install
 $ gulp
 ```
+
+You also can instal it from [chrome web store](https://chrome.google.com/webstore/detail/horn/kgakjogacdmeoefbgjigkidejggcienn). Remember, it still in early development.
