@@ -18,6 +18,7 @@
             f(sender, args);
           });
         });
+        cm.setSize('100%', '100%');
       },
 
       render: function () {
@@ -28,14 +29,16 @@
             f(text);
           });
         });
-        cm.setSize('100%', '100%');
       },
 
       setDoc: function (doc) {
-        var cm = this.cm;
+        var cm = this.cm,
+            self = this;
         $timeout(function () {
-          cm.swapDoc(doc)
-        }, 0);
+          cm.swapDoc(doc);
+          self.render();
+        });
+
       },
 
       setValue: function (value) {

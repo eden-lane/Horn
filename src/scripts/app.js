@@ -63,7 +63,6 @@
       vm.current = id;
       vm.mode = mode;
       Editor.setDoc(doc);
-      Editor.render();
       Utils.saveCurrentTab(tab);
     }
 
@@ -168,7 +167,6 @@
      */
     vm.setMode = function (name) {
       vm.mode = vm.tabs[vm.current].mode = name;
-      Editor.render();
       Editor.setDoc(vm.tabs[vm.current].doc);
     }
 
