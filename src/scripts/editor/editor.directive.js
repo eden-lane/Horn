@@ -6,13 +6,6 @@
     function Controller ($scope) {
       var vm = this;
 
-      vm.renderedText = '';
-
-      Editor.on('rendered', function (text) {
-        vm.renderedText = text;
-      });
-
-
       vm.isMode = function (name) {
         return $scope.mode == name;
       }
@@ -49,7 +42,13 @@
         lineWrapping: true
       });
 
+      scope.renderedText = '';
+
       Editor.init(scope.cm);
+
+      Editor.on('rendered', function (text) {
+        scope.renderedText = text;
+      });
     }
 
     return {
