@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" ng-csp>
 <head>
 	<meta charset="utf-8" />
 	<title>Horn</title>
@@ -8,8 +8,7 @@
 
     <script src="components/angular/angular.js"></script>
     <script src="components/angular-sanitize/angular-sanitize.js"></script>
-    <!-- Keymaster -->
-    <script src="components/keymaster/keymaster.js"></script>
+    <link href="components/angular/angular-csp.css" rel="stylesheet">
     <!-- CodeMirror -->
     <link rel="stylesheet" href="components/codemirror/lib/codemirror.css">
     <script src="components/codemirror/lib/codemirror.js"></script>
@@ -37,7 +36,7 @@
     <script src="scripts/module.js"></script>
 
 </head>
-<body ng-app="Horn" ng-csp>
+<body ng-app="Horn">
   <div ng-controller="BaseCtrl as base">
     <div class="loader-container" ng-show="base.loading">
       <div class="loader"></div>
