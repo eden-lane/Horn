@@ -88,6 +88,21 @@
       return defer.promise;
     }
 
+    /**
+     * Load images for preview
+     */
+    function loadImage (img) {
+      var src = img.src,
+          xhr = new XMLHttpRequest();
+
+      xhr.responseType = 'blob';
+      xhr.onload = function () {
+        img.src = window.URL.createObjectURL(xhr.response);
+      };
+      xhr.open('GET', src, true);
+      xhr.send();
+    };
+
     return {
       saveTabs: saveTabs,
       loadTabs: loadTabs,
