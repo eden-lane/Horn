@@ -52,7 +52,7 @@
        * Load images for preview
        */
       function loadImage (img) {
-        if (img.length) {
+        if (typeof img.length != 'undefined') {
           [].forEach.call(img, loadImage);
           return;
         }
