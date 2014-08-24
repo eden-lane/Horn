@@ -101,7 +101,7 @@
      * @private
      * Insert file in the database and save
      */
-    function insert(tab) {
+    function insert (tab) {
       var dbFile,
           doc = tab.doc;
 
@@ -109,12 +109,12 @@
 
       dbFile = clearTab(tab);
 
-      getDb()
+      return getDb()
         .then(function (db) {
           db.push(dbFile);
           saveDb(db);
-          updateBody(tab);
           tab.doc = doc;
+          updateBody(tab);
         });
     };
 
@@ -130,8 +130,9 @@
 
       Cfs.get().then(function (file) {
         tab.cfs = file.name;
-        insert(tab);
-        defer.resolve(tab);
+        insert(tab).then(function () {
+          defer.resolve(tab);
+        });
       });
 
       return defer.promise;
