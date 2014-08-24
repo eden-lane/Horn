@@ -35,7 +35,6 @@
         text = text || '';
         doc = new CodeMirror.Doc(text, 'gfm');
         oldDoc = $scope.cm.swapDoc(doc);
-        render();
         return doc;
       };
 
