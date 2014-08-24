@@ -13,10 +13,6 @@
       });
 
 
-      $scope.$watch('mode', function () {
-        Editor.render();
-      });
-
       vm.isMode = function (name) {
         return $scope.mode == name;
       }
