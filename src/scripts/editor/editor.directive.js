@@ -34,7 +34,9 @@
     }
 
     function link (scope, element, attributes) {
-      var textarea = element.find('textarea')[0];
+      var textarea = element.find('textarea')[0],
+          // it's div.preview
+          preview = element.find('div')[2];
       scope.cm = CodeMirror.fromTextArea(textarea, {
         mode: 'gfm',
         theme: 'kirin',
@@ -45,9 +47,30 @@
       scope.renderedText = '';
 
       Editor.init(scope.cm);
+      
+      /**
+       * Load images for preview
+       */
+      function loadImage (img) {
+        if (img.length) {
+          [].forEach.call(img, loadImage);
+          return;
+        }
+        
+        var src = img.src,
+            xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = function () {
+          img.src = window.URL.createObjectURL(xhr.response);
+        };
+        xhr.open('GET', src, true);
+        xhr.send(null);
+      }
 
       Editor.on('rendered', function (text) {
         scope.renderedText = text;
+        var imgs = preview.querySelectorAll('img');
+        loadImage(imgs);
       });
     }
 
