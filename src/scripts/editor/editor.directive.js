@@ -24,10 +24,6 @@
         $scope.mode = name || 'md';
       }
 
-      function render () {
-        vm.renderedText = marked($scope.cm.getValue());
-      }
-
       /**
       * Creates a new document, swaps current document to
       * it and returns previous document
