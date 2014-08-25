@@ -21,6 +21,7 @@ var paths = {
     'src/components/ngDialog/css/ngDialog-theme-plain.css',
     'src/components/ngDialog/css/ngDialog.css',
     'src/components/angular/angular.js',
+    'src/components/angular/angular-csp.css',
     'src/components/angular-sanitize/angular-sanitize.js',
     'src/components/lodash/dist/lodash.min.js',
     'src/components/marked/lib/marked.js',
