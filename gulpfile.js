@@ -17,6 +17,7 @@ var paths = {
     'src/img/*',
     'src/components/codemirror/**/*',
     'src/components/ngDialog/js/ngDialog.js',
+    'src/components/moment/min/moment-with-locales.js',
     'src/components/ngDialog/css/ngDialog-theme-default.css',
     'src/components/ngDialog/css/ngDialog-theme-plain.css',
     'src/components/ngDialog/css/ngDialog.css',
