@@ -22,6 +22,7 @@
     "angular-route": "~1.2.18",
     "siftjs": "*",
     "lodash": "~2.4.1",
-    "ngDialog": "~0.2.11"
+    "ngDialog": "~0.2.11",
+    "moment": "~2.8.2"
   }
 }

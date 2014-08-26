@@ -218,11 +218,20 @@
     });
   }
 
+  function humanDate () {
+    return function (input) {
+      return moment(input).fromNow();
+    }
+  }
+
   angular
     .module('Horn', ['ngSanitize', 'ngDialog'])
     .controller('BaseCtrl', BaseCtrl)
     .controller('PromptCtrl', PromptCtrl)
     .controller('TabSettingsCtrl', TabSettingsCtrl)
     .controller('OpenFileCtrl', OpenFileCtrl)
+    .filter('humanDate', humanDate)
+
+  moment.locale('en');
 
 })(angular);

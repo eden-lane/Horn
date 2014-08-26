@@ -166,6 +166,7 @@
       return get({cfs: tab.cfs}).then(function (dbFile) {
         delete tab.isNew;
         Cfs.set(dbFile.cfs, tab.doc.getValue() || '');
+        update(dbFile.cfs, null);
       });
     };
 
@@ -177,11 +178,15 @@
     function update (id, params) {
       if (!id)
         return;
+
+      params = params || {};
+
       return getDb().then(function (db) {
         var item = sift({cfs: id}, db)[0],
             doc = params.doc;
         delete params.doc;
         params = clearTab(params);
+        params.updatedAt = Date.now();
         angular.extend(item, params);
         params.doc = doc;
         saveDb(db);
