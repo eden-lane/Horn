@@ -1,7 +1,12 @@
 <div>
-  <h3>Name:</h3>
+  <p>
+  <b>Name:</b>
   <input type="text" ng-model="tabSettings.current.name"/>
-  <h3>Tags:</h3>
+  </p>
+  <!--<p>
+  <b>Tags:</b>
   <input type="text" ng-model="tabSettings.current.tags" ng-list/>
+  </p>-->
+
   <input type="button" ng-click="confirm(); closeThisDialog(); " value="Save"/>
 </div>
