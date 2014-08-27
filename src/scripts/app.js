@@ -180,16 +180,34 @@
      * Key binding for editor
      */
 
+    /**
+     * Helper method for replacing or
+     * inserting characters
+     */
+    function replaceSelection (value, cm) {
+      var selection = cm.getSelection();
+      if (!selection) {
+        cm.replaceSelection(value);
+      } else {
+        cm.replaceSelection(value + selection + value);
+      }
+    }
+
     vm.keys = {
       'Ctrl-S': vm.saveFile,
       'Ctrl-O': vm.openFile,
       'Ctrl-N': vm.newFile,
+      'Ctrl-E': vm.setMode.bind(null, 'md'),
+      'Ctrl-P': vm.setMode.bind(null, 'preview'),
       'Ctrl-Tab': function (cm) {
         vm.setTab(vm.current + 1);
       },
       'Shift-Ctrl-Tab': function (cm) {
         vm.setTab(vm.current - 1);
-      }
+      },
+      // text editing
+      'Ctrl-B': replaceSelection.bind(null, '**'),
+      'Ctrl-I': replaceSelection.bind(null, '_')
     }
 
     window.dbg = {};
