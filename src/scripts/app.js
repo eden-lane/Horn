@@ -182,6 +182,8 @@
 
     vm.keys = {
       'Ctrl-S': vm.saveFile,
+      'Ctrl-O': vm.openFile,
+      'Ctrl-N': vm.newFile,
       'Ctrl-Tab': function (cm) {
         vm.setTab(vm.current + 1);
       },
