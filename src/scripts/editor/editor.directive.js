@@ -41,7 +41,8 @@
         mode: 'gfm',
         theme: 'kirin',
         tabSize: 2,
-        lineWrapping: true
+        lineWrapping: true,
+        extraKeys: scope.keys
       });
 
       scope.renderedText = '';
@@ -80,7 +81,8 @@
       transclude: true,
       link: link,
       scope: {
-        mode: '='
+        mode: '=',
+        keys: '='
       },
       controller: Controller,
       controllerAs: 'editor'

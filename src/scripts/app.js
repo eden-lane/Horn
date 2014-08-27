@@ -174,6 +174,14 @@
       return vm.mode == name;
     }
 
+    /**
+     * Key binding for editor
+     */
+
+    vm.keys = {
+      'Ctrl-S': vm.saveFile
+    }
+
     window.dbg = {};
     window.dbg.tabs = vm.tabs;
     window.dbg.root = $rootScope;
