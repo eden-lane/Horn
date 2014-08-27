@@ -83,7 +83,14 @@
      * Shows dialog when tab is going to close
      */
     //TODO: Don't ask if doc is in saved state
-    $scope.$on('tabs:closing', function (ev, defer) {
+    $scope.$on('tabs:closing', function (ev, id, defer) {
+      var tab = vm.tabs[id];
+      if (tab.isSaved) {
+        var length = vm.tabs.length - 2;
+        defer.resolve();
+        vm.setTab(length);
+        return;
+      }
       ngDialog.open({
         template: 'templates/prompt.html',
         controller: 'PromptCtrl'
@@ -97,6 +104,10 @@
         };
       });
     });
+
+    $scope.$on('tabs:closed', function (ev) {
+      Utils.saveTabs(vm.tabs);
+    })
 
     Editor.on('changed', function (sender, args) {
       if (vm.tabs[vm.current].isSaved) {

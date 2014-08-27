@@ -35,10 +35,11 @@
          */
         vm.close = function (id) {
           var defer = $q.defer();
-          $scope.$emit('tabs:closing', defer);
+          $scope.$emit('tabs:closing', id, defer);
 
           defer.promise.then(function () {
             $scope.items.splice(id, 1);
+            $scope.$emit('tabs:closed');
           });
         }
       }
