@@ -79,7 +79,7 @@
         var dbFile = angular.copy(sift(filter, db)[0]);
 
         if (!dbFile) {
-          deferred.reject();
+          deferred.reject('File not found in the database');
         } else {
           if (withContent) {
             Cfs.get(dbFile.cfs, false).then(function (file) {

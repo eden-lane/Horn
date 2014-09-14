@@ -84,6 +84,8 @@
         dbFile.isSaved = true;
         delete dbFile.body;
         defer.resolve(dbFile);
+      }, function onError (e) {
+        defer.reject(e);
       });
       return defer.promise;
     }
