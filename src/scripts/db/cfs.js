@@ -8,7 +8,6 @@
      */
     function getFileEntry (name, createIfNotExists) {
       var deferred = $q.defer();
-
       if (!name)
         throw "name can't be empty";
 
@@ -33,12 +32,13 @@
      */
     function get (name, createIfNotExists) {
       var defer = $q.defer();
+      name = name || getNewFileName();
 
       getFileEntry(name, createIfNotExists)
         .then(readFileEntry)
         .then(function (text) {
           var file = {
-            name: name || getNewFileName(),
+            name: name,
             body: text
           };
 
@@ -133,6 +133,7 @@
     return {
       get: get,
       set: set,
+      readFileEntry: readFileEntry,
       remove: remove,
       removeAll: removeAll,
       on: on

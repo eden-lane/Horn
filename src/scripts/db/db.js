@@ -20,6 +20,7 @@
                   database = JSON.parse(e.target.result);
                 else
                   database = [];
+
               };
 
               reader.readAsText(file);

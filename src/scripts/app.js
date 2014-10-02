@@ -1,7 +1,7 @@
 ;(function (angular) {
   'use strict';
 
-  function BaseCtrl ($rootScope, $scope, $q, $timeout, Db, Settings, Utils, ngDialog, Editor) {
+  function BaseCtrl ($rootScope, $scope, $q, $timeout, Db, Settings, Utils, Cfs, ngDialog, Editor) {
     var vm = this,
         changingTabs = false;
 
@@ -123,11 +123,11 @@
     /**
      * New file button
      */
-    vm.newFile = function () {
+    vm.newFile = function (text, name) {
       var tab = {
-        doc: Editor.createDoc(),
+        doc: Editor.createDoc(text),
         isSaved: false,
-        name: 'untitled',
+        name: name || 'untitled',
         mode: 'md'
       };
       Db.create(tab).then(function (tab) {
@@ -161,14 +161,20 @@
         template: 'templates/openFile.html',
         controller: 'OpenFileCtrl'
       }).closePromise.then(function (data) {
-        var index = _.findIndex(vm.tabs, {cfs: data.value});
-        if (index > -1) {
-          vm.setTab(index);
+        if (data.value.toString() == "[object FileEntry]") {
+          Cfs.readFileEntry(data.value).then(function (text) {
+             vm.newFile(text, data.value.name);
+          });
         } else {
-          Utils.openDocument(data.value).then(function (tab) {
-            var length = vm.tabs.push(tab);
-            vm.setTab(length - 1);
-          })
+          var index = _.findIndex(vm.tabs, {cfs: data.value});
+          if (index > -1) {
+            vm.setTab(index);
+          } else {
+            Utils.openDocument(data.value).then(function (tab) {
+              var length = vm.tabs.push(tab);
+              vm.setTab(length - 1);
+            })
+          }
         }
       });
     }
@@ -220,24 +226,6 @@
       'Ctrl-B': replaceSelection.bind(null, '**'),
       'Ctrl-I': replaceSelection.bind(null, '_')
     }
-
-    window.dbg = {};
-    window.dbg.tabs = vm.tabs;
-    window.dbg.root = $rootScope;
-    window.dbg.editor = Editor;
-    window.dbg.clear = Db.removeAll;
-    window.dbg.activate = activate;
-    window.dbg.info = function () {
-      Db.getDb().then(function (db) {
-        console.info('database file', db);
-      });
-      Settings.get('tabs', function (storage) {
-        console.info('storage:opened tabs', storage.tabs);
-      });
-      Settings.get('current', function (storage) {
-        console.info('storage:current', storage.current);
-      });
-    };
   };
 
 
@@ -263,6 +251,23 @@
     Db.getDb().then(function (db) {
       $scope.db = db;
     });
+
+    $scope.importFromLocal = function () {
+      var localImportSettings = {
+        type: 'openWritableFile',
+        accepts: [
+          {
+            extensions: ['md']
+          },
+          {
+            extensions: ['txt']
+          }
+        ]
+      };
+      chrome.fileSystem.chooseEntry(localImportSettings, function (entry) {
+        $scope.closeThisDialog(entry);
+      })
+    }
   }
 
   function humanDate () {
