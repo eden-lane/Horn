@@ -10,9 +10,9 @@
       var deferred = $q.defer();
 
       if (!name)
-        throw "name of FileEntry cannot be undefined";
+        throw "name can't be empty";
 
-      createIfNotExists = createIfNotExists || true;
+      createIfNotExists = createIfNotExists == false ? false : true;
       chrome.syncFileSystem.requestFileSystem(function (fs) {
         fs.root.getFile(name, {create: createIfNotExists}, function (fileEntry) {
           deferred.resolve(fileEntry);
@@ -32,28 +32,20 @@
      * }
      */
     function get (name, createIfNotExists) {
-      var deferred = $q.defer();
-
-      name = name || getNewFileName();
+      var defer = $q.defer();
 
       getFileEntry(name, createIfNotExists)
-        .then(function (fileEntry) {
-          fileEntry.file(function (file) {
-            var reader = new FileReader();
-            reader.onloadend = function (e) {
-              var file = {
-                name: name,
-                body: e.target.result
-              };
+        .then(readFileEntry)
+        .then(function (text) {
+          var file = {
+            name: name || getNewFileName(),
+            body: text
+          };
 
-              deferred.resolve(file);
-            };
-
-            reader.readAsText(file);
-          });
+          defer.resolve(file);
         });
 
-      return deferred.promise;
+      return defer.promise;
     };
 
     /**
@@ -113,6 +105,26 @@
     function getNewFileName() {
       return +new Date + ".md";
     };
+
+
+    /**
+     * Reads content of the file
+     * @param <FileEntry> fileEntry
+     *
+     * @return {Promise<String>} - content of the file
+     */
+    function readFileEntry (fileEntry) {
+      var defer = $q.defer();
+      fileEntry.file(function (file) {
+        var reader = new FileReader();
+        reader.onloadend = function (e) {
+          defer.resolve(e.target.result);
+        };
+
+        reader.readAsText(file);
+      });
+      return defer.promise;
+    }
 
     function on(callback) {
       chrome.syncFileSystem.onFileStatusChanged.addListener(callback);
