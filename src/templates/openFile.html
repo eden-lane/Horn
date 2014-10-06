@@ -7,7 +7,8 @@
   <input type="text" ng-model="searchText"/>
   </p>
   <div class="files-container">
-    <div ng-repeat="file in db | filter:{'name':searchText} track by $index" class="file" ng-click="closeThisDialog(file.cfs);">
+    <div ng-repeat="file in db | orderBy:'-updatedAt' | filter:{'name':searchText} track by $index " class="file" ng-click="closeThisDialog(file.cfs);">
+      <!--   -->
       <span class="name">{{file.name}}</span>
       <span class="date">{{file.updatedAt | humanDate}}</span>
     </div>
