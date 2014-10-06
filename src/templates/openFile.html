@@ -10,6 +10,7 @@
     <div ng-repeat="file in db | orderBy:'-updatedAt' | filter:{'name':searchText} track by $index " class="file" ng-click="closeThisDialog(file.cfs);">
       <!--   -->
       <span class="name">{{file.name}}</span>
+      <small class="delete" ng-click="delete(file.cfs); $event.stopPropagation();">[delete]</small>
       <span class="date">{{file.updatedAt | humanDate}}</span>
     </div>
   </div>
