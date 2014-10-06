@@ -123,19 +123,25 @@
     /**
      * New file button
      */
-    vm.newFile = function (text, name) {
+    vm.newFile = function (text, name, isLocal) {
       var tab = {
         doc: Editor.createDoc(text),
         isSaved: false,
         name: name || 'untitled',
         mode: 'md'
       };
-      Db.create(tab).then(function (tab) {
+
+      if (isLocal) {
         vm.tabs.push(tab);
-        Utils.saveCurrentTab(tab);
-        Utils.saveTabs(vm.tabs);
         vm.setTab(vm.tabs.length - 1);
-      });
+      } else {
+        Db.create(tab).then(function (tab) {
+          vm.tabs.push(tab);
+          Utils.saveCurrentTab(tab);
+          Utils.saveTabs(vm.tabs);
+          vm.setTab(vm.tabs.length - 1);
+        });
+      }
     }
 
     /**
@@ -163,7 +169,7 @@
       }).closePromise.then(function (data) {
         if (data.value.toString() == "[object FileEntry]") {
           Cfs.readFileEntry(data.value).then(function (text) {
-             vm.newFile(text, data.value.name);
+             vm.newFile(text, data.value.name, true);
           });
         } else {
           var index = _.findIndex(vm.tabs, {cfs: data.value});
