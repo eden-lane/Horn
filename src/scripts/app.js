@@ -253,7 +253,7 @@
   /**
    * Controller for OpenFile dialog
    */
-  function OpenFileCtrl ($scope, Db, Utils) {
+  function OpenFileCtrl ($scope, Db, Utils, ngDialog) {
     Db.getDb().then(function (db) {
       $scope.db = db;
     });
@@ -274,6 +274,20 @@
         $scope.closeThisDialog(entry);
       })
     }
+
+    $scope.delete = function (cfs) {
+      var openFileCtrlScope = $scope;
+      ngDialog.open({
+          template: 'templates/prompt.html',
+          controller: function ($scope) { $scope.message = "Do you really want do delete this document ?" }
+        }).closePromise.then(function (data) {
+          if (data.value) {
+            Db.remove(cfs).then(function (db) {
+              openFileCtrlScope.db = db;
+            });
+          }
+        })
+      }
   }
 
   function humanDate () {

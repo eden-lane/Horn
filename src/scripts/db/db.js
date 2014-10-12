@@ -10,39 +10,14 @@
       var database,
           deferred = $q.defer();
 
-      function init () {
-        Cfs.on(function (fileInfo) {
-          if (fileInfo.fileEntry.name == 'db.json') {
-            fileInfo.fileEntry.file(function (file) {
-              var reader = new FileReader();
-              reader.onloadend = function (e) {
-                if (e.target.result)
-                  database = JSON.parse(e.target.result);
-                else
-                  database = [];
-
-              };
-
-              reader.readAsText(file);
-            });
-          };
-        });
-
+      return function () {
         Cfs.get('db.json', true).then(function (dbFile) {
           if (!dbFile.body)
             database = [];
           else
             database = JSON.parse(dbFile.body);
-
           deferred.resolve(database);
         });
-      };
-
-      return function () {
-        if (!database)
-          init();
-        else
-          deferred.resolve(database);
 
         return deferred.promise;
       };
@@ -141,16 +116,25 @@
 
 
     /**
+     * @public
      * Delete an entry from the db and file from the Cfs
+     * @return {Promise<Array<DbFile>>} - new database
      */
     function remove(id) {
+      var defer = $q.defer();
+
       getDb().then(function (db) {
         db = db.filter(function (item) {
           return item.cfs !== id;
         });
-        saveDb(db);
-        Cfs.remove(id);
+        Cfs.remove(id).then(function () {
+          saveDb(db).then(function () {;
+            defer.resolve(db);
+          });
+        });
       });
+
+      return defer.promise;
     };
 
     function removeAll() {
