@@ -2,9 +2,13 @@
   'use strict';
 
   function Db ($q, Cfs) {
-     /**
+
+    /**
+     * Loads database file form CFS or creates it
+     * if it don't exists
+     *
      * @private
-     * @return {Array<Object>} - database
+     * @return {Array<DbFile>} - database
      */
     var getDb = (function () {
       var database,
@@ -23,16 +27,53 @@
       };
     })();
 
+
     /**
+     * Insert file in the database and save
+     *
      * @private
-     * Saves database to Cfs
      */
-    function saveDb (db) {
-      if (typeof db == 'object')
-        db = JSON.stringify(db);
-      return Cfs.set('db.json', db);
+    function insert (tab) {
+      var dbFile,
+          doc = tab.doc;
+
+      delete tab.doc;
+
+      dbFile = clearTab(tab);
+
+      return getDb()
+        .then(function (db) {
+          db.push(dbFile);
+          saveDb(db);
+          tab.doc = doc;
+          updateBody(tab);
+        });
     };
 
+
+    /**
+     * Saves database to Cfs
+     *
+     * @private
+     * @param {Array<DbFile>}
+     * @return {Promise}
+     */
+    function saveDb (db) {
+      if (typeof db == 'object') {
+        db = JSON.stringify(db);
+        return Cfs.set('db.json', db);
+      } else {
+        throw "db is not valid database file !"
+      }
+    };
+
+
+    /**
+     * Removes unnecessary information from
+     * Tab
+     * @param {Tab}
+     * @return {DbFile}
+     */
     function clearTab(tab) {
       var result = angular.copy(tab);
       delete result.body;
@@ -43,7 +84,10 @@
       return result;
     };
 
+
     /**
+     * Fetching file from database
+     *
      * @param {Object} filter - monogo-like filter
      * @param {Boolean} withContent - if true returns contents
      *                                of the file from Cfs
@@ -72,30 +116,6 @@
     }
 
 
-
-    /**
-     * @private
-     * Insert file in the database and save
-     */
-    function insert (tab) {
-      var dbFile,
-          doc = tab.doc;
-
-      delete tab.doc;
-
-      dbFile = clearTab(tab);
-
-      return getDb()
-        .then(function (db) {
-          db.push(dbFile);
-          saveDb(db);
-          tab.doc = doc;
-          updateBody(tab);
-        });
-    };
-
-
-
     /**
      * @public
      * Create a new file in Cfs and in the database
@@ -116,8 +136,9 @@
 
 
     /**
-     * @public
      * Delete an entry from the db and file from the Cfs
+     *
+     * @public
      * @return {Promise<Array<DbFile>>} - new database
      */
     function remove(id) {
@@ -178,6 +199,7 @@
         return params;
       });
     };
+
 
     return {
       get: get,
