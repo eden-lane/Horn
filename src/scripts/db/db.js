@@ -158,9 +158,11 @@
       return defer.promise;
     };
 
+
     function removeAll() {
       Cfs.removeAll();
     };
+
 
     /**
      * Update an entry in the db and in the cfs
@@ -175,6 +177,7 @@
         update(dbFile.cfs, null);
       });
     };
+
 
     /**
      * Rename an entry in the database
