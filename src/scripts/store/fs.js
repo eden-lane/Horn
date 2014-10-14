@@ -49,12 +49,16 @@
       var defer = $q.defer();
       fs.chooseEntry(settings, function (fileEntry) {
          readFileEntry(fileEntry).then(function (text) {
-           var data = {
-             text: text,
-             name: fileEntry.name
-           }
 
-           defer.resolve(data);
+           fs.getDisplayPath(fileEntry, function (path) {
+             var data = {
+               text: text,
+               path: path,
+               name: fileEntry.name
+             };
+
+             defer.resolve(data);
+           });
          });
       });
 
