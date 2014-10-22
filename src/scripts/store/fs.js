@@ -65,7 +65,8 @@
 
     /**
      * Save file content of the given FileEntry
-     * @param
+     * @param {FileEntry} - entry that will be overwritten
+     * @param {String} - new text of file
      */
     function save (fileEntry, text) {
       var defer = $q.defer();
