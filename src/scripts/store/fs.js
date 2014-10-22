@@ -73,11 +73,25 @@
       var getWritableEntry = fs.getWritableEntry;
       getWritableEntry(fileEntry, function (writableFileEntry) {
         writableFileEntry.createWriter(function (writer) {
+          var truncated = false;
+
+          writer.onwriteend = function (e) {
+            if (!truncated) {
+              truncated = true;
+              this.truncate(this.position);
+            } else {
+              defer.resolve();
+            }
+          }
+
+          writer.onerror = function (e) {
+            defer.reject(e);
+          }
+
           fileEntry.file(function (file) {
             var blob = new Blob([text], {type: 'text/plain'});
             writer.write(blob);
-            defer.resolve();
-          })
+          });
         })
       })
 

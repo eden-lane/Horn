@@ -158,11 +158,13 @@
      * Save file button
      */
     vm.saveFile = function () {
-      var tab = vm.tabs[vm.current];
+      var tab = vm.tabs[vm.current],
+          text = Editor.getText()
 
-      tab.body = Editor.getText();
-      if (tab.isLocal) {
-        Fs.save(tab.fileEntry, Editor.getText());
+      if (tab.fileEntry) {
+        Fs.save(tab.fileEntry, text).then(function () {
+          tab.isSaved = true;
+        });
       } else {
         console.log('isnt local !');
 //        Db.updateBody(tab).then(function () {
