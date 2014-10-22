@@ -37,6 +37,26 @@
       return defer.promise;
     }
 
+
+    function getEntryData (fileEntry) {
+      var defer = $q.defer();
+
+      readFileEntry(fileEntry).then(function (text) {
+        fs.getDisplayPath(fileEntry, function (path) {
+          var data = {
+            text: text,
+            fileEntry: fileEntry,
+            path: path,
+            name: fileEntry.name,
+            id: fs.retainEntry(fileEntry)
+          };
+          defer.resolve(data);
+        });
+      });
+
+      return defer.promise;
+    }
+
     /**
      * Start a dialog for opening file from
      * local file system
@@ -44,19 +64,9 @@
     function open () {
       var defer = $q.defer();
       fs.chooseEntry(settings, function (fileEntry) {
-         readFileEntry(fileEntry).then(function (text) {
-
-           fs.getDisplayPath(fileEntry, function (path) {
-             var data = {
-               text: text,
-               fileEntry: fileEntry,
-               path: path,
-               name: fileEntry.name
-             };
-
-             defer.resolve(data);
-           });
-         });
+        getEntryData(fileEntry).then(function (data) {
+          defer.resolve(data);
+        })
       });
 
       return defer.promise;
@@ -98,9 +108,26 @@
       return defer.promise;
     }
 
+
+    function restore (id) {
+      debugger;
+      console.log('restore');
+      var id = 'E170318E023F637D8AE99D8008A2E6A5:DEMO.md',
+          defer = $q.defer();
+      fs.restoreEntry(id, function (fileEntry) {
+        getEntryData(fileEntry).then(function (data) {
+          defer.resolve(data);
+        })
+      })
+
+      return defer.promise;
+    }
+
     return {
       open: open,
-      save: save
+      save: save,
+      restore: restore,
+      getId: fs.retainEntry
     }
   }
 

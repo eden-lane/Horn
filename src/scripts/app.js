@@ -11,6 +11,12 @@
     vm.mode = 'md';
 
     function activate() {
+      Fs.restore().then(vm.newFile);
+//      Fs.restore().then(function (data) {
+//        vm.newFile(data);
+//      });
+
+
 //      Utils.loadTabs().then(function (tabs) {
 //        vm.tabs = tabs;
 //        Utils.loadCurrentTab().then(function (current) {
@@ -22,8 +28,6 @@
 //      });
       vm.loading = false;
     };
-
-    activate();
 
 
     /**
@@ -131,6 +135,7 @@
      *
      */
     vm.newFile = function (data) {
+      console.log('newFile:data', data);
       var tab = {
         doc: Editor.createDoc(data.text),
         isSaved: !!data.fileEntry,
@@ -255,6 +260,10 @@
       'Ctrl-B': replaceSelection.bind(null, '**'),
       'Ctrl-I': replaceSelection.bind(null, '_')
     }
+
+
+    activate();
+
   };
 
 
