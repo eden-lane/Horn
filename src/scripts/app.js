@@ -133,14 +133,13 @@
     vm.newFile = function (data) {
       var tab = {
         doc: Editor.createDoc(data.text),
-        isSaved: false,
+        isSaved: !!data.fileEntry,
         name: data.name || 'untitled',
         mode: 'md',
-        isLocal: data.isLocal || false,
         fileEntry: data.fileEntry
       };
 
-      if (data.isLocal) {
+      if (data.fileEntry) {
         vm.tabs.push(tab);
         vm.setTab(vm.tabs.length - 1);
       } else {
@@ -207,10 +206,7 @@
      * Import file from local file system
      */
     vm.importFile = function () {
-      Fs.open().then(function (data) {
-        data.isLocal = true;
-        vm.newFile(data);
-      })
+      Fs.open().then(vm.newFile);
     }
 
     /**
