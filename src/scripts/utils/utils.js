@@ -25,17 +25,34 @@
           syncTabs.push({cfs: tab.cfs});
       }
 
-      Settings.set('syncTabs', false, syncTabs);
-      Settings.set('localTabs', true, localTabs);
+      Settings.set('syncTabs', syncTabs, false);
+      Settings.set('localTabs', localTabs, true);
     }
 
+
+    function loadTabs () {
+      var syncTabs, localTabs, tabs,
+          defer = $q.defer();
+
+      Settings.get('syncTabs', false, function (storage) {
+        syncTabs = storage.syncTabs;
+        Settings.get('localTabs', true, function (storage) {
+          localTabs = storage.localTabs;
+          tabs = angular.extend([], syncTabs, localTabs);
+
+          defer.resolve(tabs);
+        })
+      })
+
+      return defer.promise;
+    }
 
     /**
      * Loads saved tabs
      * @returns {Promise) - will be resolved
      * when all tabs are loaded
      */
-    function loadTabs() {
+ /*   function loadTabs() {
       var promises = [],
           defer = $q.defer();
       Settings.get('tabs', function (storage) {
@@ -51,7 +68,7 @@
         defer.resolve($q.all(promises));
       })
       return defer.promise;
-    }
+    }*/
 
     /**
      * Saves currently active tab in chrome
