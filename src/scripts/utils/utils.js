@@ -7,21 +7,26 @@
   function Utils ($q, Editor, Settings, Db) {
 
     /**
-     * Saves currently opened tabs
-     * to settings
+     * Saves currently opened tabs to settings. Documents
+     * stored in CFS will be saved in 'syncTabs' and
+     * documents from local FS will be saved in 'localTabs'
+     *
      * @param {Array.<Object>} tabs
      */
     function saveTabs(tabs) {
-      var result = [];
+      var syncTabs = [],
+          localTabs = [];
 
       for (var i = 0, l = tabs.length; i < l; i++) {
         var tab = tabs[i];
-        if (!tab.cfs)
-          continue;
-
-        result.push({cfs: tab.cfs});
+        if (tab.id)
+          localTabs.push({id: tab.id});
+        else
+          syncTabs.push({cfs: tab.cfs});
       }
-      Settings.set('tabs', result)
+
+      Settings.set('syncTabs', false, syncTabs);
+      Settings.set('localTabs', true, localTabs);
     }
 
 
