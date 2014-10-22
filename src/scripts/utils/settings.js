@@ -9,18 +9,27 @@
 
     /**
      * Saves item to storage
+     *
      * @param {String} name
      * @param {~} value
+     * @param {Boolean} isLocalScope (optional)
      * @param {Function} callback
      */
-    function set(name, value, callback) {
-      var item = {};
+    function set (name, value, isLocalScope, callback) {
+      var item = {},
+          scope = 'sync';
       item[name] = value;
+
+      if (typeof isLocalScope == 'function') {
+        callback = isLocalScope;
+      } else if (isLocalScope) {
+        scope = 'local';
+      }
 
       if (typeof callback != 'function')
         callback = null;
 
-      chrome.storage.sync.set(item, callback);
+      chrome.storage[scope].set(item, callback);
     };
 
     /**
@@ -28,8 +37,16 @@
      * @param {String} name
      * @param {Function} callback
      */
-    function get(name, callback) {
-      chrome.storage.sync.get(name, callback);
+    function get (name, isLocalScope, callback) {
+      var scope = 'sync';
+
+      if (typeof isLocalScope == 'function') {
+        callback = isLocalScope;
+      } else if (isLocalScope) {
+        scope = 'local';
+      }
+
+      chrome.storage[scope].get(name, callback);
     };
 
     return {
