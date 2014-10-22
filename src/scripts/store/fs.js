@@ -110,8 +110,8 @@
 
 
     function restore (id) {
-      var id = 'E170318E023F637D8AE99D8008A2E6A5:DEMO.md',
-          defer = $q.defer();
+      var defer = $q.defer();
+
       fs.restoreEntry(id, function (fileEntry) {
         getEntryData(fileEntry).then(function (data) {
           defer.resolve(data);

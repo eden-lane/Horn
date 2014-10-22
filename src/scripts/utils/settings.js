@@ -32,9 +32,12 @@
       chrome.storage[scope].set(item, callback);
     };
 
+
     /**
      * Loads item from storage
+     *
      * @param {String} name
+     * @param {Boolean} isLocalScope (optional)
      * @param {Function} callback
      */
     function get (name, isLocalScope, callback) {
