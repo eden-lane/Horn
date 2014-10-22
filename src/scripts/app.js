@@ -11,7 +11,13 @@
     vm.mode = 'md';
 
     function activate() {
-      Fs.restore().then(vm.newFile);
+      //Fs.restore().then(vm.newFile);
+      Utils.loadTabs().then(function (tabs) {
+        _.forEach(tabs, function (tab) {
+          if (tab.id)
+            Fs.restore(tab.id).then(vm.newFile);
+        })
+      });
 //      Fs.restore().then(function (data) {
 //        vm.newFile(data);
 //      });
@@ -135,18 +141,19 @@
      *
      */
     vm.newFile = function (data) {
-      console.log('newFile:data', data);
       var tab = {
         doc: Editor.createDoc(data.text),
         isSaved: !!data.fileEntry,
         name: data.name || 'untitled',
         mode: 'md',
-        fileEntry: data.fileEntry
+        fileEntry: data.fileEntry,
+        id: data.id
       };
 
       if (data.fileEntry) {
         vm.tabs.push(tab);
         vm.setTab(vm.tabs.length - 1);
+        Utils.saveTabs(vm.tabs);
       } else {
         throw "Tab can't be not local !";
 //        Db.create(tab).then(function (tab) {
