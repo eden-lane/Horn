@@ -110,8 +110,6 @@
 
 
     function restore (id) {
-      debugger;
-      console.log('restore');
       var id = 'E170318E023F637D8AE99D8008A2E6A5:DEMO.md',
           defer = $q.defer();
       fs.restoreEntry(id, function (fileEntry) {
