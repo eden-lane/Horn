@@ -8,18 +8,14 @@
 
   function Fs ($q) {
 
-    var settings = {
+    var fs = chrome.fileSystem,
+        settings = {
       type: 'openWritableFile',
       accepts: [
-        {
-          extensions: ['md']
-        },
-        {
-          extensions: ['txt']
-        }
+        { extensions: ['md'] },
+        { extensions: ['txt'] }
       ]
-    },
-        fs = chrome.fileSystem;
+    };
 
 
     /**
@@ -53,6 +49,7 @@
            fs.getDisplayPath(fileEntry, function (path) {
              var data = {
                text: text,
+               fileEntry: fileEntry,
                path: path,
                name: fileEntry.name
              };
@@ -65,8 +62,30 @@
       return defer.promise;
     }
 
+
+    /**
+     * Save file content of the given FileEntry
+     * @param
+     */
+    function save (fileEntry, text) {
+      var defer = $q.defer();
+      var getWritableEntry = fs.getWritableEntry;
+      getWritableEntry(fileEntry, function (writableFileEntry) {
+        writableFileEntry.createWriter(function (writer) {
+          fileEntry.file(function (file) {
+            var blob = new Blob([text], {type: 'text/plain'});
+            writer.write(blob);
+            defer.resolve();
+          })
+        })
+      })
+
+      return defer.promise;
+    }
+
     return {
-      open: open
+      open: open,
+      save: save
     }
   }
 

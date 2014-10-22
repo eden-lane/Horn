@@ -1,7 +1,7 @@
 ;(function (angular) {
   'use strict';
 
-  function BaseCtrl ($rootScope, $scope, $q, $timeout, Db, Settings, Utils, Cfs, ngDialog, Editor) {
+  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Editor) {
     var vm = this,
         changingTabs = false;
 
@@ -11,15 +11,16 @@
     vm.mode = 'md';
 
     function activate() {
-      Utils.loadTabs().then(function (tabs) {
-        vm.tabs = tabs;
-        Utils.loadCurrentTab().then(function (current) {
-          var index = _.findIndex(vm.tabs, {cfs: current.cfs});
-          vm.setTab(index);
-        });
-      }).finally(function () {
-        vm.loading = false;
-      });
+//      Utils.loadTabs().then(function (tabs) {
+//        vm.tabs = tabs;
+//        Utils.loadCurrentTab().then(function (current) {
+//          var index = _.findIndex(vm.tabs, {cfs: current.cfs});
+//          vm.setTab(index);
+//        });
+//      }).finally(function () {
+//        vm.loading = false;
+//      });
+      vm.loading = false;
     };
 
     activate();
@@ -122,25 +123,34 @@
 
     /**
      * New file button
+     * @param {Object} data -
+     *  name: name of document
+     *  test: text content of document
+     *  isLocal: true, if document opened from
+     *           local file system
+     *
      */
-    vm.newFile = function (text, name, isLocal) {
+    vm.newFile = function (data) {
       var tab = {
-        doc: Editor.createDoc(text),
+        doc: Editor.createDoc(data.text),
         isSaved: false,
-        name: name || 'untitled',
-        mode: 'md'
+        name: data.name || 'untitled',
+        mode: 'md',
+        isLocal: data.isLocal || false,
+        fileEntry: data.fileEntry
       };
 
-      if (isLocal) {
+      if (data.isLocal) {
         vm.tabs.push(tab);
         vm.setTab(vm.tabs.length - 1);
       } else {
-        Db.create(tab).then(function (tab) {
-          vm.tabs.push(tab);
-          Utils.saveCurrentTab(tab);
-          Utils.saveTabs(vm.tabs);
-          vm.setTab(vm.tabs.length - 1);
-        });
+        throw "Tab can't be not local !";
+//        Db.create(tab).then(function (tab) {
+//          vm.tabs.push(tab);
+//          Utils.saveCurrentTab(tab);
+//          Utils.saveTabs(vm.tabs);
+//          vm.setTab(vm.tabs.length - 1);
+//        });
       }
     }
 
@@ -151,11 +161,16 @@
       var tab = vm.tabs[vm.current];
 
       tab.body = Editor.getText();
-      Db.updateBody(tab).then(function () {
-        delete tab.isNew;
-        tab.isSaved = true;
-        Utils.saveTabs(vm.tabs);
-      });
+      if (tab.isLocal) {
+        Fs.save(tab.fileEntry, Editor.getText());
+      } else {
+        console.log('isnt local !');
+//        Db.updateBody(tab).then(function () {
+//          delete tab.isNew;
+//          tab.isSaved = true;
+//          Utils.saveTabs(vm.tabs);
+//        });
+      }
     }
 
 
@@ -185,6 +200,16 @@
       });
     }
 
+
+    /**
+     * Import file from local file system
+     */
+    vm.importFile = function () {
+      Fs.open().then(function (data) {
+        data.isLocal = true;
+        vm.newFile(data);
+      })
+    }
 
     /**
      * Change current mode of Editor
