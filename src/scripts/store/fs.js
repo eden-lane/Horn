@@ -38,6 +38,18 @@
     }
 
 
+    /**
+     * Get main info for FileEntry
+     *
+     * @param {FileEntry}
+     *
+     * @return {Object} data
+     * @return {String} data.text - content of fileEntry
+     * @return {FileEntry} data.fileEntry
+     * @return {String} data.path - path to the document (is it really needed ?)
+     * @return {String} data.name - name of the file with extension
+     * @return {String} data.id - uniq id file for restoring later
+     */
     function getEntryData (fileEntry) {
       var defer = $q.defer();
 
