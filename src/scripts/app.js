@@ -119,12 +119,7 @@
 
     /**
      * New file button
-     * @param {Object} data -
-     *  name: name of document
-     *  test: text content of document
-     *  isLocal: true, if document opened from
-     *           local file system
-     *
+     * @param {Object} data
      */
     vm.newFile = function (data) {
       var tab = {
