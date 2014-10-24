@@ -41,12 +41,12 @@
     /**
      * Get main info for FileEntry
      *
+     * @private
      * @param {FileEntry}
      *
      * @return {Object} data
      * @return {String} data.text - content of fileEntry
      * @return {FileEntry} data.fileEntry
-     * @return {String} data.path - path to the document (is it really needed ?)
      * @return {String} data.name - name of the file with extension
      * @return {String} data.id - uniq id file for restoring later
      */
@@ -54,16 +54,13 @@
       var defer = $q.defer();
 
       readFileEntry(fileEntry).then(function (text) {
-        fs.getDisplayPath(fileEntry, function (path) {
-          var data = {
-            text: text,
-            fileEntry: fileEntry,
-            path: path,
-            name: fileEntry.name,
-            id: fs.retainEntry(fileEntry)
-          };
-          defer.resolve(data);
-        });
+        var data = {
+          text: text,
+          fileEntry: fileEntry,
+          name: fileEntry.name,
+          id: fs.retainEntry(fileEntry)
+        };
+        defer.resolve(data);
       });
 
       return defer.promise;
