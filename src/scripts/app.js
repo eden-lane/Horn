@@ -48,7 +48,6 @@
      */
     vm.setTab = function (id) {
       id = id >= vm.tabs.length ? 0 : id;
-      id = id < 0 ? vm.tabs.length - 1 : id;
       var tab = vm.tabs[id];
 
       if (!tab) {
