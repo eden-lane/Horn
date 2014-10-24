@@ -66,6 +66,7 @@
       return defer.promise;
     }
 
+
     /**
      * Start a dialog for opening file from
      * local file system

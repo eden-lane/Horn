@@ -11,27 +11,13 @@
     vm.mode = 'md';
 
     function activate() {
-      //Fs.restore().then(vm.newFile);
       Utils.loadTabs().then(function (tabs) {
         _.forEach(tabs, function (tab) {
           if (tab.id)
             Fs.restore(tab.id).then(vm.newFile);
         })
       });
-//      Fs.restore().then(function (data) {
-//        vm.newFile(data);
-//      });
 
-
-//      Utils.loadTabs().then(function (tabs) {
-//        vm.tabs = tabs;
-//        Utils.loadCurrentTab().then(function (current) {
-//          var index = _.findIndex(vm.tabs, {cfs: current.cfs});
-//          vm.setTab(index);
-//        });
-//      }).finally(function () {
-//        vm.loading = false;
-//      });
       vm.loading = false;
     };
 
@@ -274,75 +260,8 @@
   };
 
 
-  /**
-   * Controller for Prompt dialog window
-   */
-  function PromptCtrl ($scope) {
-    //TODO: Remove
-  }
-
-  /**
-   * Controller for TabSettings popup window
-   */
-  function TabSettingsCtrl ($scope) {
-    //TODO: Remove
-  }
-
-
-  /**
-   * Controller for OpenFile dialog
-   */
-  function OpenFileCtrl ($scope, Db, Utils, ngDialog) {
-    Db.getDb().then(function (db) {
-      $scope.db = db;
-    });
-
-    $scope.importFromLocal = function () {
-      var localImportSettings = {
-        type: 'openWritableFile',
-        accepts: [
-          {
-            extensions: ['md']
-          },
-          {
-            extensions: ['txt']
-          }
-        ]
-      };
-      chrome.fileSystem.chooseEntry(localImportSettings, function (entry) {
-        $scope.closeThisDialog(entry);
-      })
-    }
-
-    $scope.delete = function (cfs) {
-      var openFileCtrlScope = $scope;
-      ngDialog.open({
-          template: 'templates/prompt.html',
-          controller: function ($scope) { $scope.message = "Do you really want do delete this document ?" }
-        }).closePromise.then(function (data) {
-          if (data.value) {
-            Db.remove(cfs).then(function (db) {
-              openFileCtrlScope.db = db;
-            });
-          }
-        })
-      }
-  }
-
-  function humanDate () {
-    return function (input) {
-      return moment(input).fromNow();
-    }
-  }
-
   angular
     .module('Horn', ['ngSanitize', 'ngDialog'])
     .controller('BaseCtrl', BaseCtrl)
-    .controller('PromptCtrl', PromptCtrl)
-    .controller('TabSettingsCtrl', TabSettingsCtrl)
-    .controller('OpenFileCtrl', OpenFileCtrl)
-    .filter('humanDate', humanDate)
-
-  moment.locale('en');
 
 })(angular);
