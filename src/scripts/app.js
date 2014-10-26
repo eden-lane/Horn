@@ -39,8 +39,6 @@
       this.id = data.id;
       this.fileEntry = data.fileEntry;
       this.isSaved = !!data.fileEntry;
-
-      window.x = this.doc;
     }
 
 
@@ -58,42 +56,6 @@
       }
     }
 
-/*
-    var tab = vm.tabs[vm.current],
-          text = Editor.getText()
-
-      if (tab.fileEntry) {
-        Fs.save(tab.fileEntry, text).then(function () {
-          tab.isSaved = true;
-        });
-      } else {
-        console.log('isnt local !');
-//        Db.updateBody(tab).then(function () {
-//          delete tab.isNew;
-//          tab.isSaved = true;
-//          Utils.saveTabs(vm.tabs);
-//        });
-    */
-
-
-    /**
-     * Show dialog for renaming tab
-     */
-    vm.renameTab = function () {
-      var tab = vm.tabs[vm.current];
-      $scope.tabSettings = {current: tab};
-
-      ngDialog.open({
-        template: 'templates/fileSettings.html',
-        controller: 'TabSettingsCtrl',
-        scope: $scope
-      }).closePromise.then(function () {
-        Db.update(tab.cfs, tab).then(function (params) {
-          tab.doc = params.doc;
-        });
-      });
-    };
-
 
     /**
      * Change current tab
@@ -101,16 +63,18 @@
      * Also will save new current tab to chrome sync storage
      */
     vm.setTab = function (id) {
+      var tab, doc, mode;
+
       id = id >= vm.tabs.length ? 0 : id;
-      var tab = vm.tabs[id];
+      tab = vm.tabs[id];
 
       if (!tab) {
         Editor.setValue(null);
         return;
       }
 
-      var doc = tab.doc,
-          mode = tab.mode || 'md';
+      doc = tab.doc;
+      mode = tab.mode || 'md';
 
       vm.current = id;
       vm.mode = mode;
@@ -177,20 +141,13 @@
     vm.newFile = function (data) {
       var tab = new Tab(data);
 
-      if (data.fileEntry) {
-        vm.tabs.push(tab);
-        vm.setTab(vm.tabs.length - 1);
-        Utils.saveTabs(vm.tabs);
-      } else {
-        throw "Tab can't be not local !";
-//        Db.create(tab).then(function (tab) {
-//          vm.tabs.push(tab);
-//          Utils.saveCurrentTab(tab);
-//          Utils.saveTabs(vm.tabs);
-//          vm.setTab(vm.tabs.length - 1);
-//        });
-      }
+      vm.tabs.push(tab);
+      vm.setTab(vm.tabs.length - 1);
+      Utils.saveTabs(vm.tabs);
+
+      return tab;
     }
+
 
     /**
      * Save file button
@@ -202,38 +159,12 @@
 
 
     /**
-     * Open file button
-     */
-    vm.openFile = function () {
-      ngDialog.open({
-        template: 'templates/openFile.html',
-        controller: 'OpenFileCtrl'
-      }).closePromise.then(function (data) {
-        if (data.value.toString() == "[object FileEntry]") {
-          Cfs.readFileEntry(data.value).then(function (text) {
-             vm.newFile(text, data.value.name, true);
-          });
-        } else {
-          var index = _.findIndex(vm.tabs, {cfs: data.value});
-          if (index > -1) {
-            vm.setTab(index);
-          } else {
-            Utils.openDocument(data.value).then(function (tab) {
-              var length = vm.tabs.push(tab);
-              vm.setTab(length - 1);
-            })
-          }
-        }
-      });
-    }
-
-
-    /**
      * Import file from local file system
      */
     vm.importFile = function () {
       Fs.open().then(vm.newFile);
     }
+
 
     /**
      * Change current mode of Editor
