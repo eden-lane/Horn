@@ -21,6 +21,60 @@
       vm.loading = false;
     };
 
+    /**
+     * @constructor
+     * @data {Object}
+     */
+    function Tab (data) {
+      var data = data || {
+        name: 'untitled',
+        text: '',
+        mode: 'md',
+        isSaved: false
+      };
+
+      this.doc = Editor.createDoc(data.text)
+      this.name = data.name || 'untitled';
+      this.mode = data.mode || 'md';
+      this.id = data.id;
+      this.fileEntry = data.fileEntry;
+      this.isSaved = !!data.fileEntry;
+
+      window.x = this.doc;
+    }
+
+
+    /**
+     * Saves Tab content to local file
+     */
+    Tab.prototype.save = function () {
+      var self = this,
+          text = self.doc.getValue();
+
+      if (self.fileEntry) {
+        Fs.save(self.fileEntry, text).then(function (){
+          self.isSaved = true;
+        })
+      }
+    }
+
+/*
+    var tab = vm.tabs[vm.current],
+          text = Editor.getText()
+
+      if (tab.fileEntry) {
+        Fs.save(tab.fileEntry, text).then(function () {
+          tab.isSaved = true;
+        });
+      } else {
+        console.log('isnt local !');
+//        Db.updateBody(tab).then(function () {
+//          delete tab.isNew;
+//          tab.isSaved = true;
+//          Utils.saveTabs(vm.tabs);
+//        });
+    */
+
 
     /**
      * Show dialog for renaming tab
@@ -121,14 +175,7 @@
      * @param {Object} data
      */
     vm.newFile = function (data) {
-      var tab = {
-        doc: Editor.createDoc(data.text),
-        isSaved: !!data.fileEntry,
-        name: data.name || 'untitled',
-        mode: 'md',
-        fileEntry: data.fileEntry,
-        id: data.id
-      };
+      var tab = new Tab(data);
 
       if (data.fileEntry) {
         vm.tabs.push(tab);
@@ -149,21 +196,8 @@
      * Save file button
      */
     vm.saveFile = function () {
-      var tab = vm.tabs[vm.current],
-          text = Editor.getText()
-
-      if (tab.fileEntry) {
-        Fs.save(tab.fileEntry, text).then(function () {
-          tab.isSaved = true;
-        });
-      } else {
-        console.log('isnt local !');
-//        Db.updateBody(tab).then(function () {
-//          delete tab.isNew;
-//          tab.isSaved = true;
-//          Utils.saveTabs(vm.tabs);
-//        });
-      }
+      var tab = vm.tabs[vm.current];
+      tab.save();
     }
 
 
@@ -207,7 +241,7 @@
      */
     vm.setMode = function (name) {
       vm.mode = vm.tabs[vm.current].mode = name;
-      Editor.setDoc(vm.tabs[vm.current].doc);
+      ///Editor.setDoc(vm.tabs[vm.current].doc);
     }
 
     vm.isMode = function (name) {
