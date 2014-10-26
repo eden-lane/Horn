@@ -49,10 +49,10 @@
       var self = this,
           text = self.doc.getValue();
 
-      if (self.fileEntry) {
+      if (!self.cfs) {
         Fs.save(self.fileEntry, text).then(function (){
           self.isSaved = true;
-        })
+        });
       }
     }
 

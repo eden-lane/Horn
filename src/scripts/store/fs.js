@@ -10,7 +10,6 @@
 
     var fs = chrome.fileSystem,
         settings = {
-      type: 'openWritableFile',
       accepts: [
         { extensions: ['md'] },
         { extensions: ['txt'] }
@@ -70,10 +69,19 @@
     /**
      * Start a dialog for opening file from
      * local file system
+     *
+     * @param {Boolean} isNew
      */
-    function open () {
-      var defer = $q.defer();
-      fs.chooseEntry(settings, function (fileEntry) {
+    function open (isNew) {
+      var options,
+          defer = $q.defer();
+
+      if (isNew)
+        options = angular.extend({}, settings, {type: 'saveFile'});
+      else
+        options = angular.extend({}, settings, {type: 'openFile'});
+
+      fs.chooseEntry(options, function (fileEntry) {
         getEntryData(fileEntry).then(function (data) {
           defer.resolve(data);
         })
@@ -89,35 +97,40 @@
      * @param {String} - new text of file
      */
     function save (fileEntry, text) {
-      var defer = $q.defer();
-      var getWritableEntry = fs.getWritableEntry;
-      getWritableEntry(fileEntry, function (writableFileEntry) {
-        writableFileEntry.createWriter(function (writer) {
-          var truncated = false;
+      var defer = $q.defer(),
+          getWritableEntry = fs.getWritableEntry;
 
-          writer.onwriteend = function (e) {
-            if (!truncated) {
-              truncated = true;
-              this.truncate(this.position);
-            } else {
-              defer.resolve();
+      $q.when(!!fileEntry ? {fileEntry: fileEntry} : open(true)).then(function (data) {
+        getWritableEntry(data.fileEntry, function (writableFileEntry) {
+          writableFileEntry.createWriter(function (writer) {
+            var truncated = false;
+
+            writer.onwriteend = function (e) {
+              if (!truncated) {
+                truncated = true;
+                this.truncate(this.position);
+              } else {
+                defer.resolve();
+              }
             }
-          }
 
-          writer.onerror = function (e) {
-            defer.reject(e);
-          }
+            writer.onerror = function (e) {
+              defer.reject(e);
+            }
 
-          fileEntry.file(function (file) {
-            var blob = new Blob([text], {type: 'text/plain'});
-            writer.write(blob);
-          });
+            fileEntry.file(function (file) {
+              var blob = new Blob([text], {type: 'text/plain'});
+              writer.write(blob);
+            });
+          })
         })
       })
+
 
       return defer.promise;
     }
 
+    window.fssave = save;
 
     function restore (id) {
       var defer = $q.defer();
