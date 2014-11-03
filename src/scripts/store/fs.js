@@ -95,6 +95,8 @@
      * Save file content of the given FileEntry
      * @param {FileEntry} - entry that will be overwritten
      * @param {String} - new text of file
+     *
+     * @return {Promise<FileEntry>} - fileEntry for saved file
      */
     function save (fileEntry, text) {
       var defer = $q.defer(),
@@ -110,7 +112,7 @@
                 truncated = true;
                 this.truncate(this.position);
               } else {
-                defer.resolve();
+                defer.resolve(writableFileEntry);
               }
             }
 
@@ -118,10 +120,8 @@
               defer.reject(e);
             }
 
-            fileEntry.file(function (file) {
-              var blob = new Blob([text], {type: 'text/plain'});
-              writer.write(blob);
-            });
+            var blob = new Blob([text], {type: 'text/plain'});
+            writer.write(blob);
           })
         })
       })
@@ -129,8 +129,6 @@
 
       return defer.promise;
     }
-
-    window.fssave = save;
 
     function restore (id) {
       var defer = $q.defer();

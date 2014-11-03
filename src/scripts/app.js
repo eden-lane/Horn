@@ -50,8 +50,10 @@
           text = self.doc.getValue();
 
       if (!self.cfs) {
-        Fs.save(self.fileEntry, text).then(function (){
+        Fs.save(self.fileEntry, text).then(function (fileEntry) {
           self.isSaved = true;
+          self.fileEntry = fileEntry;
+          self.name = fileEntry.name;
         });
       }
     }
