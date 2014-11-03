@@ -103,18 +103,19 @@
       var tab = vm.tabs[id];
       if (tab.isSaved) {
         var length = vm.tabs.length - 2;
-        defer.resolve();
         vm.setTab(length);
+        defer.resolve();
         return;
       }
       ngDialog.open({
         template: 'templates/prompt.html',
-        controller: 'PromptCtrl'
+        controller: 'PromptCtrl',
+        data: {message: "File isn't saved. Do you really want to close it ?"}
       }).closePromise.then(function (result) {
         if (result.value) {
           var length = vm.tabs.length - 2;
-          defer.resolve();
           vm.setTab(length);
+          defer.resolve();
         } else {
           defer.reject();
         };
