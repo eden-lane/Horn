@@ -14,6 +14,11 @@
     vm.current = 0;
     vm.mode = 'md';
 
+    activate();
+
+    /**
+     * Loads previously saved tabs
+     */
     function activate() {
       Utils.loadTabs().then(function (tabs) {
         _.forEach(tabs, function (tab) {
@@ -25,8 +30,37 @@
       vm.loading = false;
     };
 
-    activate();
 
+    /**
+     * Get currently active tab
+     *
+     * @return {Tab}
+     */
+    function getCurrentTab () {
+      return getTab(vm.current);
+    }
+
+
+    /**
+     * Get tab by id
+     *
+     * @param {Number} id
+     * @return {Tab}
+     */
+    function getTab (id) {
+      return vm.tabs[id];
+    }
+
+
+    /**
+     * Actions that performed when tab is changed.
+     * It sets doc of new tab in the Editor and saves
+     * currently active tab for restore it later, when app
+     * starts
+     *
+     * @param {Tab} tab - new tab
+     * @param {Number} id - id of new tab
+     */
     function onChangeTab (tab, id) {
       if (tab) {
         Editor.setDoc(tab.doc);
@@ -35,13 +69,7 @@
       }
     }
 
-    function getCurrentTab () {
-      return getTab(vm.current);
-    }
-
-    function getTab (id) {
-      return vm.tabs[id];
-    }
+    // EVENTS
 
     /*
      * When tab has been switched
@@ -50,10 +78,10 @@
       onChangeTab(data.tab, data.id);
     });
 
+
     /**
      * Shows dialog when tab is going to close
      */
-    //TODO: Don't ask if doc is in saved state
     $scope.$on('tabs:closing', function (ev, id, defer) {
       var tab = getTab(id);
       if (tab.isSaved) {
@@ -70,17 +98,27 @@
     });
 
 
+    /**
+     * Saves currently opened tabs
+     */
     $scope.$on('tabs:closed', function (ev) {
       Utils.saveTabs(vm.tabs);
     })
 
 
+    /**
+     * Watch for changing of text in Editor
+     */
     Editor.on('changed', function (sender, args) {
       if (vm.tabs[vm.current].isSaved) {
-        vm.tabs[vm.current].isSaved = false;
-        $scope.$digest();
+        $scope.$apply(function () {
+          getCurrentTab().isSaved = false;
+        })
       }
     });
+
+
+    // Toolbar actions
 
     /**
      * New file button
