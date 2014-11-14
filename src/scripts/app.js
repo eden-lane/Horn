@@ -1,7 +1,7 @@
 ;(function (angular) {
   'use strict';
 
-  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Editor) {
+  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Editor, Tab) {
     var vm = this,
         changingTabs = false;
 
@@ -20,44 +20,6 @@
 
       vm.loading = false;
     };
-
-    /**
-     * @constructor
-     * @data {Object}
-     */
-    function Tab (data) {
-      var data = data || {
-        name: 'untitled',
-        text: '',
-        mode: 'md',
-        isSaved: false
-      };
-
-      this.doc = Editor.createDoc(data.text)
-      this.name = data.name || 'untitled';
-      this.mode = data.mode || 'md';
-      this.id = data.id;
-      this.fileEntry = data.fileEntry;
-      this.isSaved = !!data.fileEntry;
-    }
-
-
-    /**
-     * Saves Tab content to local file
-     */
-    Tab.prototype.save = function () {
-      var self = this,
-          text = self.doc.getValue();
-
-      if (!self.cfs) {
-        Fs.save(self.fileEntry, text).then(function (fileEntry) {
-          self.isSaved = true;
-          self.fileEntry = fileEntry;
-          self.name = fileEntry.name;
-        });
-      }
-    }
-
 
     /**
      * Change current tab
