@@ -171,6 +171,8 @@
      * @param {'md'|'html'|'preview'} name - name of new mode
      */
     vm.setMode = function (name) {
+      if (name != 'md')
+        Editor.render();
       vm.mode = getCurrentTab().mode = name;
     }
 
