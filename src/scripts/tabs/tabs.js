@@ -59,6 +59,7 @@
 
           defer.promise.then(function () {
             $scope.items.splice(id, 1);
+            vm.set(id - 1);
             $scope.$emit('tabs:closed');
           });
         }

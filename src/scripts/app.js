@@ -66,6 +66,8 @@
         Editor.setDoc(tab.doc);
         vm.mode = tab.mode;
         Utils.saveCurrentTab(tab);
+      } else {
+        vm.mode = null;
       }
     }
 
