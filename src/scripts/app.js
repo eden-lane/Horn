@@ -69,6 +69,20 @@
       }
     }
 
+
+    /**
+     * Change current tab
+     * @param {Number|String} id
+     */
+    function setTab (id) {
+      if (isNaN(Number.parseInt(id))) {
+        id = _.findIndex(vm.tabs, {name: id});
+      }
+      $scope.$apply(function () {
+        vm.current = id;
+      })
+    }
+
     // EVENTS
 
     /*
@@ -185,11 +199,11 @@
       'Ctrl-N': vm.newFile,
       'Ctrl-E': vm.setMode.bind(null, 'md'),
       'Ctrl-P': vm.setMode.bind(null, 'preview'),
-      'Ctrl-Tab': function (cm) {
-        vm.setTab(vm.current + 1);
+      'Ctrl-Tab': function () {
+        $scope.$broadcast('tabs:change', {id: vm.current + 1});
       },
       'Shift-Ctrl-Tab': function (cm) {
-        vm.setTab(vm.current - 1);
+        $scope.$broadcast('tabs:change', {id: vm.current - 1});
       },
       // text editing
       'Ctrl-B': replaceSelection.bind(null, '**'),

@@ -28,7 +28,13 @@
          * @event 'tabs:changed'
          */
         vm.set = function (id) {
-          var tab = $scope.items[id];
+          var tab,
+              length = $scope.items.length;
+
+          id = id >= length ? 0 : id;
+          id = id < 0 ? length - 1 : id;
+
+          tab = $scope.items[id];
           $scope.current = id;
 
           $scope.$emit('tabs:changed', {id: id, tab: tab});
@@ -67,6 +73,17 @@
 
           if (newLength > oldLength)
             vm.set(newLength - 1);
+        });
+
+
+        /**
+         * Listen for changing tabs outside directive
+         * args: {
+         *  id - id of new tab
+         * }
+         */
+        $scope.$on('tabs:change', function (ev, args) {
+          vm.set(args.id);
         })
 
       }
