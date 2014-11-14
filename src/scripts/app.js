@@ -1,7 +1,11 @@
 ;(function (angular) {
   'use strict';
 
-  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Editor, Tab) {
+  angular
+    .module('Horn', ['ngSanitize', 'ngDialog', 'dialogs'])
+    .controller('BaseCtrl', BaseCtrl);
+
+  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Editor, Tab, Prompt) {
     var vm = this,
         changingTabs = false;
 
@@ -20,6 +24,8 @@
 
       vm.loading = false;
     };
+
+    activate();
 
     /**
      * Change current tab
@@ -69,18 +75,15 @@
         defer.resolve();
         return;
       }
-      ngDialog.open({
-        template: 'templates/prompt.html',
-        controller: 'PromptCtrl',
-        data: {message: "File isn't saved. Do you really want to close it ?"}
-      }).closePromise.then(function (result) {
-        if (result.value) {
-          var length = vm.tabs.length - 2;
-          vm.setTab(length);
-          defer.resolve();
-        } else {
-          defer.reject();
-        };
+
+      Prompt({
+        message: "File isn't saved. Do you really want to close it ?"
+      }).then(function success () {
+        var length = vm.tabs.length - 2;
+        vm.setTab(length);
+        defer.resolve();
+      }, function failed () {
+        defer.reject();
       });
     });
 
@@ -179,13 +182,6 @@
     }
 
 
-    activate();
-
   };
-
-
-  angular
-    .module('Horn', ['ngSanitize', 'ngDialog'])
-    .controller('BaseCtrl', BaseCtrl)
 
 })(angular);

@@ -34,7 +34,7 @@ src/components/*
 src/styles/horn.css
 
 # compiled modules
-src/scripts/*/module.js
+src/scripts/./module.js
 /src/scripts/module.js
 
 # compiled app
