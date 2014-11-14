@@ -27,29 +27,12 @@
 
     activate();
 
-    /**
-     * Change current tab
-     * @param {Number} id - number of new tab
-     * Also will save new current tab to chrome sync storage
-     */
-    vm.setTab = function (id) {
-      var tab, doc, mode;
-
-      id = id >= vm.tabs.length ? 0 : id;
-      tab = vm.tabs[id];
-
-      if (!tab) {
-        Editor.setValue(null);
-        return;
+    function onChangeTab (tab, id) {
+      if (tab) {
+        Editor.setDoc(tab.doc);
+        vm.mode = tab.mode;
+        Utils.saveCurrentTab(tab);
       }
-
-      doc = tab.doc;
-      mode = tab.mode || 'md';
-
-      vm.current = id;
-      vm.mode = mode;
-      Editor.setDoc(doc);
-      Utils.saveCurrentTab(tab);
     }
 
     /*
@@ -59,8 +42,8 @@
     /*
      * When tab has been switched
      */
-    $scope.$on('tabs:changed', function (ev, id) {
-      vm.setTab(id);
+    $scope.$on('tabs:changed', function (ev, data) {
+      onChangeTab(data.tab, data.id);
     });
 
     /**
@@ -71,7 +54,6 @@
       var tab = vm.tabs[id];
       if (tab.isSaved) {
         var length = vm.tabs.length - 2;
-        vm.setTab(length);
         defer.resolve();
         return;
       }
@@ -80,7 +62,6 @@
         message: "File isn't saved. Do you really want to close it ?"
       }).then(function success () {
         var length = vm.tabs.length - 2;
-        vm.setTab(length);
         defer.resolve();
       }, function failed () {
         defer.reject();
@@ -110,7 +91,7 @@
       var tab = new Tab(data);
 
       vm.tabs.push(tab);
-      vm.setTab(vm.tabs.length - 1);
+//      vm.setTab(vm.tabs.length - 1);
       Utils.saveTabs(vm.tabs);
 
       return tab;

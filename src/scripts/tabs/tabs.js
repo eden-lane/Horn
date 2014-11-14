@@ -10,16 +10,14 @@
 
         var vm = this;
 
-        /**
-         * Change currently active tab. Produces two events:
-         * tabs:beforeChanged()
-         * tabs:changed(id) where
-         * @param {Number} id - number of new tab
-         */
         vm.set = function (id) {
-          $scope.$emit('tabs:beforeChanged');
+          var tab = $scope.items[id];
           $scope.current = id;
-          $scope.$emit('tabs:changed', id);
+
+          $scope.$emit('tabs:changed', {
+            id: id,
+            tab: tab
+          });
         }
 
         /**
