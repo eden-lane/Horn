@@ -2,14 +2,31 @@
  * Directive for controlling tabs
  */
 ;(function () {
+  'use strict';
+
   angular
     .module('Horn')
     .directive('tabs', function () {
+
+      return {
+        restrict: 'E',
+        scope: {
+          items: '=',
+          current: '='
+        },
+        templateUrl: 'scripts/tabs/tabs.html',
+        controller: Controller,
+        controllerAs: 'tabs'
+      }
 
       function Controller ($rootScope, $scope, $q) {
 
         var vm = this;
 
+        /**
+         * Set tab as currently active
+         * @event 'tabs:changed'
+         */
         vm.set = function (id) {
           var tab = $scope.items[id];
           $scope.current = id;
@@ -28,7 +45,7 @@
 
 
         /**
-         * Closing
+         * Closes tab
          */
         vm.close = function (id) {
           var defer = $q.defer();
@@ -40,7 +57,10 @@
           });
         }
 
-
+        /**
+         * Watch for tabs count and if any tab is added,
+         * set it as currently active tab
+         */
         $scope.$watchCollection('items', function (newValue, oldValue) {
           var newLength = newValue.length,
               oldLength = oldValue.length;
@@ -49,18 +69,6 @@
             vm.set(newLength - 1);
         })
 
-
-      }
-
-      return {
-        restrict: 'E',
-        scope: {
-          items: '=',
-          current: '='
-        },
-        templateUrl: 'scripts/tabs/tabs.html',
-        controller: Controller,
-        controllerAs: 'tabs'
       }
     })
 })();
