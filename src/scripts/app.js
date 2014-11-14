@@ -35,9 +35,13 @@
       }
     }
 
-    /*
-     * Events
-     */
+    function getCurrentTab () {
+      return getTab(vm.current);
+    }
+
+    function getTab (id) {
+      return vm.tabs[id];
+    }
 
     /*
      * When tab has been switched
@@ -51,26 +55,25 @@
      */
     //TODO: Don't ask if doc is in saved state
     $scope.$on('tabs:closing', function (ev, id, defer) {
-      var tab = vm.tabs[id];
+      var tab = getTab(id);
       if (tab.isSaved) {
-        var length = vm.tabs.length - 2;
         defer.resolve();
         return;
       }
 
-      Prompt({
-        message: "File isn't saved. Do you really want to close it ?"
-      }).then(function success () {
-        var length = vm.tabs.length - 2;
-        defer.resolve();
-      }, function failed () {
-        defer.reject();
-      });
+      Prompt({ message: "File isn't saved. Do you really want to close it ?"})
+        .then(function success () {
+          defer.resolve();
+        }, function failed () {
+          defer.reject();
+        });
     });
+
 
     $scope.$on('tabs:closed', function (ev) {
       Utils.saveTabs(vm.tabs);
     })
+
 
     Editor.on('changed', function (sender, args) {
       if (vm.tabs[vm.current].isSaved) {
@@ -79,19 +82,13 @@
       }
     });
 
-    /*
-     * Toolbar actions
-     */
-
     /**
      * New file button
      * @param {Object} data
      */
     vm.newFile = function (data) {
       var tab = new Tab(data);
-
       vm.tabs.push(tab);
-//      vm.setTab(vm.tabs.length - 1);
       Utils.saveTabs(vm.tabs);
 
       return tab;
@@ -102,7 +99,7 @@
      * Save file button
      */
     vm.saveFile = function () {
-      var tab = vm.tabs[vm.current];
+      var tab = getCurrentTab();
       tab.save();
     }
 
@@ -120,8 +117,7 @@
      * @param {'md'|'html'|'preview'} name - name of new mode
      */
     vm.setMode = function (name) {
-      vm.mode = vm.tabs[vm.current].mode = name;
-      ///Editor.setDoc(vm.tabs[vm.current].doc);
+      vm.mode = getCurrentTab().mode = name;
     }
 
     vm.isMode = function (name) {

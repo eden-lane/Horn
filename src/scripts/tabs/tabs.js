@@ -14,11 +14,9 @@
           var tab = $scope.items[id];
           $scope.current = id;
 
-          $scope.$emit('tabs:changed', {
-            id: id,
-            tab: tab
-          });
+          $scope.$emit('tabs:changed', {id: id, tab: tab});
         }
+
 
         /**
          * Check if tab is selected
@@ -27,6 +25,7 @@
         vm.isActive = function (id) {
           return id === $scope.current;
         }
+
 
         /**
          * Closing
@@ -40,6 +39,17 @@
             $scope.$emit('tabs:closed');
           });
         }
+
+
+        $scope.$watchCollection('items', function (newValue, oldValue) {
+          var newLength = newValue.length,
+              oldLength = oldValue.length;
+
+          if (newLength > oldLength)
+            vm.set(newLength - 1);
+        })
+
+
       }
 
       return {
