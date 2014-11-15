@@ -37,13 +37,13 @@
         var data = data || {
           name: 'untitled',
           text: '',
-          mode: 'md',
+          mode: 'preview',
           isSaved: false
         };
 
         this.doc = Editor.createDoc(data.text)
         this.name = data.name || 'untitled';
-        this.mode = data.mode || 'md';
+        this.mode = data.mode || 'preview';
         this.id = data.id;
         this.fileEntry = data.fileEntry;
         this.isSaved = !!data.fileEntry;
