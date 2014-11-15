@@ -11,6 +11,8 @@
     return {
       cm: null,
 
+      md: null,
+
       init: function (cm) {
         this.cm = cm;
         cm.on('change', function (sender, args) {
@@ -19,12 +21,19 @@
           });
         });
         cm.setSize('100%', '100%');
+
+        this.md = new Remarkable({
+          html: true,
+          breaks: false,
+          linkify: true
+        });
       },
 
       render: function () {
-        var cm = this.cm;
+        var cm = this.cm,
+            md = this.md;
         $timeout(function () {
-        var text = marked(cm.getValue());
+        var text = md.render(cm.getValue());
           callbacks.rendered.forEach(function (f) {
             f(text);
           });
