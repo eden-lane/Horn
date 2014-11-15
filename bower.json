@@ -17,12 +17,12 @@
   "dependencies": {
     "angular": "~1.2.18",
     "angular-sanitize": "~1.2.18",
-    "marked": "~0.3.2",
     "codemirror": "~4.2.0",
     "angular-route": "~1.2.18",
     "siftjs": "*",
     "lodash": "~2.4.1",
     "ngDialog": "~0.2.11",
-    "moment": "~2.8.2"
+    "moment": "~2.8.2",
+    "remarkable": "~1.4.1"
   }
 }
