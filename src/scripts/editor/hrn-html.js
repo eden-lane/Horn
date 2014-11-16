@@ -3,22 +3,22 @@
   
   angular
     .module('Horn')
-    .directive('hrnMd', hrnMd);
+    .directive('hrnHtml', hrnHtml);
   
-  function hrnMd () {
+  function hrnHtml () {
     return {
       restrict: 'E',
       scope: {
-        doc: '='
+        text: '='
       },
       require: '^editor',
-      templateUrl: 'scripts/editor/hrn-md.html',
+      templateUrl: 'scripts/editor/hrn-html.html',
       link: link
     }
     
     function link (scope, element, attrs, editor) {
       
-      var cm;
+      var cm, doc;
       
       init();
       
@@ -31,14 +31,16 @@
           mode: 'gfm',
           theme: 'kirin',
           tabSize: 4,
-          lineWrapping: true
+          lineWrapping: true,
+          readOnly: true
         });
-        cm.setSize('100%', '100%')
+        cm.setSize('100%', '100%');
+        doc = new CodeMirror.Doc('', 'gfm');
+        cm.swapDoc(doc);
       }
       
-      scope.$watch('doc', function (newValue, oldValue) {
-        if (newValue != oldValue)
-          cm.swapDoc(newValue);
+      scope.$watch('text', function (newValue, oldValue) {
+        doc.setValue(newValue);
       })
     }
   }
