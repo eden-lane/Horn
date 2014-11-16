@@ -20,9 +20,6 @@
     function Controller ($scope) {
       var vm = this;
       
-      $scope.$watch('doc', function (newDoc) {
-        $scope.$broadcast('editor:switched', newDoc);
-      })
       
       vm.isMode = function (name) {
         return $scope.mode == name;
@@ -33,12 +30,27 @@
       var textarea = element.find('textarea')[0],
           // it's div.preview
           preview = element.find('div')[2];
+      
+      var md = new Remarkable({
+        html: true,
+        breaks: false,
+        linkify: true
+      });
 
       scope.renderedText = '<i>text</i>';
 
       scope.isMode = function (mode) {
         return scope.mode === mode;
       }
+      
+      scope.$watch('mode', function (newValue, oldValue) {
+        if (newValue != 'md')
+          scope.renderedText = md.render(scope.doc.getValue());
+      })
+      
+      scope.$watch('doc', function (newDoc) {
+        scope.$broadcast('editor:switched', newDoc);
+      })
       
       /**
        * Load images for preview

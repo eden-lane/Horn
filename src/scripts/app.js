@@ -144,7 +144,7 @@
       var tab = new Tab(data);
       vm.tabs.push(tab);
       Utils.saveTabs(vm.tabs);
-
+      vm.doc = tab.doc;
       return tab;
     }
 
