@@ -18,7 +18,15 @@
     
     function link (scope, element, attrs, editor) {
       
-      var cm, doc;
+      var cm, doc,
+      options = {
+        mode: 'gfm',
+        theme: 'kirin',
+        tabSize: 4,
+        lineWrapping: true,
+        readOnly: true
+      };
+
       
       init();
       
@@ -27,13 +35,7 @@
        */
       function init () {
         var textarea = element.find('textarea')[0];
-        cm = CodeMirror.fromTextArea(textarea, {
-          mode: 'gfm',
-          theme: 'kirin',
-          tabSize: 4,
-          lineWrapping: true,
-          readOnly: true
-        });
+        cm = CodeMirror.fromTextArea(textarea, options);
         cm.setSize('100%', '100%');
         doc = new CodeMirror.Doc('', 'gfm');
         cm.swapDoc(doc);
