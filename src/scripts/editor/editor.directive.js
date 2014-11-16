@@ -3,55 +3,42 @@
   .module('Horn')
   .directive('editor', function ($sanitize, $timeout, Editor) {
 
+    return {
+      restrict: 'E',
+      templateUrl: 'scripts/editor/editor.html',
+      transclude: true,
+      link: link,
+      scope: {
+        mode: '=',
+        keys: '=',
+        doc: '='
+      },
+      controller: Controller,
+      controllerAs: 'editor'
+    }
+
     function Controller ($scope) {
       var vm = this;
       
       $scope.$watch('doc', function (newDoc) {
         $scope.$broadcast('editor:switched', newDoc);
       })
-
+      
       vm.isMode = function (name) {
         return $scope.mode == name;
       }
-
-      /**
-       * Check current mode
-       */
-      vm.setMode = function (name) {
-        $scope.mode = name || 'md';
-      }
-
-      /**
-      * Creates a new document, swaps current document to
-      * it and returns previous document
-      * @param {String} text - text of new document
-      * @return {CodeMirror.Doc} - previous document
-      */
-      vm.create = function (text) {
-        var doc, oldDoc;
-        text = text || '';
-        doc = new CodeMirror.Doc(text, 'gfm');
-        oldDoc = $scope.cm.swapDoc(doc);
-        return doc;
-      };
-
     }
 
     function link (scope, element, attributes) {
       var textarea = element.find('textarea')[0],
           // it's div.preview
           preview = element.find('div')[2];
-      /*scope.cm = CodeMirror.fromTextArea(textarea, {
-        mode: 'gfm',
-        theme: 'kirin',
-        tabSize: 2,
-        lineWrapping: true,
-        extraKeys: scope.keys
-      });*/
 
-      scope.renderedText = '';
+      scope.renderedText = '<i>text</i>';
 
-//      Editor.init(scope.cm);
+      scope.isMode = function (mode) {
+        return scope.mode === mode;
+      }
       
       /**
        * Load images for preview
@@ -77,20 +64,6 @@
         var imgs = preview.querySelectorAll('img');
         loadImage(imgs);
       });*/
-    }
-
-    return {
-      restrict: 'E',
-      templateUrl: 'scripts/editor/editor.html',
-      transclude: true,
-      link: link,
-      scope: {
-        mode: '=',
-        keys: '=',
-        doc: '='
-      },
-      controller: Controller,
-      controllerAs: 'editor'
     }
   })
 })();
