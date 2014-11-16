@@ -5,6 +5,10 @@
 
     function Controller ($scope) {
       var vm = this;
+      
+      $scope.$watch('doc', function (newDoc) {
+        $scope.$broadcast('editor:switched', newDoc);
+      })
 
       vm.isMode = function (name) {
         return $scope.mode == name;
@@ -37,17 +41,17 @@
       var textarea = element.find('textarea')[0],
           // it's div.preview
           preview = element.find('div')[2];
-      scope.cm = CodeMirror.fromTextArea(textarea, {
+      /*scope.cm = CodeMirror.fromTextArea(textarea, {
         mode: 'gfm',
         theme: 'kirin',
         tabSize: 2,
         lineWrapping: true,
         extraKeys: scope.keys
-      });
+      });*/
 
       scope.renderedText = '';
 
-      Editor.init(scope.cm);
+//      Editor.init(scope.cm);
       
       /**
        * Load images for preview
@@ -68,11 +72,11 @@
         xhr.send(null);
       }
 
-      Editor.on('rendered', function (text) {
+      /*Editor.on('rendered', function (text) {
         scope.renderedText = text;
         var imgs = preview.querySelectorAll('img');
         loadImage(imgs);
-      });
+      });*/
     }
 
     return {
@@ -82,7 +86,8 @@
       link: link,
       scope: {
         mode: '=',
-        keys: '='
+        keys: '=',
+        doc: '='
       },
       controller: Controller,
       controllerAs: 'editor'

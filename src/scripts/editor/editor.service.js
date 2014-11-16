@@ -33,9 +33,9 @@
         var cm = this.cm,
             md = this.md;
         $timeout(function () {
-        var text = md.render(cm.getValue());
+//        var text = md.render(cm.getValue());
           callbacks.rendered.forEach(function (f) {
-            f(text);
+            f("");
           });
         });
       },
@@ -44,7 +44,7 @@
         var cm = this.cm,
             self = this;
         $timeout(function () {
-          cm.swapDoc(doc);
+          //cm.swapDoc(doc);
           self.render();
         });
 
