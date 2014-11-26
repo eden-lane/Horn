@@ -16,9 +16,15 @@
       link: link
     }
     
-    function link (scope, element, attrs, editor) {
+    function link (scope, element, attrs, ctrls) {
       
-      var cm;
+      var cm,
+          options = {
+            mode: 'gfm',
+            theme: 'kirin',
+            tabSize: 4,
+            lineWrapping: true
+          };
       
       init();
       
@@ -27,19 +33,37 @@
        */
       function init () {
         var textarea = element.find('textarea')[0];
-        cm = CodeMirror.fromTextArea(textarea, {
-          mode: 'gfm',
-          theme: 'kirin',
-          tabSize: 4,
-          lineWrapping: true
-        });
-        cm.setSize('100%', '100%')
+        window.cm = cm = CodeMirror.fromTextArea(textarea, options);
+        cm.setSize('100%', '100%');
       }
       
+      scope.$watch(isMdMode, setVisibility);
+
       scope.$watch('doc', function (newValue, oldValue) {
         if (newValue != oldValue)
           cm.swapDoc(newValue);
       })
+
+      /**
+       * Check if current mode is MD
+       */
+      function isMdMode () {
+        return ctrls.isMode('md');
+      }
+
+      /**
+       * Shows and hides directive
+       */
+      function setVisibility (isVisible) {
+        if (isVisible) {
+          element.css('display', 'block');
+          cm.refresh();
+        } else {
+          element.css('display', 'none');
+        }
+      }
+
+
     }
   }
   
