@@ -8,16 +8,12 @@
   function hrnHtml () {
     return {
       restrict: 'E',
-      scope: {
-        text: '='
-      },
-      require: '^editor',
+      require: ['^editor'],
       templateUrl: 'scripts/editor/hrn-html.html',
       link: link
     }
     
-    function link (scope, element, attrs, editor) {
-      
+    function link (scope, element, attrs, ctrls) {
       var cm, doc,
       options = {
         mode: 'gfm',
@@ -27,23 +23,9 @@
         readOnly: true
       };
 
+
       
-      init();
-      
-      /**
-       * CodeMirror's initialization
-       */
-      function init () {
-        var textarea = element.find('textarea')[0];
-        cm = CodeMirror.fromTextArea(textarea, options);
-        cm.setSize('100%', '100%');
-        doc = new CodeMirror.Doc('', 'gfm');
-        cm.swapDoc(doc);
-      }
-      
-      scope.$watch('text', function (newValue, oldValue) {
-        doc.setValue(newValue);
-      })
+
     }
   }
   

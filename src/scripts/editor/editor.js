@@ -19,20 +19,15 @@
 
     function Controller ($scope) {
       var vm = this;
-      
-      vm.renderedText = '<i>text</i>';
-      
+
       vm.isMode = function (name) {
         return $scope.mode == name;
       }
-
-
     }
 
     function link (scope, element, attributes) {
-      var textarea = element.find('textarea')[0],
-          // it's div.preview
-          preview = element.find('div')[2];
+
+      scope.renderedText = '';
       
       var md = new Remarkable({
         html: true,
@@ -40,6 +35,11 @@
         linkify: true
       });
 
+      scope.$watch('mode', function (newValue) {
+        if (newValue != 'md') {
+          scope.renderedText = md.render(scope.doc.getValue());
+        }
+      })
       
       /**
        * Load images for preview
