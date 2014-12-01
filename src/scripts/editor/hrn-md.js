@@ -16,7 +16,7 @@
       link: link
     }
     
-    function link (scope, element, attrs, ctrls) {
+    function link (scope, element, attrs, editorCtrl) {
       
       var cm,
           options = {
@@ -40,15 +40,16 @@
       scope.$watch(isMdMode, setVisibility);
 
       scope.$watch('doc', function (newValue, oldValue) {
-        if (newValue != oldValue)
+        if (newValue != oldValue) {
           cm.swapDoc(newValue);
+        }
       })
 
       /**
        * Check if current mode is MD
        */
       function isMdMode () {
-        return ctrls.isMode('md');
+        return editorCtrl.isMode('md');
       }
 
       /**

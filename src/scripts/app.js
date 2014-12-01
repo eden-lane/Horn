@@ -63,11 +63,9 @@
      */
     function onChangeTab (tab, id) {
       if (tab) {
-        Editor.setDoc(tab.doc);
+        vm.doc = tab.doc;
         vm.mode = tab.mode;
         Utils.saveCurrentTab(tab);
-      } else {
-        vm.mode = null;
       }
     }
 
@@ -86,6 +84,7 @@
     }
 
     // EVENTS
+
 
     /*
      * When tab has been switched

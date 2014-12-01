@@ -23,6 +23,10 @@
       vm.isMode = function (name) {
         return $scope.mode == name;
       }
+
+      vm.setMode = function (name) {
+        $scope.mode = name;
+      }
     }
 
     function link (scope, element, attributes) {
@@ -35,11 +39,13 @@
         linkify: true
       });
 
-      scope.$watch('mode', function (newValue) {
-        if (newValue != 'md') {
+      scope.$watch('mode', render);
+      scope.$watch('doc', render)
+
+      function render () {
+        if (scope.doc)
           scope.renderedText = md.render(scope.doc.getValue());
-        }
-      })
+      }
       
       /**
        * Load images for preview
