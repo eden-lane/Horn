@@ -4,7 +4,7 @@
 ;(function (angular) {
   'use strict';
 
-  function Utils ($q, Editor, Settings, Db) {
+  function Utils ($q, Settings, Db) {
 
     /**
      * Saves currently opened tabs to settings. Documents
@@ -99,10 +99,10 @@
      * Opens document from cfs
      * @return {Promise<DbFile>}
      */
-    function openDocument(cfs) {
+    function openDocument(cfs, mode) {
       var defer = $q.defer();
       Db.get({cfs: cfs}, true).then(function (dbFile) {
-        dbFile.doc = Editor.createDoc(dbFile.body);
+        dbFile.doc = new CodeMirror.Doc(dbFile.body, mode || 'gfm');
         dbFile.isSaved = true;
         delete dbFile.body;
         defer.resolve(dbFile);

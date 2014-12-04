@@ -28,7 +28,7 @@
 
   angular
     .module('Horn')
-    .factory('Tab', function (Editor, Fs) {
+    .factory('Tab', function (Fs) {
       /**
        * @constructor
        * @data {Object}
@@ -41,7 +41,7 @@
           isSaved: false
         };
 
-        this.doc = Editor.createDoc(data.text)
+        this.doc = CodeMirror.Doc(data.text, data.language || 'gfm')
         this.name = data.name || 'untitled';
         this.mode = data.mode || 'preview';
         this.id = data.id;

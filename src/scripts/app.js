@@ -5,7 +5,7 @@
     .module('Horn', ['ngSanitize', 'ngDialog', 'dialogs'])
     .controller('BaseCtrl', BaseCtrl);
 
-  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Editor, Tab, Prompt) {
+  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Tab, Prompt) {
     var vm = this,
         changingTabs = false;
 
@@ -121,18 +121,6 @@
     })
 
 
-    /**
-     * Watch for changing of text in Editor
-     */
-    Editor.on('changed', function (sender, args) {
-      if (vm.tabs[vm.current].isSaved) {
-        $scope.$apply(function () {
-          getCurrentTab().isSaved = false;
-        })
-      }
-    });
-
-
     // Toolbar actions
 
     /**
@@ -170,8 +158,6 @@
      * @param {'md'|'html'|'preview'} name - name of new mode
      */
     vm.setMode = function (name) {
-      if (name != 'md')
-        Editor.render();
       vm.mode = getCurrentTab().mode = name;
     }
 

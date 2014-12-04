@@ -1,7 +1,7 @@
 ;(function () {
   angular
   .module('Horn')
-  .directive('editor', function ($sanitize, $timeout, Editor) {
+  .directive('editor', function ($sanitize, $timeout) {
 
     return {
       restrict: 'E',
