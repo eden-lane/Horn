@@ -31,7 +31,7 @@ node_modules
 src/components/*
 
 # compiled styles
-src/styles/horn.css
+src/styles/*.css
 
 # compiled modules
 src/scripts/./module.js

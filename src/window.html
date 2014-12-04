@@ -38,7 +38,7 @@
 
 </head>
 <body ng-app="Horn">
-  <div ng-controller="BaseCtrl as base">
+  <div id="app" ng-controller="BaseCtrl as base">
     <div class="loader-container" ng-show="base.loading">
       <div class="loader"></div>
     </div>
@@ -54,7 +54,7 @@
         <button class="icon-code" ng-click="base.setMode('html')" ng-class="{active: base.isMode('html')}"></button>
       </div>
     </toolbar>
-    <editor mode="base.mode" keys="base.keys">
+    <editor mode="base.mode" doc="base.doc" keys="base.keys" doc="base.doc">
 
     </editor>
     <script src="components/remarkable/dist/remarkable.min.js"></script>

@@ -9,6 +9,7 @@ var paths = {
   app: [
     'src/templates/*',
     'src/styles/horn.css',
+    'src/styles/font-awesome.min.css',
     'src/styles/kirin.css',
     'src/styles/icomoon.css',
     'src/styles/fonts/*',
@@ -25,7 +26,7 @@ var paths = {
     'src/components/angular/angular-csp.css',
     'src/components/angular-sanitize/angular-sanitize.js',
     'src/components/lodash/dist/lodash.min.js',
-    'src/components/marked/lib/marked.js',
+    'src/components/remarkable/dist/remarkable.min.js',
     'src/components/siftjs/sift.min.js',
     'src/components/keymaster/keymaster.js',
     'src/window.html',

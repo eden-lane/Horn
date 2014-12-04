@@ -28,25 +28,29 @@
 
   angular
     .module('Horn')
-    .factory('Tab', function (Editor, Fs) {
+    .factory('Tab', function (Fs) {
+
+      var defaults = {
+        name: 'untitled',
+        text: '',
+        mode: 'preview',
+        isSaved: false,
+        language: 'gfm'
+      }
+
       /**
        * @constructor
        * @data {Object}
        */
-      function Tab (data) {
-        var data = data || {
-          name: 'untitled',
-          text: '',
-          mode: 'preview',
-          isSaved: false
-        };
+      function Tab(data) {
+        var params = angular.extend({}, defaults, data);
 
-        this.doc = Editor.createDoc(data.text)
-        this.name = data.name || 'untitled';
-        this.mode = data.mode || 'preview';
-        this.id = data.id;
-        this.fileEntry = data.fileEntry;
-        this.isSaved = !!data.fileEntry;
+        this.doc = CodeMirror.Doc(params.text, params.language)
+        this.name = params.name;
+        this.mode = params.mode;
+        this.id = params.id;
+        this.fileEntry = params.fileEntry;
+        this.isSaved = !!params.fileEntry;
       }
 
 

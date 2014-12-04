@@ -5,7 +5,7 @@
     .module('Horn', ['ngSanitize', 'ngDialog', 'dialogs'])
     .controller('BaseCtrl', BaseCtrl);
 
-  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Editor, Tab, Prompt) {
+  function BaseCtrl ($rootScope, $scope, $q, $timeout, /*Db,*/ Settings, Utils, Cfs, Fs, ngDialog, Tab, Prompt) {
     var vm = this,
         changingTabs = false;
 
@@ -63,11 +63,9 @@
      */
     function onChangeTab (tab, id) {
       if (tab) {
-        Editor.setDoc(tab.doc);
+        vm.doc = tab.doc;
         vm.mode = tab.mode;
         Utils.saveCurrentTab(tab);
-      } else {
-        vm.mode = null;
       }
     }
 
@@ -86,6 +84,7 @@
     }
 
     // EVENTS
+
 
     /*
      * When tab has been switched
@@ -122,18 +121,6 @@
     })
 
 
-    /**
-     * Watch for changing of text in Editor
-     */
-    Editor.on('changed', function (sender, args) {
-      if (vm.tabs[vm.current].isSaved) {
-        $scope.$apply(function () {
-          getCurrentTab().isSaved = false;
-        })
-      }
-    });
-
-
     // Toolbar actions
 
     /**
@@ -144,7 +131,7 @@
       var tab = new Tab(data);
       vm.tabs.push(tab);
       Utils.saveTabs(vm.tabs);
-
+      vm.doc = tab.doc;
       return tab;
     }
 
@@ -171,8 +158,6 @@
      * @param {'md'|'html'|'preview'} name - name of new mode
      */
     vm.setMode = function (name) {
-      if (name != 'md')
-        Editor.render();
       vm.mode = getCurrentTab().mode = name;
     }
 

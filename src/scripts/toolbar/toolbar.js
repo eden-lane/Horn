@@ -1,6 +1,6 @@
 angular
   .module('Horn')
-  .directive('toolbar', function ($q, Editor) {
+  .directive('toolbar', function ($q) {
 
     function Controller ($scope) {
 
