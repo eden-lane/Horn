@@ -28,7 +28,7 @@
 
   angular
     .module('Horn')
-    .factory('Tab', function (Fs) {
+    .factory('Tab', function ($rootScope, Fs) {
 
       var defaults = {
         name: 'untitled',
@@ -43,7 +43,8 @@
        * @data {Object}
        */
       function Tab(data) {
-        var params = angular.extend({}, defaults, data);
+        var self = this,
+            params = angular.extend({}, defaults, data);
 
         this.doc = CodeMirror.Doc(params.text, params.language)
         this.name = params.name;
@@ -51,6 +52,8 @@
         this.id = params.id;
         this.fileEntry = params.fileEntry;
         this.isSaved = !!params.fileEntry;
+
+        this.doc.on('change', onTextChange.bind(self));
       }
 
 
@@ -68,6 +71,22 @@
             self.name = fileEntry.name;
           });
         }
+      }
+
+      /**
+       * Change state of `isSaved` param and
+       * call $rootScope.$digest to push changes
+       * to the tabs directive.
+       *
+       * TODO: find a better way to push changes
+       * without calling $digest for all scopes
+       */
+      function onTextChange () {
+        if (!this.isSaved)
+          return;
+
+        this.isSaved = false;
+        $rootScope.$digest();
       }
 
       return Tab;
