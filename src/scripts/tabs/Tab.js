@@ -70,6 +70,9 @@
             self.fileEntry = fileEntry;
             self.name = fileEntry.name;
           });
+        } else {
+          // Not implemented yet
+          // TODO: save to cfs
         }
       }
 
