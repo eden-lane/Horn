@@ -128,6 +128,8 @@
      * @param {Object} data
      */
     vm.newFile = function (data) {
+      data.mode = 'md';
+      
       var tab = new Tab(data);
       vm.tabs.push(tab);
       Utils.saveTabs(vm.tabs);
