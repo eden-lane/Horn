@@ -33,7 +33,7 @@
        */
       function init () {
         var textarea = element.find('textarea')[0];
-        window.cm = cm = CodeMirror.fromTextArea(textarea, options);
+        cm = CodeMirror.fromTextArea(textarea, options);
         cm.setSize('100%', '100%');
       }
       
