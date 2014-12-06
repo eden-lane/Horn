@@ -34,7 +34,7 @@
       function init () {
         var textarea = element.find('textarea')[0];
         cm = CodeMirror.fromTextArea(textarea, options);
-        cm.setSize('100%', '100%');
+        cm.setSize('100%', '95%');
       }
       
       scope.$watch(isMdMode, setVisibility);
