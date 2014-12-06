@@ -22,7 +22,7 @@
           options = {
             mode: 'gfm',
             theme: 'kirin',
-            tabSize: 4,
+            tabSize: 2,
             lineWrapping: true
           };
       
