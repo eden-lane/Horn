@@ -33,7 +33,6 @@
       function setVisibility (isVisible) {
         if (isVisible) {
           element.css('display', 'block');
-          cm.refresh();
         } else {
           element.css('display', 'none');
         }
