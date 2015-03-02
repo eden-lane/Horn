@@ -127,10 +127,8 @@
      * New file button
      * @param {Object} data
      */
-    vm.newFile = function (data) {
-      data.mode = 'md';
-      
-      var tab = new Tab(data);
+    vm.newFile = function () {
+      var tab = new Tab({mode: 'md'});
       vm.tabs.push(tab);
       Utils.saveTabs(vm.tabs);
       vm.doc = tab.doc;
